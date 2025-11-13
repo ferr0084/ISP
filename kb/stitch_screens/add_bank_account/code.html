@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Link Bank Account</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            font-size: 24px;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#007AFF",
+              "background-light": "#F2F2F7",
+              "background-dark": "#101c22",
+              "text-light-primary": "#1C1C1E",
+              "text-light-secondary": "#8E8E93",
+              "text-dark-primary": "#FFFFFF",
+              "text-dark-secondary": "#8E8E93",
+              "border-light": "#E5E5EA",
+              "border-dark": "#3A3A3C",
+              "surface-light": "#FFFFFF",
+              "surface-dark": "#1C1C1E",
+            },
+            fontFamily: {
+              "display": ["Manrope", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "0.75rem", "xl": "1rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-display bg-background-light dark:bg-background-dark">
+<div class="relative flex h-auto min-h-screen w-full max-w-md mx-auto flex-col">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-10 flex items-center bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm p-4 pb-2 justify-between border-b border-border-light dark:border-border-dark">
+<div class="flex size-10 shrink-0 items-center justify-center text-text-light-primary dark:text-text-dark-primary">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<h1 class="text-text-light-primary dark:text-text-dark-primary text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">Link Bank Account</h1>
+<div class="size-10 shrink-0"></div> <!-- Spacer for centering title -->
+</header>
+<main class="flex-1 flex flex-col p-4">
+<!-- SearchBar -->
+<div class="py-3">
+<label class="flex flex-col min-w-40 h-14 w-full">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark focus-within:ring-2 focus-within:ring-primary">
+<div class="text-text-light-secondary dark:text-text-dark-secondary flex items-center justify-center pl-4">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden text-text-light-primary dark:text-text-dark-primary focus:outline-0 focus:ring-0 border-none bg-transparent h-full placeholder:text-text-light-secondary dark:placeholder:text-text-dark-secondary px-2 text-base font-normal leading-normal" placeholder="Search for your bank" value=""/>
+</div>
+</label>
+</div>
+<!-- Secure Connection Info -->
+<div class="flex items-center justify-center gap-2 p-4 text-center">
+<span class="material-symbols-outlined text-base text-text-light-secondary dark:text-text-dark-secondary">lock</span>
+<p class="text-text-light-secondary dark:text-text-dark-secondary text-xs font-normal leading-normal">We use Plaid to securely connect your account.</p>
+</div>
+<!-- SectionHeader -->
+<h2 class="text-text-light-primary dark:text-text-dark-primary text-lg font-bold leading-tight tracking-[-0.015em] px-0 pb-3 pt-2">Popular Banks</h2>
+<!-- ImageGrid -->
+<div class="grid grid-cols-4 gap-4">
+<div class="flex flex-col items-center gap-2">
+<div class="w-full bg-white bg-center bg-no-repeat aspect-square bg-contain rounded-xl border border-border-light dark:border-border-dark p-2" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDHOa2Q6cutUAy-ohOLnEKwbgi8sCTQ9RaVHYgDsUHy1g7_SSIngQVwoMyW4J0E8H6iAkkaiGnFHBIR_6rbm_KfbFqH-uCJkTS8-6aiayDkn5JBX0N51wi4s1YV5zGXyuL5ZDhGgSiR9b9ku5azEeQR-3EFmKEA2swkYMokVLF9kjmUR3gpL9J9ipuThY-rTixVZLoljpHV21feoHhyaC54c_l_GF6h8mEhOpqpGjueQUbNMyZj44PIhhgcx4q0HS7kVaMW94DjgduZ");'></div>
+<p class="text-xs text-text-light-secondary dark:text-text-dark-secondary text-center truncate w-full">Chase</p>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-full bg-white bg-center bg-no-repeat aspect-square bg-contain rounded-xl border border-border-light dark:border-border-dark p-2" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDHOa2Q6cutUAy-ohOLnEKwbgi8sCTQ9RaVHYgDsUHy1g7_SSIngQVwoMyW4J0E8H6iAkkaiGnFHBIR_6rbm_KfbFqH-uCJkTS8-6aiayDkn5JBX0N51wi4s1YV5zGXyuL5ZDhGgSiR9b9ku5azEeQR-3EFmKEA2swkYMokVLF9kjmUR3gpL9J9ipuThY-rTixVZLoljpHV21feoHhyaC54c_l_GF6h8mEhOpqpGjueQUbNMyZj44PIhhgcx4q0HS7kVaMW94DjgduZ");'></div>
+<p class="text-xs text-text-light-secondary dark:text-text-dark-secondary text-center truncate w-full">Bank of America</p>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-full bg-white bg-center bg-no-repeat aspect-square bg-contain rounded-xl border border-border-light dark:border-border-dark p-2" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDHOa2Q6cutUAy-ohOLnEKwbgi8sCTQ9RaVHYgDsUHy1g7_SSIngQVwoMyW4J0E8H6iAkkaiGnFHBIR_6rbm_KfbFqH-uCJkTS8-6aiayDkn5JBX0N51wi4s1YV5zGXyuL5ZDhGgSiR9b9ku5azEeQR-3EFmKEA2swkYMokVLF9kjmUR3gpL9J9ipuThY-rTixVZLoljpHV21feoHhyaC54c_l_GF6h8mEhOpqpGjueQUbNMyZj44PIhhgcx4q0HS7kVaMW94DjgduZ");'></div>
+<p class="text-xs text-text-light-secondary dark:text-text-dark-secondary text-center truncate w-full">Wells Fargo</p>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-full bg-white bg-center bg-no-repeat aspect-square bg-contain rounded-xl border border-border-light dark:border-border-dark p-2" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDHOa2Q6cutUAy-ohOLnEKwbgi8sCTQ9RaVHYgDsUHy1g7_SSIngQVwoMyW4J0E8H6iAkkaiGnFHBIR_6rbm_KfbFqH-uCJkTS8-6aiayDkn5JBX0N51wi4s1YV5zGXyuL5ZDhGgSiR9b9ku5azEeQR-3EFmKEA2swkYMokVLF9kjmUR3gpL9J9ipuThY-rTixVZLoljpHV21feoHhyaC54c_l_GF6h8mEhOpqpGjueQUbNMyZj44PIhhgcx4q0HS7kVaMW94DjgduZ");'></div>
+<p class="text-xs text-text-light-secondary dark:text-text-dark-secondary text-center truncate w-full">Citibank</p>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-full bg-white bg-center bg-no-repeat aspect-square bg-contain rounded-xl border border-border-light dark:border-border-dark p-2" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDHOa2Q6cutUAy-ohOLnEKwbgi8sCTQ9RaVHYgDsUHy1g7_SSIngQVwoMyW4J0E8H6iAkkaiGnFHBIR_6rbm_KfbFqH-uCJkTS8-6aiayDkn5JBX0N51wi4s1YV5zGXyuL5ZDhGgSiR9b9ku5azEeQR-3EFmKEA2swkYMokVLF9kjmUR3gpL9J9ipuThY-rTixVZLoljpHV21feoHhyaC54c_l_GF6h8mEhOpqpGjueQUbNMyZj44PIhhgcx4q0HS7kVaMW94DjgduZ");'></div>
+<p class="text-xs text-text-light-secondary dark:text-text-dark-secondary text-center truncate w-full">U.S. Bank</p>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-full bg-white bg-center bg-no-repeat aspect-square bg-contain rounded-xl border border-border-light dark:border-border-dark p-2" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDHOa2Q6cutUAy-ohOLnEKwbgi8sCTQ9RaVHYgDsUHy1g7_SSIngQVwoMyW4J0E8H6iAkkaiGnFHBIR_6rbm_KfbFqH-uCJkTS8-6aiayDkn5JBX0N51wi4s1YV5zGXyuL5ZDhGgSiR9b9ku5azEeQR-3EFmKEA2swkYMokVLF9kjmUR3gpL9J9ipuThY-rTixVZLoljpHV21feoHhyaC54c_l_GF6h8mEhOpqpGjueQUbNMyZj44PIhhgcx4q0HS7kVaMW94DjgduZ");'></div>
+<p class="text-xs text-text-light-secondary dark:text-text-dark-secondary text-center truncate w-full">PNC Bank</p>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-full bg-white bg-center bg-no-repeat aspect-square bg-contain rounded-xl border border-border-light dark:border-border-dark p-2" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDHOa2Q6cutUAy-ohOLnEKwbgi8sCTQ9RaVHYgDsUHy1g7_SSIngQVwoMyW4J0E8H6iAkkaiGnFHBIR_6rbm_KfbFqH-uCJkTS8-6aiayDkn5JBX0N51wi4s1YV5zGXyuL5ZDhGgSiR9b9ku5azEeQR-3EFmKEA2swkYMokVLF9kjmUR3gpL9J9ipuThY-rTixVZLoljpHV21feoHhyaC54c_l_GF6h8mEhOpqpGjueQUbNMyZj44PIhhgcx4q0HS7kVaMW94DjgduZ");'></div>
+<p class="text-xs text-text-light-secondary dark:text-text-dark-secondary text-center truncate w-full">TD Bank</p>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-full bg-white bg-center bg-no-repeat aspect-square bg-contain rounded-xl border border-border-light dark:border-border-dark p-2" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDHOa2Q6cutUAy-ohOLnEKwbgi8sCTQ9RaVHYgDsUHy1g7_SSIngQVwoMyW4J0E8H6iAkkaiGnFHBIR_6rbm_KfbFqH-uCJkTS8-6aiayDkn5JBX0N51wi4s1YV5zGXyuL5ZDhGgSiR9b9ku5azEeQR-3EFmKEA2swkYMokVLF9kjmUR3gpL9J9ipuThY-rTixVZLoljpHV21feoHhyaC54c_l_GF6h8mEhOpqpGjueQUbNMyZj44PIhhgcx4q0HS7kVaMW94DjgduZ");'></div>
+<p class="text-xs text-text-light-secondary dark:text-text-dark-secondary text-center truncate w-full">Capital One</p>
+</div>
+</div>
+<!-- MetaText -->
+<p class="text-primary text-sm font-medium leading-normal py-6 text-center">Link with account numbers</p>
+<div class="flex-grow"></div> <!-- Spacer to push button to bottom -->
+</main>
+<!-- Footer with CTA Button -->
+<footer class="sticky bottom-0 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm p-4">
+<button class="w-full h-14 bg-primary text-white font-bold text-base rounded-xl flex items-center justify-center opacity-50 cursor-not-allowed">Continue</button>
+</footer>
+</div>
+</body></html>

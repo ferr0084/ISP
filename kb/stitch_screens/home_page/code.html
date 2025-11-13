@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Home - Telegram Clone</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#0088cc",
+            "background-light": "#F5F7FA",
+            "background-dark": "#101c22",
+            "card-light": "#ffffff",
+            "card-dark": "#1a2831",
+            "text-light": "#333333",
+            "text-dark": "#e0e0e0",
+            "text-muted-light": "#666666",
+            "text-muted-dark": "#9e9e9e",
+            "accent-teal": "#48D1CC",
+            "accent-orange": "#FFA500"
+          },
+          fontFamily: {
+            "display": ["Inter", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "0.75rem",
+            "xl": "1rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-display">
+<div class="relative flex h-auto min-h-screen w-full flex-col bg-background-light dark:bg-background-dark group/design-root overflow-x-hidden">
+<div class="relative z-10 w-full bg-background-light dark:bg-background-dark">
+<div class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-20">
+<button class="flex size-12 shrink-0 items-center justify-center text-text-light dark:text-text-dark">
+<span class="material-symbols-outlined !text-3xl">menu</span>
+</button>
+<h1 class="text-text-light dark:text-text-dark text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">Home</h1>
+<div class="flex w-12 items-center justify-end">
+<button class="flex cursor-pointer items-center justify-center rounded-lg h-12 bg-transparent text-text-light dark:text-text-dark min-w-0 p-0">
+<span class="material-symbols-outlined !text-3xl">search</span>
+</button>
+</div>
+</div>
+<main class="flex flex-col gap-4 p-4">
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<h2 class="text-text-light dark:text-text-dark text-xl font-bold">Friend Statuses</h2>
+<a class="text-primary text-sm font-semibold" href="#">View All</a>
+</div>
+<div class="flex w-full overflow-x-auto pb-2">
+<div class="flex min-h-min flex-row items-start justify-start gap-5">
+<div class="flex flex-col justify-center gap-2 w-16 text-center">
+<div class="relative">
+<div class="w-16 h-16 bg-center bg-no-repeat aspect-square bg-cover rounded-full" data-alt="Avatar of Maria" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD-3jkrKXTC4bbdJWGXNcTOYej6jBFz190lneA5B8Z9JW0NaeTIIy0KQh2zhNULRVJaj6O3uIqOmt-qd4bxsPvQbXLFcZcJ1N9jAUJWXMHz0FsUMYeSOF40Ur7pZT-t8Rk_0CX0EVPQawOettFulTf7ZzhCfghpj4FO6htePNXxWSD5MkhP9J25Lj3mhvvbwsdg8z_bHUoo347kRl0JwM5cj67SQ1x-91GUiIpVWLX9bbhhuUwYkpq8hD7tcLUXajkyNeDw05FsqJBh");'></div>
+<span class="absolute -bottom-0.5 -right-0.5 block h-4 w-4 rounded-full bg-green-500 ring-2 ring-background-light dark:ring-background-dark"></span>
+</div>
+<p class="text-text-muted-light dark:text-text-muted-dark text-[13px] font-normal leading-normal">Maria</p>
+</div>
+<div class="flex flex-col justify-center gap-2 w-16 text-center">
+<div class="relative">
+<div class="w-16 h-16 bg-center bg-no-repeat aspect-square bg-cover rounded-full" data-alt="Avatar of David" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBbdNmCwKaOJomKfzup3Jgg2fFRLY-RN3e57ElTGojNxsntV51bHnMAhKWwMcGsyjyBfNzUmv9Eh7Qv2NXgCKKy_ohgJsbSpseC4FzdiuDpK0ZthK-w_RWkt-Jfp0jGj8TxTrr6MszBm-NEmHyTUWuRS_pMAdUTQ_SxOu7-npH8ZhWnnjXDA_PwOF_5h8SNFLgLdQRdEJZLBP-8CFN8h2f3qytJoKYuueqppKO9rJkzkALB9rMqsogoGD92ET2NPl6J_mfkPuW4eLjI");'></div>
+</div>
+<p class="text-text-muted-light dark:text-text-muted-dark text-[13px] font-normal leading-normal">David</p>
+</div>
+<div class="flex flex-col justify-center gap-2 w-16 text-center">
+<div class="relative">
+<div class="w-16 h-16 bg-center bg-no-repeat aspect-square bg-cover rounded-full" data-alt="Avatar of Jessica" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBv01MwbMk6-tGT7SdC81ea5x7klF2JygSrSsBxwP4Nji4dvEuEXI9Opj-SeiWGk8HaW_x1BvMKpRFucHsdAJ6eDzGWryxaxVS3WntBNwqmI7lg-A05h40O0kRw-Mc3s_gIpNnS6Agn7ugHpzHQ_uqQkKIqhaETCZ800ZP7QVj0NCyv75auIwZ9JKU5h4L5lKM_oREge0sfuBn5ari3J-0LwtN22z6oNk4vENOYFD5tKAkz0iABxzH85Tx3vvA5vzHMNh7H9D82INr-");'></div>
+<span class="absolute -bottom-0.5 -right-0.5 block h-4 w-4 rounded-full bg-green-500 ring-2 ring-background-light dark:ring-background-dark"></span>
+</div>
+<p class="text-text-muted-light dark:text-text-muted-dark text-[13px] font-normal leading-normal">Jessica</p>
+</div>
+<div class="flex flex-col justify-center gap-2 w-16 text-center">
+<div class="relative">
+<div class="w-16 h-16 bg-center bg-no-repeat aspect-square bg-cover rounded-full" data-alt="Avatar of Chris" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDCOgz0DZCEUOOkzaz5ET2-kDzIfKtv5udLLDexNUMsRnFYD18CONx_NkRLLmOfuS2zEPVbeD0J-Cw-oM8dup4suW957956qht1Y5KZM_QG6__PDo06VhF5GC_ySbXSPyD1q6yE-xWsXGQYLup5AWzLm_UQOLZYfh_oSwuYQCR8dUW9ffLyfGFB00A4rj2rYUxNnmRRm88R-PM40xaLZ27z5o-Dr-9mBP1ip27HwYDEkiUWScmYYTjOH6kDuKcQP4Y9IV041NuCwuqG");'></div>
+</div>
+<p class="text-text-muted-light dark:text-text-muted-dark text-[13px] font-normal leading-normal">Chris</p>
+</div>
+<div class="flex flex-col justify-center gap-2 w-16 text-center">
+<div class="relative">
+<div class="w-16 h-16 bg-center bg-no-repeat aspect-square bg-cover rounded-full" data-alt="Avatar of Sarah" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBufn-5f182_I2QfbF6hO8vAkcLPbjo3fbc8b2R6UEPlTDWPu83vjCY98EKcZWOq-fu9l9rSlZuNGUnA2JlVGZul4ZQtlu57E6DkvVDg7ylEo-V6dL0fmRch-oLpG3SMsuVxalYdDVk20qO6_qaEVdk1Qx_Lz3dA9NJ3Iicr3wdHriw10YsGs4kFXp2FJBslbSZwyyP89PpneascFxaeFzEMG8GLulRn-ZHSQzd8x1yoUMQfop4IykkEr9OLvEsNPSnl-dEuhKduWAF");'></div>
+</div>
+<p class="text-text-muted-light dark:text-text-muted-dark text-[13px] font-normal leading-normal">Sarah</p>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-4 rounded-xl bg-card-light dark:bg-card-dark p-4">
+<div class="flex items-center justify-between">
+<h2 class="text-text-light dark:text-text-dark text-xl font-bold">My Groups</h2>
+<a class="text-primary text-sm font-semibold" href="#">View All</a>
+</div>
+<div class="flex flex-col gap-4">
+<a class="flex items-center gap-4 group" href="#">
+<div class="relative shrink-0">
+<img alt="Design Team group avatar" class="h-14 w-14 rounded-xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6wcPYJ3lkz38LknTCKqLJPjIG7TaYGZEpNY7XfTn9RRLFzEIRuLZhkvc1Cprw6iWCvMIXwBkuLydiTyzIiRT1a9g5_4Suf3wYJMiYfKBVIloGSKhPzdWPBBwFlXPUL-vUgWFSf7-lMKL-FTHt3BOz0g3NOFaKLo9uWwjD6yDgyZm6NbFj6BMEZVfj8CBQ9hMJt1hhAjyg71iSixT_sl9JzpNYlbBk3Fj6FAk7i1NQb14JMo9KjAUV9EsxK-SQ33tcOKzgH4ExPjI3"/>
+</div>
+<div class="flex-1">
+<p class="font-semibold text-text-light dark:text-text-dark group-hover:text-primary">Design Team</p>
+<div class="flex items-center gap-2 text-sm text-text-muted-light dark:text-text-muted-dark">
+<span class="material-symbols-outlined !text-base">chat_bubble</span>
+<span>5 new messages</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-text-muted-light dark:text-text-muted-dark group-hover:text-primary">chevron_right</span>
+</a>
+<a class="flex items-center gap-4 group" href="#">
+<div class="relative shrink-0">
+<img alt="Project Phoenix group avatar" class="h-14 w-14 rounded-xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgAqbFTmTzg1MgOBzcdk2K-zoS9u-nJrDrOrZsxk-LgKsVjObtM88z7Jhnj874PlnHakO2V-UIh51TiM7ONhS600hLUk5WaBOxe_uvncGhuUWWSlPUSCuqAtVQ1XBNKnHdJjLnKKrOSGJcovLrP27WufBaIcTIAnMVzYQfXjjcNr_xJU_C07xN8sYJLWuITPqVFsnJkqU7msJmovJG_uJlyRwWi4-otkCKtWDFO5kE6V0B1R2kOyAVKBrE2s1AzH-blFKolYkvWq0v"/>
+</div>
+<div class="flex-1">
+<p class="font-semibold text-text-light dark:text-text-dark group-hover:text-primary">Project Phoenix</p>
+<div class="flex items-center gap-2 text-sm text-text-muted-light dark:text-text-muted-dark">
+<span class="material-symbols-outlined !text-base">event</span>
+<span>Kickoff meeting today @ 2:30 PM</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-text-muted-light dark:text-text-muted-dark group-hover:text-primary">chevron_right</span>
+</a>
+<a class="flex items-center gap-4 group" href="#">
+<div class="relative shrink-0">
+<img alt="Weekend Trip group avatar" class="h-14 w-14 rounded-xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAv2RcA-_ZQuxqbL7tstqPgHv3mmmk8Bd1LMkNj2Oafrd-KTjSmiQEd0mgUu3KQrrHXrlYfljLnnAl1TuLHEXINbyyUwqKbKUZV2iUnG71-WhIq4A_lhjw39Y78Cpfjf8IPsFdvuzQj5HgR1YInr9uI5ImbSgNefDhUCAC96JyoqZIr4cX_Gs-jvEVOY4H_w0YGu-XXyikSLR4xcTVBhY31QBIlyIAtGBRbNbS2CXlqHLzzYWRTbtO_cnLKxWG652Evhy5lOf61mK52"/>
+</div>
+<div class="flex-1">
+<p class="font-semibold text-text-light dark:text-text-dark group-hover:text-primary">Weekend Trip</p>
+<div class="flex items-center gap-2 text-sm text-text-muted-light dark:text-text-muted-dark">
+<span class="material-symbols-outlined !text-base text-accent-orange">receipt_long</span>
+<span class="text-accent-orange">You owe $45 for gas</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-text-muted-light dark:text-text-muted-dark group-hover:text-primary">chevron_right</span>
+</a>
+</div>
+</div>
+<div class="flex flex-col gap-4 rounded-xl bg-card-light dark:bg-card-dark p-4">
+<div class="flex items-center justify-between">
+<h2 class="text-text-light dark:text-text-dark text-xl font-bold">Recent Chats</h2>
+<a class="text-primary text-sm font-semibold" href="#">View All</a>
+</div>
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-4">
+<div class="relative shrink-0">
+<img alt="Jessica's avatar" class="h-14 w-14 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBv01MwbMk6-tGT7SdC81ea5x7klF2JygSrSsBxwP4Nji4dvEuEXI9Opj-SeiWGk8HaW_x1BvMKpRFucHsdAJ6eDzGWryxaxVS3WntBNwqmI7lg-A05h40O0kRw-Mc3s_gIpNnS6Agn7ugHpzHQ_uqQkKIqhaETCZ800ZP7QVj0NCyv75auIwZ9JKU5h4L5lKM_oREge0sfuBn5ari3J-0LwtN22z6oNk4vENOYFD5tKAkz0iABxzH85Tx3vvA5vzHMNh7H9D82INr-"/>
+<span class="absolute -bottom-0.5 -right-0.5 block h-4 w-4 rounded-full bg-green-500 ring-2 ring-card-light dark:ring-card-dark"></span>
+</div>
+<div class="flex-1">
+<p class="font-semibold text-text-light dark:text-text-dark">Jessica</p>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark">Awesome, see you there!</p>
+</div>
+<div class="flex flex-col items-end gap-1 self-start">
+<p class="text-xs text-text-muted-light dark:text-text-muted-dark">10:42 AM</p>
+<span class="flex h-6 w-6 items-center justify-center rounded-full bg-accent-teal text-white text-xs font-bold">5</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative shrink-0">
+<img alt="Maria's avatar" class="h-14 w-14 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-3jkrKXTC4bbdJWGXNcTOYej6jBFz190lneA5B8Z9JW0NaeTIIy0KQh2zhNULRVJaj6O3uIqOmt-qd4bxsPvQbXLFcZcJ1N9jAUJWXMHz0FsUMYeSOF40Ur7pZT-t8Rk_0CX0EVPQawOettFulTf7ZzhCfghpj4FO6htePNXxWSD5MkhP9J25Lj3mhvvbwsdg8z_bHUoo347kRl0JwM5cj67SQ1x-91GUiIpVWLX9bbhhuUwYkpq8hD7tcLUXajkyNeDw05FsqJBh"/>
+<span class="absolute -bottom-0.5 -right-0.5 block h-4 w-4 rounded-full bg-green-500 ring-2 ring-card-light dark:ring-card-dark"></span>
+</div>
+<div class="flex-1">
+<p class="font-semibold text-text-light dark:text-text-dark">Maria</p>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark">Can you send me the file?</p>
+</div>
+<div class="flex flex-col items-end gap-1 self-start">
+<p class="text-xs text-text-muted-light dark:text-text-muted-dark">9:15 AM</p>
+<span class="flex h-6 w-6 items-center justify-center rounded-full bg-accent-teal text-white text-xs font-bold">2</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative shrink-0">
+<img alt="David's avatar" class="h-14 w-14 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbdNmCwKaOJomKfzup3Jgg2fFRLY-RN3e57ElTGojNxsntV51bHnMAhKWwMcGsyjyBfNzUmv9Eh7Qv2NXgCKKy_ohgJsbSpseC4FzdiuDpK0ZthK-w_RWkt-Jfp0jGj8TxTrr6MszBm-NEmHyTUWuRS_pMAdUTQ_SxOu7-npH8ZhWnnjXDA_PwOF_5h8SNFLgLdQRdEJZLBP-8CFN8h2f3qytJoKYuueqppKO9rJkzkALB9rMqsogoGD92ET2NPl6J_mfkPuW4eLjI"/>
+</div>
+<div class="flex-1">
+<p class="font-semibold text-text-light dark:text-text-dark">David</p>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark">Sounds good, let's do it.</p>
+</div>
+<div class="flex flex-col items-end gap-1 self-start">
+<p class="text-xs text-text-muted-light dark:text-text-muted-dark">Yesterday</p>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-4 rounded-xl bg-card-light dark:bg-card-dark p-4">
+<div class="flex items-center justify-between">
+<h2 class="text-text-light dark:text-text-dark text-xl font-bold">Upcoming Events</h2>
+<a class="text-primary text-sm font-semibold" href="#">View All</a>
+</div>
+<div class="flex flex-col gap-3">
+<div class="flex items-center gap-4">
+<div class="flex flex-col items-center justify-center rounded-lg bg-primary/10 text-primary w-14 h-14 p-2 shrink-0">
+<span class="text-sm font-bold uppercase">SEP</span>
+<span class="text-2xl font-bold">28</span>
+</div>
+<div class="flex-1">
+<p class="font-semibold text-text-light dark:text-text-dark">Design Team Sync</p>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark">10:00 AM - Conference Room</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex flex-col items-center justify-center rounded-lg bg-primary/10 text-primary w-14 h-14 p-2 shrink-0">
+<span class="text-sm font-bold uppercase">OCT</span>
+<span class="text-2xl font-bold">02</span>
+</div>
+<div class="flex-1">
+<p class="font-semibold text-text-light dark:text-text-dark">Project Phoenix Kickoff</p>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark">2:30 PM - Main Office</p>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-4 rounded-xl bg-card-light dark:bg-card-dark p-4">
+<div class="flex items-center justify-between">
+<h2 class="text-text-light dark:text-text-dark text-xl font-bold">Pending Expenses</h2>
+<a class="text-primary text-sm font-semibold" href="#">View All</a>
+</div>
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-4">
+<div class="flex h-12 w-12 items-center justify-center rounded-full bg-accent-orange/10 shrink-0">
+<span class="material-symbols-outlined text-accent-orange">arrow_downward</span>
+</div>
+<div class="flex-1">
+<p class="font-semibold text-text-light dark:text-text-dark">You owe Maria</p>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark">For "Team Lunch"</p>
+</div>
+<button class="bg-accent-orange text-white px-5 py-2 rounded-full text-sm font-bold">$15.50</button>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 shrink-0">
+<span class="material-symbols-outlined text-primary">arrow_upward</span>
+</div>
+<div class="flex-1">
+<p class="font-semibold text-text-light dark:text-text-dark">David owes you</p>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark">For "Movie Tickets"</p>
+</div>
+<button class="bg-primary/20 text-primary px-5 py-2 rounded-full text-sm font-bold">$25.00</button>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex h-12 w-12 items-center justify-center rounded-full bg-accent-orange/10 shrink-0">
+<span class="material-symbols-outlined text-accent-orange">arrow_downward</span>
+</div>
+<div class="flex-1">
+<p class="font-semibold text-text-light dark:text-text-dark">You owe Chris</p>
+<p class="text-sm text-text-muted-light dark:text-text-muted-dark">For "Coffee Run"</p>
+</div>
+<button class="bg-accent-orange text-white px-5 py-2 rounded-full text-sm font-bold">$8.75</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+
+</body></html>

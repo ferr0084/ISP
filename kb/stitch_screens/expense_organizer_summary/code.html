@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Expense Summary</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#37AEE2",
+            "primary-light": "#37AEE2", // Use the same for consistency
+            "primary-dark": "#37AEE2",
+            "secondary-light": "#FFFFFF",
+            "secondary-dark": "#182229",
+            "background-light": "#F3F3F3",
+            "background-dark": "#0F171C",
+            "text-primary-light": "#000000",
+            "text-primary-dark": "#FFFFFF",
+            "text-secondary-light": "#8E8E93",
+            "text-secondary-dark": "#707579",
+            "telegram-blue": "#37AEE2",
+            "telegram-green": "#50B44E",
+            "telegram-red": "#E53935",
+            "telegram-orange": "#F99F26",
+            "telegram-bg-light": "#FFFFFF",
+            "telegram-bg-dark": "#182229",
+            "telegram-header-light": "#F7F7F7",
+            "telegram-header-dark": "#182229"
+          },
+          fontFamily: {
+            "display": ["Inter", "sans-serif"]
+          },
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+    }
+    body {
+      min-height: 100dvh;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex min-h-screen w-full flex-col">
+<div class="flex flex-1 flex-col pb-24">
+<header class="sticky top-0 z-10 bg-telegram-header-light/80 dark:bg-telegram-header-dark/80 backdrop-blur-md">
+<div class="flex h-14 items-center px-2">
+<button class="flex size-12 items-center justify-center">
+<span class="material-symbols-outlined text-3xl text-primary">arrow_back_ios_new</span>
+</button>
+<h2 class="flex-1 text-center text-lg font-semibold text-text-primary-light dark:text-text-primary-dark pr-12">Expense Summary</h2>
+</div>
+</header>
+<main class="flex-1 px-4">
+<h1 class="pt-6 pb-1 text-2xl font-bold leading-tight text-text-primary-light dark:text-text-primary-dark">Dinner at The Grand Bistro</h1>
+<p class="pb-4 text-sm text-text-secondary-light dark:text-text-secondary-dark">$160.00 Total</p>
+<div class="mb-6 rounded-lg bg-telegram-bg-light dark:bg-telegram-bg-dark p-4">
+<div class="flex w-full flex-col">
+<p class="text-sm text-text-secondary-light dark:text-text-secondary-dark">Updated Split</p>
+<p class="text-3xl font-bold text-primary">$100.00</p>
+<div class="mt-4 flex flex-col gap-2">
+<div class="flex items-center justify-between text-sm">
+<p class="text-text-secondary-light dark:text-text-secondary-dark">$20.00 / person</p>
+<p class="font-medium text-text-primary-light dark:text-text-primary-dark">5 of 8 accepted</p>
+</div>
+<div class="h-1.5 w-full rounded-full bg-gray-200 dark:bg-gray-700">
+<div class="h-1.5 rounded-full bg-primary" style="width: 62.5%;"></div>
+</div>
+</div>
+</div>
+</div>
+<h3 class="pb-2 text-xl font-bold text-text-primary-light dark:text-text-primary-dark">Invitees</h3>
+<div class="flex flex-col rounded-lg bg-telegram-bg-light dark:bg-telegram-bg-dark">
+<div class="flex items-center justify-between p-3 border-b border-gray-200 dark:border-gray-700">
+<div class="flex items-center gap-3">
+<img class="h-10 w-10 rounded-full object-cover" data-alt="Avatar of Olivia Martin" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6jjl6DFKy6kpZ8otZymQiQegl2ff7ecR1APGWC-t0jX8YNvHe4K3JSPp02eSUI653oNU5KS_L1ERz37liIFR6BflSQJedJjZPGiU8VOeQOXEQElIsp7o2csNHcStCbMKxje0xDhGbFZg33zNej9OK9C2F8Wug2utSk9xmgJCg1utjULHWwZxlM20OGKgikcKthNmIxm6GQY2jkR5XtCLh7ZjOprxa5W363j5Yr2tWHNG5mBrRzTjhGlWcYFQMJ9UnsGGJJ11he6mE"/>
+<span class="font-medium text-text-primary-light dark:text-text-primary-dark">Olivia Martin</span>
+</div>
+<div class="flex items-center justify-center rounded-full bg-telegram-green/10 px-3 py-1">
+<span class="text-xs font-semibold text-telegram-green">Accepted</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 border-b border-gray-200 dark:border-gray-700">
+<div class="flex items-center gap-3">
+<img class="h-10 w-10 rounded-full object-cover" data-alt="Avatar of Liam Johnson" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBX_5GtuL2ns_Zqpww4LzTqmvycQ_MUiPKY0td73CJyF782qGxjl72Vrn10KoIPvzbrmeMg3d1jYqVGruKO1mFPjljlzBGqEU_WvjBPLopvFSwqzGK-mooZKlB41tLmJPMfbh5h1KReNgUS23VkSvJF0xolMupQIa9SaZ4LRecSDhY4Tp7J2j2CvQP4-s7JLyiUkJUluKzs3eq65MR6Y1Xx1leaXYOQGo5XyBtdXRUKwV77ubsE3QmXGUswwJ6gr0Zooegy7HJ6r7hh"/>
+<span class="font-medium text-text-primary-light dark:text-text-primary-dark">Liam Johnson</span>
+</div>
+<div class="flex items-center justify-center rounded-full bg-telegram-red/10 px-3 py-1">
+<span class="text-xs font-semibold text-telegram-red">Rejected</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 border-b border-gray-200 dark:border-gray-700">
+<div class="flex items-center gap-3">
+<img class="h-10 w-10 rounded-full object-cover" data-alt="Avatar of Ava Williams" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRNlR0zx9hWnKxLQuI1LnaApSA9NfOl-MnBWB2o9B_hn2fs1aU23OBgQpEC3ineBLNbOcoQlWz4EFolh7NSkjf8VbTI_iQSp-LjkZVHABhk-XN4NVT3MRuViQ2FLZiNw_iMGiOA_-ARpcSxmTC3kgA4P1mJ3QfmZ-n9t3A_6mwtyd4Lm2sQKqMbLz9f6xO_pg4t0Fq5d18-BnA1Owpfvn8PkXCOlJ81QVtKdhnNx829PJ73X-zlYQxUsUh7S-kR-ckDTvRqn-9RiNo"/>
+<span class="font-medium text-text-primary-light dark:text-text-primary-dark">Ava Williams</span>
+</div>
+<div class="flex items-center justify-center rounded-full bg-telegram-orange/10 px-3 py-1">
+<span class="text-xs font-semibold text-telegram-orange">Pending</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 border-b border-gray-200 dark:border-gray-700">
+<div class="flex items-center gap-3">
+<img class="h-10 w-10 rounded-full object-cover" data-alt="Avatar of Sophia Brown" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIrhHYpT7hydOWc3GVlr45WlMSgMr1S9c3qMW0v-ixjvvxZ-CIKPXX1qqA1fD-j0lFexjD33_lCA6-DMVPRA85DFAkrj4NnxsH0HtcWXhuOaKgBF4Ctx1D6oDHfrSpOMyr_8jfnywAosbPClrbqdbVzRLcfpF5-LVrGd6aXWbwJr4EpKCTYuZBWxvSq3jl4MEG3KkMoyCaRyooZKHjQ7O98YZDhHHhayOb9zvxuspgud-kPlBG3BXObotgF_jdpOQyPJUXrf4tDvcl"/>
+<span class="font-medium text-text-primary-light dark:text-text-primary-dark">Sophia Brown</span>
+</div>
+<div class="flex items-center justify-center rounded-full bg-telegram-green/10 px-3 py-1">
+<span class="text-xs font-semibold text-telegram-green">Accepted</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-3">
+<div class="flex items-center gap-3">
+<img class="h-10 w-10 rounded-full object-cover" data-alt="Avatar of Noah Garcia" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLKckPa-jAibOG8SDRps2SJApHR2i9Akrz_LmMrvNDweQe6rxl05D-9noJ81dc-HAlunp8-K1IUvkIDR7rxao2WnlbGFcDytydwIGXXdMxM6Lw4We68BKUhEH0fsdHqt_lHSFitpppJR-kQAFSJeG-jn0rWHgdHIyCs8dq9MYazWht0cJWVOjeVGyUByyon8GUpHGA6CTETvH0-N-QhgQ71ul3NL35edhxZCslkHEqjXWCjS9382F5W0Vv6IOXhusmMiDi-0cFQszI"/>
+<span class="font-medium text-text-primary-light dark:text-text-primary-dark">Noah Garcia</span>
+</div>
+<div class="flex items-center justify-center rounded-full bg-telegram-orange/10 px-3 py-1">
+<span class="text-xs font-semibold text-telegram-orange">Pending</span>
+</div>
+</div>
+</div>
+</main>
+<div class="fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-background-light via-background-light/90 to-transparent dark:from-background-dark dark:via-background-dark/90 dark:to-transparent">
+<button class="flex w-full items-center justify-center gap-2 rounded-lg bg-primary py-3.5 text-base font-semibold text-white shadow-lg shadow-primary/30">
+<span class="material-symbols-outlined">notifications</span>
+          Remind Pending Invitees
+        </button>
+</div>
+</div>
+</div>
+
+</body></html>

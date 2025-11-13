@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Thread View</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#007AFF",
+              "background-light": "#F5F5F7",
+              "background-dark": "#1C1C1E",
+            },
+            fontFamily: {
+              "display": ["Plus Jakarta Sans", "sans-serif"]
+            },
+            borderRadius: {
+                "DEFAULT": "0.5rem",
+                "lg": "0.75rem",
+                "xl": "1rem",
+                "full": "9999px"
+            },
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-display">
+<div class="relative flex h-screen max-h-screen w-full flex-col bg-background-light dark:bg-background-dark group/design-root overflow-hidden">
+<!-- Top App Bar -->
+<header class="sticky top-0 z-10 flex shrink-0 items-center justify-between border-b border-white/10 bg-background-light/[.85] px-4 py-3 backdrop-blur-sm dark:bg-background-dark/[.85]">
+<div class="flex items-center gap-2">
+<button class="flex size-10 shrink-0 items-center justify-center text-zinc-500 dark:text-zinc-400">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<div class="flex flex-col">
+<h1 class="text-lg font-bold leading-tight tracking-[-0.015em] text-zinc-900 dark:text-white">Thread</h1>
+<p class="text-sm font-medium leading-normal text-zinc-500 dark:text-zinc-400">15 Replies</p>
+</div>
+</div>
+<div class="flex w-10 shrink-0 items-center justify-end"></div>
+</header>
+<!-- Messages Container -->
+<main class="flex-1 overflow-y-auto">
+<div class="flex flex-col gap-2 p-4">
+<!-- Original Message -->
+<div class="flex flex-col gap-3 rounded-xl border border-white/10 bg-zinc-200/50 p-4 dark:bg-zinc-800/50">
+<div class="flex gap-3">
+<img class="size-10 shrink-0 rounded-full object-cover" data-alt="Portrait of Olivia Reed" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUbZ9d6xrsFolrp67JKI3vrmRv9zz45RYFgkQRJ16pPe5dujRehzPOI8fuj6D5kboui4ac3eWuFaceDT_U5DXHOpKsC7KJAW5Ps9tWj2KuW9DesfVV1VmXvgZ93GPOGhgYHvIC5OBx67KN194D8m6w6hrj_XvM6lFS1g5GKMzNFkqapaqRpmfcd9pQCUd6eewhG-3oIoNu2V8u3vXk6yIBA41oQUAXFAyV-mhrmR7xMcnbYK466Y6hg-MZO6NnEPm46CGBEILoKMSS"/>
+<div class="flex flex-1 flex-col items-stretch gap-2">
+<div class="flex flex-col gap-1">
+<div class="flex flex-wrap items-center gap-2">
+<p class="text-base font-bold leading-tight text-zinc-900 dark:text-white">Olivia Reed</p>
+<p class="text-sm font-normal leading-normal text-zinc-500 dark:text-zinc-400">10:41 AM</p>
+</div>
+<p class="text-base font-normal leading-normal text-zinc-800 dark:text-zinc-200">
+                                    This is the original message that started the thread. It's important to make it stand out so users have context for the entire conversation.
+                                </p>
+</div>
+</div>
+</div>
+</div>
+<div class="h-4"></div>
+<!-- Reply Message -->
+<div class="flex items-start gap-3">
+<img class="size-10 shrink-0 rounded-full object-cover" data-alt="Portrait of Ben Carter" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkOGCkimfOB0omF-pZgznN2mMyy5xjFFsl1VvCNHLs53MSGJujY-yWdhBqzlpzkEusuM0OwqNGlktp8rzs698qdzxEpTpcxohDWLo-YNqn7sDEwwjQdTxtaoqAdy_MwFJR2wfnWPFRWOOyThRhP9N92h15yUlMzQ7UqCydcgLoFIftGANhNmYuZvMfGJcquwAvyeAhQ1R07BbA-AFJ83ZcI1eCfjLO6WmLxBuW_p5z1eMmmEnxo9Mc-EX7ntUCgwKTaMY3mKCkapYd"/>
+<div class="flex flex-1 flex-col items-start gap-1">
+<p class="text-[13px] font-medium leading-normal text-zinc-500 dark:text-zinc-400">Ben Carter</p>
+<div class="flex max-w-[80%] rounded-lg rounded-tl-none bg-zinc-200 px-3 py-2 dark:bg-zinc-800">
+<p class="text-base font-normal leading-normal text-zinc-900 dark:text-white">I agree! This is the first reply in the thread.</p>
+</div>
+</div>
+</div>
+<!-- Reply Message (Yours) -->
+<div class="flex items-start justify-end gap-3">
+<div class="flex flex-1 flex-col items-end gap-1">
+<p class="text-[13px] font-medium leading-normal text-zinc-500 dark:text-zinc-400">You</p>
+<div class="flex max-w-[80%] rounded-lg rounded-tr-none bg-primary px-3 py-2 text-white">
+<p class="text-base font-normal leading-normal">Totally. The context is key.</p>
+</div>
+</div>
+</div>
+<!-- Nested Reply Message -->
+<div class="ml-8 flex items-start gap-3 border-l-2 border-primary/20 pl-4">
+<img class="size-10 shrink-0 rounded-full object-cover" data-alt="Portrait of Sophie Chen" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_zhLaZFiH1U3x1_Wvjr3Unfr4WB-gPFi1fywwwFXf3qbaPgx8buzs5drH46lpVqZuRoCsvCaGZ_AgyAv17sVzKYOft6wpfFSBg6JAL_9M3exYBlN7Q5uAXoY0GPf4mQKkL5-bCHMxJpWewD2_L14Xx-rniEE3edkJh2kykSah6fL0pBw_wBplrZ-t0wdPf0PRWUnuJqVdvGsvm7EQg8qBcFTV1aiutrCnG3I3FS0iisM6HDC19Jq7dcX0XQRb0ViB6Lmt3evaEy9i"/>
+<div class="flex flex-1 flex-col items-start gap-1">
+<p class="text-[13px] font-medium leading-normal text-zinc-500 dark:text-zinc-400">Sophie Chen</p>
+<div class="flex max-w-[80%] rounded-lg rounded-tl-none bg-zinc-200 px-3 py-2 dark:bg-zinc-800">
+<p class="text-base font-normal leading-normal text-zinc-900 dark:text-white">
+                                This is a nested reply, indented to show it's a response to Ben's message.
+                            </p>
+</div>
+</div>
+</div>
+<!-- Deeper Nested Reply (Yours) -->
+<div class="ml-8 flex items-start justify-end gap-3 border-l-2 border-primary/20 pl-4">
+<div class="flex flex-1 flex-col items-end gap-1">
+<p class="text-[13px] font-medium leading-normal text-zinc-500 dark:text-zinc-400">You</p>
+<div class="flex max-w-[80%] rounded-lg rounded-tr-none bg-primary px-3 py-2 text-white">
+<p class="text-base font-normal leading-normal">And this is my reply within the nested conversation.</p>
+</div>
+</div>
+</div>
+<!-- Another Reply -->
+<div class="flex items-start gap-3">
+<img class="size-10 shrink-0 rounded-full object-cover" data-alt="Portrait of Mark Johnson" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_kRrcOlOwGmCh7q4beDuUknWQigijiztLQih_iWN-99hgNiIoG7JzEpO132h1LRXUZ9_bP-o4n4q0ifQfaJa6KViB1X-gX1DJSTcFHQybSvXCzlDn00dXtoXczw-BIiSJIL4qIckJKbnUJkCbcR0_EzqabrbbL1CDAR8jkkBRVWszQlS8jxx8wWDHFo50AMatSzJVffERoQJhlFfahqBz33E8A1tkwbYXLuGERIumn7xt6Za2V5fJD1Lz_v8t7lkTngBbyNuMzAu3"/>
+<div class="flex flex-1 flex-col items-start gap-1">
+<p class="text-[13px] font-medium leading-normal text-zinc-500 dark:text-zinc-400">Mark Johnson</p>
+<div class="flex max-w-[80%] rounded-lg rounded-tl-none bg-zinc-200 px-3 py-2 dark:bg-zinc-800">
+<p class="text-base font-normal leading-normal text-zinc-900 dark:text-white">Just catching up now. Great point, Olivia!</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Threaded Reply Input Field -->
+<footer class="sticky bottom-0 mt-auto flex shrink-0 items-end gap-2 border-t border-white/10 bg-background-light p-3 dark:bg-background-dark">
+<button class="flex size-10 shrink-0 items-center justify-center rounded-full text-zinc-500 hover:bg-zinc-200 dark:text-zinc-400 dark:hover:bg-zinc-800">
+<span class="material-symbols-outlined text-2xl">add</span>
+</button>
+<div class="flex flex-1 items-center rounded-full bg-zinc-200 px-4 dark:bg-zinc-800">
+<input class="h-10 flex-1 border-none bg-transparent text-base text-zinc-900 placeholder:text-zinc-500 focus:ring-0 dark:text-white dark:placeholder:text-zinc-400" placeholder="Reply in thread" type="text"/>
+<button class="flex size-8 shrink-0 items-center justify-center text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200">
+<span class="material-symbols-outlined text-2xl">mood</span>
+</button>
+</div>
+<button class="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-white">
+<span class="material-symbols-outlined text-2xl">send</span>
+</button>
+</footer>
+</div>
+</body></html>

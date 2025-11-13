@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13a4ec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101c22",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative mx-auto flex h-auto min-h-screen w-full max-w-md flex-col overflow-x-hidden bg-background-light dark:bg-background-dark">
+<!-- Top App Bar -->
+<div class="flex shrink-0 items-center justify-between p-4 pb-2">
+<div class="flex size-12 shrink-0 items-center text-slate-800 dark:text-white">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</div>
+<h2 class="flex-1 text-lg font-bold leading-tight tracking-[-0.015em] text-slate-900 dark:text-white">Settings</h2>
+<div class="flex w-12 items-center justify-end">
+<p class="shrink-0 text-base font-bold leading-normal tracking-[0.015em] text-primary">Edit</p>
+</div>
+</div>
+<div class="flex-1 space-y-8 p-4">
+<!-- User Profile Card -->
+<div class="flex items-center gap-4">
+<div class="h-16 w-16 shrink-0 rounded-full bg-cover bg-center bg-no-repeat" data-alt="Profile picture of a woman with curly hair" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDQUb7W5NCNNGzPUSW03aJWrzL8M6O0fZfhuiWWA15MPfoMPoOAvpbS4KaQXdClB7-IwIxWsXDZykfmZNC9zv57PvVhztgem74RfGXB3L6BQKgyAwJAURQmlfyb66azKEfTjcdT9-P295nb3t0nUP9F-q_3wPUGGBPPHVVEd6ZMyYBFUwHKfjv6rbSDSBVWDJ94ZnOSAJRn4vSdCu8lCQOeu03tJ1CMfG8TgX-GxPJwlh2OxytjK_5ciui2XBd3_2VKTdg9ZKjeyAP9");'></div>
+<div class="flex flex-1 flex-col justify-center">
+<p class="line-clamp-1 text-base font-medium leading-normal text-slate-900 dark:text-white">Esther Howard</p>
+<p class="line-clamp-2 text-sm font-normal leading-normal text-slate-500 dark:text-slate-400">+1 (234) 567-8900</p>
+</div>
+<div class="shrink-0">
+<div class="flex size-7 items-center justify-center text-slate-800 dark:text-white">
+<span class="material-symbols-outlined text-2xl">qr_code_2</span>
+</div>
+</div>
+</div>
+<!-- Settings Sections -->
+<div class="space-y-6">
+<!-- Main Settings Group -->
+<div class="flex flex-col rounded-xl bg-slate-100 dark:bg-slate-900/50">
+<div class="flex items-center justify-between gap-4 px-4 pt-4 pb-2 min-h-14">
+<div class="flex items-center gap-4">
+<div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/20 text-primary">
+<span class="material-symbols-outlined text-2xl">notifications</span>
+</div>
+<p class="flex-1 truncate text-base font-normal leading-normal text-slate-900 dark:text-white">Notifications and Sounds</p>
+</div>
+<div class="shrink-0">
+<div class="flex size-7 items-center justify-center text-slate-400 dark:text-slate-500">
+<span class="material-symbols-outlined text-2xl">chevron_right</span>
+</div>
+</div>
+</div>
+<div class="mx-4 h-px bg-slate-200 dark:bg-slate-800"></div>
+<div class="flex items-center justify-between gap-4 px-4 py-2 min-h-14">
+<div class="flex items-center gap-4">
+<div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/20 text-primary">
+<span class="material-symbols-outlined text-2xl">lock</span>
+</div>
+<p class="flex-1 truncate text-base font-normal leading-normal text-slate-900 dark:text-white">Privacy and Security</p>
+</div>
+<div class="shrink-0">
+<div class="flex size-7 items-center justify-center text-slate-400 dark:text-slate-500">
+<span class="material-symbols-outlined text-2xl">chevron_right</span>
+</div>
+</div>
+</div>
+<div class="mx-4 h-px bg-slate-200 dark:bg-slate-800"></div>
+<div class="flex items-center justify-between gap-4 px-4 py-2 min-h-14">
+<div class="flex items-center gap-4">
+<div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/20 text-primary">
+<span class="material-symbols-outlined text-2xl">database</span>
+</div>
+<p class="flex-1 truncate text-base font-normal leading-normal text-slate-900 dark:text-white">Data and Storage</p>
+</div>
+<div class="shrink-0">
+<div class="flex size-7 items-center justify-center text-slate-400 dark:text-slate-500">
+<span class="material-symbols-outlined text-2xl">chevron_right</span>
+</div>
+</div>
+</div>
+<div class="mx-4 h-px bg-slate-200 dark:bg-slate-800"></div>
+<div class="flex items-center justify-between gap-4 px-4 py-2 min-h-14">
+<div class="flex items-center gap-4">
+<div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/20 text-primary">
+<span class="material-symbols-outlined text-2xl">palette</span>
+</div>
+<p class="flex-1 truncate text-base font-normal leading-normal text-slate-900 dark:text-white">Appearance</p>
+</div>
+<div class="shrink-0">
+<div class="flex size-7 items-center justify-center text-slate-400 dark:text-slate-500">
+<span class="material-symbols-outlined text-2xl">chevron_right</span>
+</div>
+</div>
+</div>
+<div class="mx-4 h-px bg-slate-200 dark:bg-slate-800"></div>
+<div class="flex items-center justify-between gap-4 px-4 pt-2 pb-4 min-h-14">
+<div class="flex items-center gap-4">
+<div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/20 text-primary">
+<span class="material-symbols-outlined text-2xl">language</span>
+</div>
+<p class="flex-1 truncate text-base font-normal leading-normal text-slate-900 dark:text-white">Language</p>
+</div>
+<div class="shrink-0">
+<div class="flex size-7 items-center justify-center text-slate-400 dark:text-slate-500">
+<span class="material-symbols-outlined text-2xl">chevron_right</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Support Group -->
+<div class="flex flex-col rounded-xl bg-slate-100 dark:bg-slate-900/50">
+<div class="flex items-center justify-between gap-4 px-4 pt-4 pb-2 min-h-14">
+<div class="flex items-center gap-4">
+<div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/20 text-primary">
+<span class="material-symbols-outlined text-2xl">help</span>
+</div>
+<p class="flex-1 truncate text-base font-normal leading-normal text-slate-900 dark:text-white">Ask a Question</p>
+</div>
+<div class="shrink-0">
+<div class="flex size-7 items-center justify-center text-slate-400 dark:text-slate-500">
+<span class="material-symbols-outlined text-2xl">chevron_right</span>
+</div>
+</div>
+</div>
+<div class="mx-4 h-px bg-slate-200 dark:bg-slate-800"></div>
+<div class="flex items-center justify-between gap-4 px-4 pt-2 pb-4 min-h-14">
+<div class="flex items-center gap-4">
+<div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/20 text-primary">
+<span class="material-symbols-outlined text-2xl">policy</span>
+</div>
+<p class="flex-1 truncate text-base font-normal leading-normal text-slate-900 dark:text-white">Privacy Policy</p>
+</div>
+<div class="shrink-0">
+<div class="flex size-7 items-center justify-center text-slate-400 dark:text-slate-500">
+<span class="material-symbols-outlined text-2xl">chevron_right</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body></html>

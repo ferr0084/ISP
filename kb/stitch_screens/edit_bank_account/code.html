@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Edit Bank Account</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#13a4ec",
+              "background-light": "#f6f7f8",
+              "background-dark": "#101c22",
+            },
+            fontFamily: {
+              "display": ["Manrope", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative mx-auto flex h-auto min-h-screen w-full max-w-md flex-col overflow-x-hidden">
+<!-- Top App Bar -->
+<header class="flex items-center p-4 pb-2 justify-between sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm">
+<button class="text-slate-800 dark:text-white flex size-10 shrink-0 items-center justify-center">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<h1 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center -ml-10">Edit Bank Account</h1>
+</header>
+<main class="flex-1 flex flex-col px-4 pt-6 pb-4">
+<!-- Bank Info -->
+<div class="flex flex-col items-center gap-4 py-4 mb-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-20 border-4 border-slate-200 dark:border-slate-700" data-alt="Bank of America logo" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDSBsQQ3LBzmi3006GJ2O0SakodkCt3yLpGkA95Qn3WWIqKg0Qsp-4Rqebk8LXYdsoIZpfZzFjyyCSotcommGP-nBXu-LmWpyccYweyCf-CSodC6deHewGNoSOC6qigX7TJ4AY9jMAlo4s7tIFOeB0sCgAUNum7z0ZmLcSz5JADFc8r12VzsZvz0_mS7tgDpBJ18q2W0bG5bAVCCk20LHT68q8XxXrWyRylBU3dSxAXauYXFEiesCxN__jiSDRP3ZORprGOusB1_t1h");'></div>
+<p class="text-slate-900 dark:text-white text-xl font-bold leading-normal">Bank of America</p>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-normal">Checking Account</p>
+</div>
+<!-- Form Fields -->
+<div class="flex flex-col gap-4">
+<!-- Account Nickname -->
+<label class="flex flex-col w-full">
+<p class="text-slate-800 dark:text-white text-base font-medium leading-normal pb-2">Account Nickname</p>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-slate-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 focus:border-primary h-14 placeholder:text-slate-400 dark:placeholder:text-slate-500 p-4 text-base font-normal leading-normal" value="My Checking Account"/>
+</label>
+<!-- Account Holder Name -->
+<label class="flex flex-col w-full">
+<p class="text-slate-800 dark:text-white text-base font-medium leading-normal pb-2">Account Holder Name</p>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-slate-500 dark:text-slate-400 focus:outline-0 focus:ring-0 border border-slate-300 dark:border-slate-700 bg-slate-200/50 dark:bg-slate-800/50 h-14 placeholder:text-slate-400 dark:placeholder:text-slate-500 p-4 text-base font-normal leading-normal" readonly="" value="John Doe"/>
+</label>
+<!-- Account Number -->
+<label class="flex flex-col w-full">
+<p class="text-slate-800 dark:text-white text-base font-medium leading-normal pb-2">Account Number</p>
+<div class="flex w-full flex-1 items-stretch rounded-lg">
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-slate-500 dark:text-slate-400 focus:outline-0 focus:ring-0 border border-slate-300 dark:border-slate-700 bg-slate-200/50 dark:bg-slate-800/50 h-14 placeholder:text-slate-400 dark:placeholder:text-slate-500 p-4 rounded-r-none border-r-0 pr-2 text-base font-normal leading-normal" readonly="" value="•••• •••• •••• 1234"/>
+<div class="text-slate-500 dark:text-slate-400 flex border border-slate-300 dark:border-slate-700 bg-slate-200/50 dark:bg-slate-800/50 items-center justify-center px-4 rounded-r-lg border-l-0">
+<span class="material-symbols-outlined text-xl">lock</span>
+</div>
+</div>
+</label>
+</div>
+<!-- Default Toggle -->
+<div class="flex justify-between items-center bg-slate-100 dark:bg-slate-800 p-4 rounded-lg mt-6">
+<label class="text-slate-800 dark:text-white font-medium cursor-pointer" for="default-toggle">Set as default payment method</label>
+<div class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" id="default-toggle" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-slate-300 dark:bg-slate-700 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-primary"></div>
+</div>
+</div>
+<!-- Spacer -->
+<div class="flex-grow"></div>
+<!-- Action Buttons -->
+<div class="flex flex-col gap-4 pt-6">
+<button class="flex items-center justify-center w-full h-14 px-6 bg-primary text-white text-base font-bold rounded-xl hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-background-dark disabled:opacity-50" disabled="">
+                    Save Changes
+                </button>
+<button class="flex items-center justify-center w-full h-14 px-6 bg-transparent text-red-500 dark:text-red-500 text-base font-bold rounded-xl hover:bg-red-500/10 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-background-dark">
+                    Delete Bank Account
+                </button>
+</div>
+</main>
+</div>
+</body></html>

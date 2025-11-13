@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Events Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#0088cc",
+              "background-light": "#F2F2F7",
+              "background-dark": "#101c22",
+            },
+            fontFamily: {
+              "display": ["Plus Jakarta Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "0.75rem", "xl": "1rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-display">
+<div class="relative mx-auto flex h-auto min-h-screen w-full max-w-md flex-col bg-background-light dark:bg-background-dark group/design-root overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-10">
+<div class="flex size-12 shrink-0 items-center justify-start text-zinc-900 dark:text-white">
+<!-- Placeholder for back button or menu icon -->
+</div>
+<h1 class="text-zinc-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">Events</h1>
+<div class="flex w-12 items-center justify-end">
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 bg-transparent text-primary gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 p-0">
+<span class="material-symbols-outlined text-3xl">add_circle</span>
+</button>
+</div>
+</header>
+<!-- SegmentedButtons -->
+<div class="flex px-4 py-3">
+<div class="flex h-10 flex-1 items-center justify-center rounded-lg bg-zinc-200 dark:bg-zinc-800 p-1">
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-md px-2 has-[:checked]:bg-background-light has-[:checked]:dark:bg-zinc-900 has-[:checked]:shadow-sm has-[:checked]:text-zinc-900 has-[:checked]:dark:text-white text-zinc-500 dark:text-zinc-400 text-sm font-medium leading-normal transition-colors duration-200">
+<span class="truncate">List</span>
+<input checked="" class="invisible w-0" name="view-toggle" type="radio" value="List"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-md px-2 has-[:checked]:bg-background-light has-[:checked]:dark:bg-zinc-900 has-[:checked]:shadow-sm has-[:checked]:text-zinc-900 has-[:checked]:dark:text-white text-zinc-500 dark:text-zinc-400 text-sm font-medium leading-normal transition-colors duration-200">
+<span class="truncate">Calendar</span>
+<input class="invisible w-0" name="view-toggle" type="radio" value="Calendar"/>
+</label>
+</div>
+</div>
+<!-- List View Content -->
+<main class="flex flex-col flex-1 pb-4">
+<!-- SectionHeader: Pending Invitations -->
+<h2 class="text-zinc-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">Pending Invitations</h2>
+<!-- Card: Pending -->
+<div class="px-4 py-2">
+<div class="flex flex-col gap-4 rounded-lg bg-white dark:bg-zinc-900 p-4 shadow-sm">
+<div class="flex flex-col gap-1">
+<p class="text-orange-500 text-sm font-medium leading-normal">Pending</p>
+<p class="text-zinc-900 dark:text-white text-base font-bold leading-tight">Quarterly Design Review</p>
+<p class="text-zinc-500 dark:text-zinc-400 text-sm font-normal leading-normal">Fri, Nov 15, 2:00 PM • Design Team Chat</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-9 px-5 flex-1 bg-primary text-white text-sm font-medium leading-normal">
+<span class="truncate">Accept</span>
+</button>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-9 px-5 flex-1 bg-zinc-200 dark:bg-zinc-800 text-zinc-900 dark:text-white text-sm font-medium leading-normal">
+<span class="truncate">Decline</span>
+</button>
+</div>
+</div>
+</div>
+<!-- SectionHeader: Upcoming Events -->
+<h2 class="text-zinc-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-6">Upcoming Events</h2>
+<!-- Card: Upcoming Accepted -->
+<div class="px-4 py-2">
+<div class="flex items-stretch justify-between gap-4 rounded-lg bg-white dark:bg-zinc-900 p-4 shadow-sm">
+<div class="flex flex-[2_2_0px] flex-col gap-2">
+<div class="flex flex-col gap-1">
+<p class="text-teal-500 text-sm font-medium leading-normal">Accepted</p>
+<p class="text-zinc-900 dark:text-white text-base font-bold leading-tight">Team Sync &amp; Brainstorm</p>
+<p class="text-zinc-500 dark:text-zinc-400 text-sm font-normal leading-normal">Mon, Oct 28, 10:00 AM • Product Crew</p>
+</div>
+</div>
+<div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg flex-1" data-alt="Abstract gradient of blue and purple" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAWDRkZJ23aGV6IBoYX7iVrzmdoVYz4Pf8sxqjrGu79XSHc-6109sFH_hCrI3b4oyhswV8BYQaCrISruYfBrNjLG995Pur9c4K55o3XvlDkryrfC3Oaa7fgmRO3VDF8sa2EhbBPla020fRL3YZa2jTEiuA02nffBnmB86pwbK_ry_51HzENejbFJ8XLC_rh4U3jn22lg7O7r3PRpv9IgKpXUzKmN-BJikIKxZy0SJXE_3arj3YYE63nqmvUmvSrrK9eMzRSXWLoR08G");'></div>
+</div>
+</div>
+<!-- Card: Upcoming Accepted -->
+<div class="px-4 py-2">
+<div class="flex items-stretch justify-between gap-4 rounded-lg bg-white dark:bg-zinc-900 p-4 shadow-sm">
+<div class="flex flex-[2_2_0px] flex-col gap-2">
+<div class="flex flex-col gap-1">
+<p class="text-teal-500 text-sm font-medium leading-normal">Accepted</p>
+<p class="text-zinc-900 dark:text-white text-base font-bold leading-tight">Project Phoenix Kick-off</p>
+<p class="text-zinc-500 dark:text-zinc-400 text-sm font-normal leading-normal">Wed, Oct 30, 9:00 AM • Engineering All-Hands</p>
+</div>
+</div>
+<div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg flex-1" data-alt="Geometric pattern in shades of teal and gray" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAmO7NR1gQIR0LdgGmtljpVDNTBNtDDQi9WZYN2PG_zeerkCiovfHeRPy3arXVgNaMpj_ei0ije-8oFykfGv1vuX4sVuQOYXBBrE-V0GYO6wnAb0YUBLuEuQ1cKjXVouWsZA9ZRBUV-9qW1OmjRFhFNzApua5iPljQQrnOwy9ciqVn05LOttfbQDXCYvpGOA6GMypKW-7NE-oHbagzqJviTmdV6HP5MDy5ksiQqIOgaizZSGNq4bTOcDtnZPnFYr_feBAuUVMYXssEQ");'></div>
+</div>
+</div>
+<!-- Empty State (Example) -->
+<div class="flex flex-col items-center justify-center text-center p-10 mt-8 hidden">
+<div class="flex items-center justify-center w-24 h-24 rounded-full bg-primary/10 mb-6">
+<span class="material-symbols-outlined text-primary text-5xl">event_busy</span>
+</div>
+<h3 class="text-zinc-900 dark:text-white text-lg font-bold">No Events Yet</h3>
+<p class="text-zinc-500 dark:text-zinc-400 mt-1 max-w-xs">Create a new event or wait for an invitation to get started.</p>
+</div>
+</main>
+</div>
+</body></html>

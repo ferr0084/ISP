@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Chat Screen</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#13a4ec",
+              "background-light": "#f6f7f8",
+              "background-dark": "#101c22",
+            },
+            fontFamily: {
+              "display": ["Plus Jakarta Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark">
+<div class="relative mx-auto flex h-screen max-h-screen w-full max-w-md flex-col overflow-hidden bg-background-light dark:bg-background-dark font-display group/design-root" style='font-family: "Plus Jakarta Sans", "Noto Sans", sans-serif;'>
+<!-- Top App Bar -->
+<div class="flex shrink-0 items-center justify-between border-b border-white/10 bg-background-light dark:bg-background-dark/[.6] p-4 backdrop-blur-sm">
+<div class="flex items-center gap-3">
+<button class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-black dark:text-white">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<div class="flex items-center gap-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 shrink-0" data-alt="Profile picture of Alex Weber" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCkgIdbxT4fbzMAWMl1d-MchEOe0K5UxobP_GmsV-UbfvxOwerTbaSq513YhwG40wxTcE6y5nSIDQ_9Fdlo4RbvIiAX5yFacAZ0bcfom-dYTC3Q0FT4MGGc8EJmjQaDkMYVo1NxNOjYnEbR_9lTMTW1Gk_EUbEgDN4dlqEGit9uHwt6s0JH4nxa9g-_togq0hUgghO8Ve8Yp681A4WsH90XaT4omdCTTOACGAg8bCl-YDYFFXmL9ECU-Ln8ELZdcXfSMklOD0oaRyUq");'></div>
+<div class="flex flex-col">
+<h2 class="text-base font-bold leading-tight tracking-[-0.015em] text-black dark:text-white">Alex Weber</h2>
+<p class="text-sm font-normal text-primary">online</p>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-end gap-1">
+<button class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-black dark:text-white">
+<span class="material-symbols-outlined text-2xl">call</span>
+</button>
+<button class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-black dark:text-white">
+<span class="material-symbols-outlined text-2xl">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Chat History -->
+<div class="flex flex-1 flex-col-reverse overflow-y-auto px-4 pt-4">
+<div class="flex flex-col gap-4 pb-4">
+<!-- Date Separator -->
+<div class="flex items-center justify-center py-2">
+<div class="rounded-full bg-black/10 px-3 py-1 text-xs font-medium text-black/60 dark:bg-white/10 dark:text-white/60">TODAY</div>
+</div>
+<!-- Incoming Message -->
+<div class="flex items-end gap-2.5">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full w-8 shrink-0 self-end" data-alt="Profile picture of Alex Weber" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBfh5Zd6TEHdcE459etNDCJM0Uib9Tzkvsh6S_nAiF9GlFKEq51lVMdmFTpgVNU7qWxgcZQDFrn-cQCi0CRnHOX8zP5FzNnCvTXQKt0A5Ar6sXeFTInoINUILBGgqwnso4rODyo_Va1oxLp5pomqIBvIHIVbPSLQsUBOknzOFiwBYxwW8P269EM8sJ4GNBJiuZiyd0yRaVOZajCIS3M-JSz6PbYR5PLjz2niCdMlHYAA3F8yjivff1GCdR70eWtC3NnW7XfF6wqPaOd");'></div>
+<div class="flex max-w-[80%] flex-col gap-1 items-start">
+<div class="flex items-baseline gap-2">
+<p class="text-base font-normal leading-normal flex max-w-[360px] rounded-xl rounded-bl-sm px-4 py-2.5 bg-white dark:bg-[#283339] text-black dark:text-white">
+                                Sounds perfect! See you then. Can't wait!
+                            </p>
+</div>
+</div>
+</div>
+<!-- Outgoing Message -->
+<div class="flex items-end gap-2.5 justify-end">
+<div class="flex max-w-[80%] flex-col gap-1 items-end">
+<div class="flex items-baseline gap-2">
+<p class="text-base font-normal leading-normal flex max-w-[360px] rounded-xl rounded-br-sm px-4 py-2.5 bg-primary/20 dark:bg-primary/30 text-black dark:text-white">
+                                 Absolutely! I was thinking of that new Italian place downtown. Around 1pm?
+                             </p>
+</div>
+</div>
+</div>
+<!-- Incoming Message -->
+<div class="flex items-end gap-2.5">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full w-8 shrink-0 self-end" data-alt="Profile picture of Alex Weber" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAIsSYmyJwgV4AGmcSXVA9UiClPIrWVG3k4U__Bj9cr8aMNOKZcb0BMjGAT-WYryLhD_A8yUdp1FZt1jnXIKIaSPWU1TY7rcwJc4Cul3RqB_QPsNIMNRKJHC6tJiaycWgDsdv9mXbyIW5sGjyv1Z95q7IT_rVYgRNGxt2EvNamRCp4ciAilyw4z_y86UaqDVqN-Q5pWHsUahUUU7ebN4wdXy873SOptE52wqY0pVKKlWCUwSVdglM2z75RzO74jzBXhtzvUZ4W8secN");'></div>
+<div class="flex max-w-[80%] flex-col gap-1 items-start">
+<div class="flex items-baseline gap-2">
+<p class="text-base font-normal leading-normal flex max-w-[360px] rounded-xl rounded-bl-sm px-4 py-2.5 bg-white dark:bg-[#283339] text-black dark:text-white">
+                                Hey! How's it going? Are we still on for lunch tomorrow?
+                            </p>
+</div>
+</div>
+</div>
+<!-- Date Separator -->
+<div class="flex items-center justify-center py-2">
+<div class="rounded-full bg-black/10 px-3 py-1 text-xs font-medium text-black/60 dark:bg-white/10 dark:text-white/60">YESTERDAY</div>
+</div>
+<!-- Incoming Message with Image -->
+<div class="flex items-end gap-2.5">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full w-8 shrink-0 self-end" data-alt="Profile picture of Alex Weber" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAh8sou2qrfWR1g08sj_C8PBdd5AdWg8Q0C8ddCJLL0OecxdfNAgYeBC-CreqywiozmGlZFvNbu_sPE2N3X4W19Z3bh-bzc75G_kZH8PN3owR1L_WGmvS43F8UmV8VydVqHCDfgeJ5oPnI1GCK0JKHgx2k4KTXyJVIq5m1L_oCTHiDVYYkZqMLEeHEah6Gr84xPYYKHXx10gwU9-DQawk__ZAbiIZNSWAQQS1gV15b-XGNAsVRVNMjv2uPpHLXCNw901VedxYg9EYO0");'></div>
+<div class="flex max-w-[80%] flex-col gap-1 items-start">
+<div class="overflow-hidden rounded-xl rounded-bl-sm">
+<img class="w-64 h-auto object-cover" data-alt="A delicious grilled dish with lemon and herbs" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKv4XHeo3C2c_H_ldCAbHgp7_rV3q4BixjTO-W3FbnyWc9NUuiVBe-Q9gnya6nLYGC8oj9sjQrE2pCbrqLQ8zZf7a8snprBjuVoipkziaF6P12VRbf2t7DvOzsHir_MNo22-ClsYlfqSWe4ogH1-RBfJqPWP8vZHJ0PRhmwr5ZpDcQbP7MTsNrAQALIg5CRU4g5SIQMqAY1Iuadwkcr0mw6_knup3kIupPqQG98CjL41BC3qLNMJAkl9rqdrk5O3W4jFdE2qpP9I5b"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Composer / Message Input Bar -->
+<div class="flex shrink-0 items-center gap-3 border-t border-white/10 bg-background-light dark:bg-background-dark/[.6] px-4 py-3 backdrop-blur-sm @container">
+<button class="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full text-black/60 dark:text-white/70">
+<span class="material-symbols-outlined text-2xl">add_circle</span>
+</button>
+<label class="flex h-12 flex-1 flex-col min-w-40">
+<div class="flex h-full w-full flex-1 items-stretch rounded-full">
+<div class="relative flex flex-1">
+<input class="form-input h-full w-full min-w-0 flex-1 resize-none overflow-hidden rounded-full border-none bg-white dark:bg-[#283339] px-5 pr-12 text-base font-normal leading-normal text-black dark:text-white placeholder:text-black/50 dark:placeholder:text-[#9db0b9] focus:border-none focus:outline-0 focus:ring-0" placeholder="Message" value=""/>
+<button class="absolute right-0 top-0 flex h-full w-12 items-center justify-center p-1.5 text-black/60 dark:text-white/70">
+<span class="material-symbols-outlined text-2xl">sentiment_satisfied</span>
+</button>
+</div>
+</div>
+</label>
+<button class="flex h-12 w-12 shrink-0 cursor-pointer items-center justify-center rounded-full bg-primary text-white">
+<span class="material-symbols-outlined text-2xl">mic</span>
+</button>
+</div>
+</div>
+</body></html>

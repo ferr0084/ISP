@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Idiot Player Profile</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#007AFF",
+              "background-light": "#f2f2f7",
+              "background-dark": "#101c22",
+              "text-light-primary": "#1c1c1e",
+              "text-dark-primary": "#ffffff",
+              "text-light-secondary": "#8e8e93",
+              "text-dark-secondary": "#9db0b9",
+              "card-light": "#ffffff",
+              "card-dark": "#1c2a33",
+              "border-light": "#e5e7eb",
+              "border-dark": "#3b4b54"
+            },
+            fontFamily: {
+              "display": ["Plus Jakarta Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "0.75rem", "xl": "1rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-display bg-background-light dark:bg-background-dark">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<!-- Top App Bar -->
+<div class="flex items-center p-4 pb-2 justify-between sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm">
+<div class="flex size-12 shrink-0 items-center">
+<button class="flex items-center justify-center rounded-full h-10 w-10 text-text-light-primary dark:text-text-dark-primary">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+</div>
+<h2 class="text-text-light-primary dark:text-text-dark-primary text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">@elenasmith</h2>
+<div class="flex w-12 items-center justify-end">
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 w-10 text-text-light-primary dark:text-text-dark-primary">
+<span class="material-symbols-outlined text-2xl">ios_share</span>
+</button>
+</div>
+</div>
+<!-- Profile Header -->
+<div class="flex p-4 @container">
+<div class="flex w-full flex-col gap-4 items-center">
+<div class="flex gap-4 flex-col items-center">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full min-h-32 w-32" data-alt="Profile picture of Elena Smith" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBGeKr6_yWLp4RKK-y-F9iu3usnmiVhfqwL0eYPMYcHUYga9sF4-9Q98XiTiY-tkj4nCScUmlIUFh8AUSL2cAyzUl4Z_FRL3VLvJ0-C8nyXEHfbRXGD61MDfFArZmsAYbtR40s6lMcWRQ2RkMVEaGN7z0TCy695reUi210FccTOfYZDDy5DgV3I0Dt8FsqZBXKy8ZWP_JuRgbj2IBG_HXsIC2_Je7xtTzolBxZ2hKI4rhUV-j7_R43S6lQn4Ps1fGnLB9dERdGVGL5M");'></div>
+<div class="flex flex-col items-center justify-center">
+<p class="text-text-light-primary dark:text-text-dark-primary text-[22px] font-bold leading-tight tracking-[-0.015em] text-center">Elena Smith</p>
+<p class="text-text-light-secondary dark:text-text-dark-secondary text-base font-normal leading-normal text-center">Member since 2023</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Primary Statistic Display -->
+<div class="px-4 pb-4">
+<div class="flex flex-col items-center justify-center gap-2 rounded-xl p-6 bg-[#FF3B30]/10 dark:bg-[#FF3B30]/20">
+<p class="text-5xl font-bold text-[#FF3B30]">7</p>
+<p class="text-base font-medium text-[#FF3B30]/80 dark:text-[#FF3B30]">Times Been the Idiot</p>
+</div>
+</div>
+<!-- Stats Grid -->
+<div class="flex flex-wrap gap-4 p-4">
+<div class="flex min-w-[158px] flex-1 flex-col gap-2 rounded-lg p-4 bg-card-light dark:bg-card-dark border border-border-light dark:border-border-dark">
+<p class="text-text-light-secondary dark:text-text-dark-secondary text-sm font-medium leading-normal">Win/Loss Ratio</p>
+<p class="text-text-light-primary dark:text-text-dark-primary tracking-light text-2xl font-bold leading-tight">2.5</p>
+</div>
+<div class="flex min-w-[158px] flex-1 flex-col gap-2 rounded-lg p-4 bg-card-light dark:bg-card-dark border border-border-light dark:border-border-dark">
+<p class="text-text-light-secondary dark:text-text-dark-secondary text-sm font-medium leading-normal">Winning Streak</p>
+<p class="text-text-light-primary dark:text-text-dark-primary tracking-light text-2xl font-bold leading-tight">5</p>
+</div>
+<div class="flex min-w-[158px] flex-1 flex-col gap-2 rounded-lg p-4 bg-card-light dark:bg-card-dark border border-border-light dark:border-border-dark">
+<p class="text-text-light-secondary dark:text-text-dark-secondary text-sm font-medium leading-normal">Games Played</p>
+<p class="text-text-light-primary dark:text-text-dark-primary tracking-light text-2xl font-bold leading-tight">24</p>
+</div>
+</div>
+<!-- Section Header: Badges -->
+<h3 class="text-text-light-primary dark:text-text-dark-primary text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">Badges Earned</h3>
+<!-- Carousel -->
+<div class="flex overflow-y-auto [-ms-scrollbar-style:none] [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden">
+<div class="flex items-stretch px-4 pb-4 gap-4">
+<div class="flex h-full flex-1 flex-col gap-3 text-center rounded-lg min-w-32">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full flex flex-col self-center w-24 h-24" data-alt="First Win badge with a trophy icon" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuALh2AgVnmI9FgnEFG0GUS8YC3eRsR2eRbWlhqaPVCjOO9UJTJuJGacPOMWlasnrW5UJPTNN0nED2FX8dqOJr86Sya1s5BT9YsXCIS1a1Q-vaz9gDM-09sFqRF5WIOeOmsoj-r4WQFdIrieSQK6tv6ME7PK9YWyvZZ6azb6EilDSrAoum0pm67IgD9uUWuP9D7_JjypZIa7oLCQx64zS197kTGCp9yJ99UOBnRHGhNrx75ADKFN--sT60K2q3yvKGbU-NsBtQXm3rRC");'></div>
+<div>
+<p class="text-text-light-primary dark:text-text-dark-primary text-sm font-medium leading-normal">First Win</p>
+<p class="text-text-light-secondary dark:text-text-dark-secondary text-xs font-normal leading-normal">Won first game</p>
+</div>
+</div>
+<div class="flex h-full flex-1 flex-col gap-3 text-center rounded-lg min-w-32">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full flex flex-col self-center w-24 h-24" data-alt="Comeback King badge with a crown icon" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuASNOaYv594PM65nvaoClrfAFinawalrPW1RV-FJTu0ZjHhiq8UAU4nxUAKrpGB4DBecWX9J7TzxnOKuh0hYtYPOy7U_wrPQ03RQpZuw388XhFrKa0bdFfbrmA0XqmgpwmPz2C7JVbokr2RjqaHkiujnZ6wkca9wkicB3IcfSyE2azKlk30Xo0CLZQHsR2KNYxKb5oL4CT5Xy-juGHteriSnvonYI_AOk-ALrYHKF17ED2dkzooMPW_vY7w1uo85BhNMGG3rV-YeZTt");'></div>
+<div>
+<p class="text-text-light-primary dark:text-text-dark-primary text-sm font-medium leading-normal">Comeback King</p>
+<p class="text-text-light-secondary dark:text-text-dark-secondary text-xs font-normal leading-normal">Won after a loss</p>
+</div>
+</div>
+<div class="flex h-full flex-1 flex-col gap-3 text-center rounded-lg min-w-32">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full flex flex-col self-center w-24 h-24" data-alt="5-Game Streak badge with a fire icon" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBMGd3VDfFMJdu4yRvqjEPdQALUGq8MwdROJ-skCHvtMtnt88viizzUv6Bl73UhJG6N6z11Ige_tO1PULT4VrxYQslqVDQ66bHYmW0O-Wz3AII5fU8k4Sgnkw1JpD85ZH7gsj7CZe9D-DZGIb65kxud2yE2haaffKnQQaafrlng5xWqH830W--VgcTmjdmltm_3-oolWOYxpjM4d74jeoE9KHczcljbPoiH8Dh_fNR2wP8txLC6cLmYiQtbhmbJwreXA-vBtf9YrYDx");'></div>
+<div>
+<p class="text-text-light-primary dark:text-text-dark-primary text-sm font-medium leading-normal">5-Game Streak</p>
+<p class="text-text-light-secondary dark:text-text-dark-secondary text-xs font-normal leading-normal">Won 5 in a row</p>
+</div>
+</div>
+<div class="flex h-full flex-1 flex-col gap-3 text-center rounded-lg min-w-32">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full flex flex-col self-center w-24 h-24" data-alt="Good Sport badge with a handshake icon" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB1LdI_IjpP7LwJVNW8xnr0cvcH8fMthdAQugAWG4e-9TO6gbpkWxutq1JoOz_BgjPfh-pHKKlvYkHU-Oswgg2tFgL5e1sXOvTkNxIslolZ94AI8uIPzAcwhmtyHi4_Nhz6HMhGi_h_llKB4NKlt-uYYKCgj-x_Ng0iX-a3Win1iP5Nr58X-f24QJR6cDrQaln6j9-O8kngdzRPfpRyALPCxnfGAePccdQBxgQ6jzpu84M9QGnvtIU7bMK7WmVmyUKLwIPqpaFlHf92");'></div>
+<div>
+<p class="text-text-light-primary dark:text-text-dark-primary text-sm font-medium leading-normal">Good Sport</p>
+<p class="text-text-light-secondary dark:text-text-dark-secondary text-xs font-normal leading-normal">Played 10 games</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Section Header: Game History -->
+<h3 class="text-text-light-primary dark:text-text-dark-primary text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4">Game History</h3>
+<!-- Game History List -->
+<div class="flex flex-col px-4 pb-8 gap-3">
+<div class="flex items-center gap-4 rounded-lg p-4 bg-card-light dark:bg-card-dark border border-border-light dark:border-border-dark">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#FF3B30]/20">
+<span class="material-symbols-outlined text-xl text-[#FF3B30]">sentiment_very_dissatisfied</span>
+</div>
+<div class="flex-1">
+<p class="font-medium text-text-light-primary dark:text-text-dark-primary">Became the Idiot</p>
+<p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">October 26</p>
+</div>
+<span class="material-symbols-outlined text-text-light-secondary dark:text-text-dark-secondary">chevron_right</span>
+</div>
+<div class="flex items-center gap-4 rounded-lg p-4 bg-card-light dark:bg-card-dark border border-border-light dark:border-border-dark">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#34C759]/20">
+<span class="material-symbols-outlined text-xl text-[#34C759]">workspace_premium</span>
+</div>
+<div class="flex-1">
+<p class="font-medium text-text-light-primary dark:text-text-dark-primary">Won the game</p>
+<p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">October 25</p>
+</div>
+<span class="material-symbols-outlined text-text-light-secondary dark:text-text-dark-secondary">chevron_right</span>
+</div>
+<div class="flex items-center gap-4 rounded-lg p-4 bg-card-light dark:bg-card-dark border border-border-light dark:border-border-dark">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#34C759]/20">
+<span class="material-symbols-outlined text-xl text-[#34C759]">workspace_premium</span>
+</div>
+<div class="flex-1">
+<p class="font-medium text-text-light-primary dark:text-text-dark-primary">Won the game</p>
+<p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">October 24</p>
+</div>
+<span class="material-symbols-outlined text-text-light-secondary dark:text-text-dark-secondary">chevron_right</span>
+</div>
+</div>
+</div>
+</body></html>

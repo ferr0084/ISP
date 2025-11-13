@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Chat List</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+      }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#0088cc",
+              "background-light": "#FFFFFF",
+              "background-dark": "#18222D",
+            },
+            fontFamily: {
+              "display": ["Plus Jakarta Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-display">
+<div class="relative flex min-h-screen w-full flex-col bg-background-light dark:bg-background-dark group/design-root overflow-x-hidden">
+<div class="sticky top-0 z-10 flex h-14 items-center justify-between gap-4 bg-[#F7F7F7] dark:bg-background-dark px-4 shadow-sm">
+<button class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-[#8E8E93] dark:text-[#A9B2BC]">
+<span class="material-symbols-outlined text-2xl">menu</span>
+</button>
+<h1 class="flex-1 text-xl font-bold text-black dark:text-white">Chats</h1>
+<button class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-[#8E8E93] dark:text-[#A9B2BC]">
+<span class="material-symbols-outlined text-2xl">search</span>
+</button>
+</div>
+<div class="flex flex-col">
+<div class="flex cursor-pointer items-center gap-4 px-4 py-3 min-h-[72px] justify-between hover:bg-black/5 dark:hover:bg-white/5">
+<div class="flex items-center gap-3 overflow-hidden">
+<img class="h-14 w-14 shrink-0 rounded-full object-cover" data-alt="Profile picture of Laura" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4hkpGc4s2N977gdHv60PtFi0QZrCI64ALUBoqgDIpq5s-jOYwgroNmBkUg_WrJeVoH0MjAQi6kqLPxqGVmGY4FppijNQr5OTwVuFJnZc9ovULHS3RP9zTJv87K93fIRQCBdK06SReUPbZM8U0L4tYl0ld5CmLbjjK1Fwy_bm0eAn4zFmyqBSukCVpooU4Dxs4G9WgMwowyKpeqbHGIcdgfEy7TG3KbfgzdItt9pe-SEFIS6SGTu7rHYg0aVFMeOVEs1p3oLcb2tuE"/>
+<div class="flex flex-col justify-center overflow-hidden">
+<p class="truncate text-base font-semibold text-black dark:text-white">Laura</p>
+<p class="truncate text-sm font-normal text-[#8E8E93] dark:text-[#A9B2BC]">Hey, what's up? Just checking in to see how you are doing.</p>
+</div>
+</div>
+<div class="flex shrink-0 flex-col items-end gap-1.5">
+<p class="text-xs font-normal text-[#8E8E93] dark:text-[#A9B2BC]">10:45 AM</p>
+<div class="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-white text-xs font-bold">
+<span>2</span>
+</div>
+</div>
+</div>
+<div class="flex cursor-pointer items-center gap-4 px-4 py-3 min-h-[72px] justify-between hover:bg-black/5 dark:hover:bg-white/5">
+<div class="flex items-center gap-3 overflow-hidden">
+<img class="h-14 w-14 shrink-0 rounded-full object-cover" data-alt="Profile picture of Mom" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBE6LGUb5lkig2Il4I5HhaSmCXomMYO91m1F4kzbLabCiD2tMv70sSkYyQBq5OGrcilgKYdzCOmChV-TElH_jaLcSeKNByiBQ-mGMEAEXTQf3qYNfZWJHPXwyLLFamShlCxixlmbCdop7yUjSdcTFi6wKwZ9lJYA8QGKJSZ7zzi-AVdf7knURmjvqFLrisvH9f-Rig2cclSJC2T41l43jiUBzKSPJyJupF6OYCYHp8cD2UHHcz5yqr4OtiPgRoHt1gsGNUBK0mulUR"/>
+<div class="flex flex-col justify-center overflow-hidden">
+<p class="truncate text-base font-semibold text-black dark:text-white">Mom</p>
+<p class="truncate text-sm font-normal text-[#8E8E93] dark:text-[#A9B2BC]">See you soon!</p>
+</div>
+</div>
+<div class="shrink-0">
+<p class="text-xs font-normal text-[#8E8E93] dark:text-[#A9B2BC]">10:42 AM</p>
+</div>
+</div>
+<a class="flex cursor-pointer items-center gap-4 px-4 py-3 min-h-[72px] justify-between hover:bg-black/5 dark:hover:bg-white/5" href="screen_id_1e0ecfbbd0d24f39b5c59844a40e4501.html">
+<div class="flex items-center gap-3 overflow-hidden">
+<div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-blue-500 text-white">
+<span class="text-2xl font-bold">W</span>
+</div>
+<div class="flex flex-col justify-center overflow-hidden">
+<div class="flex items-center gap-2">
+<p class="truncate text-base font-semibold text-black dark:text-white">Work Group</p>
+<span class="material-symbols-outlined text-base text-[#8E8E93] dark:text-[#A9B2BC]">groups</span>
+</div>
+<p class="truncate text-sm font-normal text-[#8E8E93] dark:text-[#A9B2BC]"><span class="font-medium text-black dark:text-white">John:</span> Don't forget the meeting...</p>
+</div>
+</div>
+<div class="flex shrink-0 flex-col items-end gap-1.5">
+<p class="text-xs font-normal text-[#8E8E93] dark:text-[#A9B2BC]">Yesterday</p>
+<div class="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-white text-xs font-bold">
+<span>5</span>
+</div>
+</div>
+</a>
+<div class="flex cursor-pointer items-center gap-4 px-4 py-3 min-h-[72px] justify-between hover:bg-black/5 dark:hover:bg-white/5">
+<div class="flex items-center gap-3 overflow-hidden">
+<img class="h-14 w-14 shrink-0 rounded-full object-cover" data-alt="Profile picture of Alex" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3q4q65LJ9tcJo7lzw-ACdAXicGo0LXfjCKkQW6KqHcGGNw-NRjALbNmsPIxgolEGd_a_glsEKCAtxMy2sulSMRwVsedH6gBsbksgUwuzh__groFmNsgau0HG1NEkmOTgefdS_ZzHJFVGjIq9BF4mclw6Z40RQ7DAs0llt2_X0z7Xb6Zy_jqwLa-EntHt3o9T9jCVLhPE64PwxCOnZPknWj_KBe1iEwKagBU-TywE06UnDOqjPYVti5iueym65uMXWY_cX6alWBEC-"/>
+<div class="flex flex-col justify-center overflow-hidden">
+<p class="truncate text-base font-semibold text-black dark:text-white">Alex</p>
+<p class="flex items-center gap-1.5 truncate text-sm font-normal text-[#8E8E93] dark:text-[#A9B2BC]">
+<span class="material-symbols-outlined text-base">photo_camera</span>
+<span>Photo</span>
+</p>
+</div>
+</div>
+<div class="shrink-0">
+<p class="text-xs font-normal text-[#8E8E93] dark:text-[#A9B2BC]">Yesterday</p>
+</div>
+</div>
+<div class="flex cursor-pointer items-center gap-4 px-4 py-3 min-h-[72px] justify-between hover:bg-black/5 dark:hover:bg-white/5">
+<div class="flex items-center gap-3 overflow-hidden">
+<img class="h-14 w-14 shrink-0 rounded-full object-cover" data-alt="Profile picture of Sarah" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCntrkjpZY3OWTIsKmtnnw__VnJPcRoWDmFFTJA451fEHvq98YCVAls1Ce5bjlZoR4gRwOI-2QGTmYdUyE83QWIf3DC_qPWzfpeIhgpnUiibibdOpFacrgELiFXFTpIz0Xoz15sQ4sKVgaBbTpLDTQ6f_HtPGjfI-8HaKadYZ6Pmu0ounUAwllnVa7suZYQBXTudxxpazij8phP1TO__EEhNcj_i47HoLS-4zEnlrcX2-ii7pi4t51DeWDkQmQZo0bkOl7zPwq4HFXK"/>
+<div class="flex flex-col justify-center overflow-hidden">
+<p class="truncate text-base font-semibold text-black dark:text-white">Sarah</p>
+<p class="truncate text-sm font-normal text-[#8E8E93] dark:text-[#A9B2BC]">Sounds good, talk to you later!</p>
+</div>
+</div>
+<div class="shrink-0">
+<p class="text-xs font-normal text-[#8E8E93] dark:text-[#A9B2BC]">2d ago</p>
+</div>
+</div>
+<div class="flex cursor-pointer items-center gap-4 px-4 py-3 min-h-[72px] justify-between hover:bg-black/5 dark:hover:bg-white/5">
+<div class="flex items-center gap-3 overflow-hidden">
+<img class="h-14 w-14 shrink-0 rounded-full object-cover" data-alt="Profile picture of Mike" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsDClf-YTRjGhReWLJhpGsCr5tUwE_xpX8vsTYQmtYJOfyKkIRLnlKu2rqhqgaMM0vvaO5_jC1chlqJ7up4EZNTTRtW2BebMbAKIpKs-Bvty2URM4jQG5T9UKOZC6bzaVwBzl3aKUArwZr7cag-oU-9CgnO1M9vHzYlLOGN6OQxY-65MpsdSTexLp3Rm-RG5-2vvnyvNSWgo0EBxHgNmVxuXvINMMGwBxeD1fOZEo2mwNhkWRhPp0czYndEHd24JfB8z51Ab7Jo2Gw"/>
+<div class="flex flex-col justify-center overflow-hidden">
+<p class="truncate text-base font-semibold text-black dark:text-white">Mike</p>
+<p class="truncate text-sm font-normal text-[#8E8E93] dark:text-[#A9B2BC]">Happy Birthday!! 🎉</p>
+</div>
+</div>
+<div class="shrink-0">
+<p class="text-xs font-normal text-[#8E8E93] dark:text-[#A9B2BC]">2d ago</p>
+</div>
+</div>
+</div>
+<button class="absolute bottom-6 right-6 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-lg">
+<span class="material-symbols-outlined text-3xl">edit</span>
+</button>
+</div>
+</body></html>

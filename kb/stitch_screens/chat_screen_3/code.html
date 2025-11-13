@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Chat Screen</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#13a4ec",
+              "background-light": "#f6f7f8",
+              "background-dark": "#101c22",
+            },
+            fontFamily: {
+              "display": ["Plus Jakarta Sans", "sans-serif"]
+            },
+            borderRadius: {
+              "DEFAULT": "0.25rem",
+              "lg": "0.5rem",
+              "xl": "0.75rem",
+              "full": "9999px"
+            },
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24
+      }
+    </style>
+<style>
+      body {
+        min-height: max(884px, 100dvh);
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark">
+<div class="relative mx-auto flex h-screen max-h-screen w-full max-w-md flex-col overflow-hidden bg-background-light font-display dark:bg-background-dark group/design-root" style='font-family: "Plus Jakarta Sans", "Noto Sans", sans-serif;'>
+<div class="flex shrink-0 items-center justify-between border-b border-white/10 bg-background-light p-4 backdrop-blur-sm dark:bg-background-dark/[.6]">
+<div class="flex items-center gap-3">
+<button class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-black dark:text-white">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<div class="flex items-center gap-4">
+<div class="aspect-square shrink-0 rounded-full bg-cover bg-center bg-no-repeat size-10" data-alt="Profile picture of Alex Weber" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCkgIdbxT4fbzMAWMl1d-MchEOe0K5UxobP_GmsV-UbfvxOwerTbaSq513YhwG40wxTcE6y5nSIDQ_9Fdlo4RbvIiAX5yFacAZ0bcfom-dYTC3Q0FT4MGGc8EJmjQaDkMYVo1NxNOjYnEbR_9lTMTW1Gk_EUbEgDN4dlqEGit9uHwt6s0JH4nxa9g-_togq0hUgghO8Ve8Yp681A4WsH90XaT4omdCTTOACGAg8bCl-YDYFFXmL9ECU-Ln8ELZdcXfSMklOD0oaRyUq");'></div>
+<div class="flex flex-col">
+<h2 class="text-base font-bold leading-tight tracking-[-0.015em] text-black dark:text-white">Alex Weber</h2>
+<p class="text-sm font-normal text-primary">online</p>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-end gap-1">
+<button class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-black dark:text-white">
+<span class="material-symbols-outlined text-2xl">call</span>
+</button>
+<button class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-black dark:text-white">
+<span class="material-symbols-outlined text-2xl">more_vert</span>
+</button>
+</div>
+</div>
+<div class="flex flex-1 flex-col-reverse overflow-y-auto px-4 pt-4">
+<div class="flex flex-col gap-4 pb-4">
+<div class="flex items-center justify-center py-2">
+<div class="rounded-full bg-black/10 px-3 py-1 text-xs font-medium text-black/60 dark:bg-white/10 dark:text-white/60">TODAY</div>
+</div>
+<div class="flex w-full flex-col items-end gap-2">
+<div class="flex w-full max-w-[85%] flex-col items-end self-end">
+<div class="flex w-full items-end justify-end gap-2.5">
+<div class="flex w-full flex-col items-end gap-1">
+<div class="rounded-xl rounded-br-sm bg-primary/20 px-4 py-2.5 text-base font-normal leading-normal text-black dark:bg-primary/30 dark:text-white">
+                                    Absolutely! I was thinking of that new Italian place downtown. Around 1pm?
+                                </div>
+</div>
+</div>
+<div class="relative mt-1 flex w-[calc(100%-16px)] flex-col gap-2 self-end">
+<div class="absolute left-3 top-2 h-full w-0.5 rounded-full bg-primary/20 dark:bg-primary/40"></div>
+<div class="relative flex w-full flex-col pl-6">
+<div class="absolute left-3 top-2.5 h-4 w-4 -translate-x-1/2 rounded-bl-lg border-b-2 border-l-2 border-primary/20 dark:border-primary/40"></div>
+<div class="flex w-full max-w-full flex-col gap-1">
+<div class="flex flex-col rounded-xl rounded-bl-sm bg-white dark:bg-[#283339]">
+<div class="border-b border-black/10 px-3.5 py-2 dark:border-white/10">
+<p class="text-sm font-semibold text-primary">You</p>
+<p class="truncate text-sm font-normal text-black/70 dark:text-white/70">Absolutely! I was thinking...</p>
+</div>
+<p class="px-3.5 py-2.5 text-base font-normal leading-normal text-black dark:text-white">
+                                            Sounds perfect! See you then.
+                                        </p>
+</div>
+</div>
+<div class="relative mt-2 flex w-full flex-col self-end pl-6">
+<div class="absolute left-3 top-2.5 h-full w-0.5 rounded-full bg-primary/20 dark:bg-primary/40"></div>
+<div class="absolute left-3 top-2.5 h-4 w-4 -translate-x-1/2 rounded-bl-lg border-b-2 border-l-2 border-primary/20 dark:border-primary/40"></div>
+<div class="flex w-full max-w-full flex-col items-end gap-1">
+<div class="flex w-full flex-col rounded-xl rounded-br-sm bg-primary/20 dark:bg-primary/30">
+<div class="border-b border-black/10 px-3.5 py-2 dark:border-white/10">
+<p class="text-sm font-semibold text-blue-400">Alex Weber</p>
+<p class="truncate text-sm font-normal text-black/70 dark:text-white/70">Sounds perfect! See you then.</p>
+</div>
+<p class="px-3.5 py-2.5 text-base font-normal leading-normal text-black dark:text-white">
+                                                Can't wait! Should I book a table?
+                                            </p>
+</div>
+</div>
+<div class="mt-2 flex items-center gap-2 pl-6">
+<span class="material-symbols-outlined -scale-x-100 -rotate-90 text-sm text-primary">subdirectory_arrow_right</span>
+<button class="cursor-pointer text-sm font-semibold text-primary">3 more replies</button>
+<div class="h-0.5 flex-1 rounded-full bg-primary/20 dark:bg-primary/40"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="flex items-end gap-2.5">
+<div class="aspect-square w-8 shrink-0 self-end rounded-full bg-cover bg-center bg-no-repeat" data-alt="Profile picture of Alex Weber" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAIsSYmyJwgV4AGmcSXVA9UiClPIrWVG3k4U__Bj9cr8aMNOKZcb0BMjGAT-WYryLhD_A8yUdp1FZt1jnXIKIaSPWU1TY7rcwJc4Cul3RqB_QPsNIMNRKJHC6tJiaycWgDsdv9mXbyIW5sGjyv1Z95q7IT_rVYgRNGxt2EvNamRCp4ciAilyw4z_y86UaqDVqN-Q5pWHsUahUUU7ebN4wdXy873SOptE52wqY0pVKKlWCUwSVdglM2z75RzO74jzBXhtzvUZ4W8secN");'></div>
+<div class="flex max-w-[80%] flex-col items-start gap-1">
+<div class="flex items-baseline gap-2">
+<p class="flex max-w-[360px] rounded-xl rounded-bl-sm bg-white px-4 py-2.5 text-base font-normal leading-normal text-black dark:bg-[#283339] dark:text-white">
+                                Hey! How's it going? Are we still on for lunch tomorrow?
+                            </p>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-center py-2">
+<div class="rounded-full bg-black/10 px-3 py-1 text-xs font-medium text-black/60 dark:bg-white/10 dark:text-white/60">YESTERDAY</div>
+</div>
+<div class="flex items-end gap-2.5">
+<div class="aspect-square w-8 shrink-0 self-end rounded-full bg-cover bg-center bg-no-repeat" data-alt="Profile picture of Alex Weber" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAh8sou2qrfWR1g08sj_C8PBdd5AdWg8Q0C8ddCJLL0OecxdfNAgYeBC-CreqywiozmGlZFvNbu_sPE2N3X4W19Z3bh-bzc75G_kZH8PN3owR1L_WGmvS43F8UmV8VydVqHCDfgeJ5oPnI1GCK0JKHgx2k4KTXyJVIq5m1L_oCTHiDVYYkZqMLEeHEah6Gr84xPYYKHXx10gwU9-DQawk__ZAbiIZNSWAQQS1gV15b-XGNAsVRVNMjv2uPpHLXCNw901VedxYg9EYO0");'></div>
+<div class="flex max-w-[80%] flex-col items-start gap-1">
+<div class="overflow-hidden rounded-xl rounded-bl-sm">
+<img class="h-auto w-64 object-cover" data-alt="A delicious grilled dish with lemon and herbs" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKv4XHeo3C2c_H_ldCAbHgp7_rV3q4BixjTO-W3FbnyWc9NUuiVBe-Q9gnya6nLYGC8oj9sjQrE2pCbrqLQ8zZf7a8snprBjuVoipkziaF6P12VRbf2t7DvOzsHir_MNo22-ClsYlfqSWe4ogH1-RBfJqPWP8vZHJ0PRhmwr5ZpDcQbP7MTsNrAQALIg5CRU4g5SIQMqAY1Iuadwkcr0mw6_knup3kIupPqQG98CjL41BC3qLNMJAkl9rqdrk5O3W4jFdE2qpP9I5b"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="flex shrink-0 items-center gap-3 border-t border-white/10 bg-background-light px-4 py-3 backdrop-blur-sm @container dark:bg-background-dark/[.6]">
+<button class="flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full text-black/60 dark:text-white/70">
+<span class="material-symbols-outlined text-2xl">add_circle</span>
+</button>
+<label class="flex h-12 min-w-40 flex-1 flex-col">
+<div class="flex h-full w-full flex-1 items-stretch rounded-full">
+<div class="relative flex flex-1">
+<input class="form-input h-full w-full min-w-0 flex-1 resize-none overflow-hidden rounded-full border-none bg-white px-5 pr-12 text-base font-normal leading-normal text-black placeholder:text-black/50 focus:border-none focus:outline-0 focus:ring-0 dark:bg-[#283339] dark:text-white dark:placeholder:text-[#9db0b9]" placeholder="Message" value=""/>
+<button class="absolute right-0 top-0 flex h-full w-12 items-center justify-center p-1.5 text-black/60 dark:text-white/70">
+<span class="material-symbols-outlined text-2xl">sentiment_satisfied</span>
+</button>
+</div>
+</div>
+</label>
+<button class="flex h-12 w-12 shrink-0 cursor-pointer items-center justify-center rounded-full bg-primary text-white">
+<span class="material-symbols-outlined text-2xl">mic</span>
+</button>
+</div>
+</div>
+
+</body></html>

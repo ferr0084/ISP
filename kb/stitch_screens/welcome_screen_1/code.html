@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Create Account</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#13a4ec",
+            "background-light": "#f6f7f8",
+            "background-dark": "#101c22",
+            "input-light": "#e9ecef",
+            "input-dark": "#1c2c35",
+          },
+          fontFamily: {
+            "display": ["Plus Jakarta Sans", "Noto Sans", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+    .form-input {
+      @apply w-full h-12 px-4 bg-input-light dark:bg-input-dark text-slate-900 dark:text-white rounded-lg border-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 placeholder:text-slate-500 dark:placeholder:text-slate-400;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark">
+<div class="relative flex h-auto min-h-screen w-full flex-col font-display dark group/design-root overflow-x-hidden">
+<main class="flex flex-col grow justify-between items-center p-6">
+<div class="flex-shrink-0 w-full flex justify-start">
+<button class="flex items-center text-primary">
+<span class="material-symbols-outlined">arrow_back_ios_new</span>
+</button>
+</div>
+<div class="flex flex-col items-center justify-center flex-grow py-8 w-full max-w-md">
+<div class="w-20 h-20 bg-primary rounded-full flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-white text-5xl">person_add</span>
+</div>
+<h1 class="text-slate-900 dark:text-white tracking-tight text-[32px] font-bold leading-tight pb-2">Create Account</h1>
+<p class="text-slate-600 dark:text-slate-300 text-base font-normal leading-normal pb-8">Let's get you started!</p>
+<div class="w-full space-y-4">
+<input class="form-input" placeholder="Full Name" type="text"/>
+<div class="flex space-x-2">
+<select class="form-input w-24">
+<option>+1</option>
+<option>+44</option>
+<option>+91</option>
+</select>
+<input class="form-input flex-1" placeholder="Phone Number" type="tel"/>
+</div>
+<p class="text-center text-slate-500 dark:text-slate-400 text-sm py-1">or</p>
+<input class="form-input" placeholder="Email Address" type="email"/>
+<input class="form-input" placeholder="Password" type="password"/>
+</div>
+</div>
+<div class="w-full max-w-md flex-shrink-0 pb-4">
+<div class="flex px-4 py-3">
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 flex-1 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Sign Up</span>
+</button>
+</div>
+<div class="flex items-center justify-center space-x-4 px-4 py-2">
+<div class="h-px flex-1 bg-slate-200 dark:bg-slate-700"></div>
+<span class="text-slate-500 dark:text-slate-400 text-sm">or continue with</span>
+<div class="h-px flex-1 bg-slate-200 dark:bg-slate-700"></div>
+</div>
+<div class="flex flex-col space-y-3 px-4 py-3">
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 flex-1 bg-white text-[#1F1F1F] border border-slate-200 dark:bg-input-dark dark:border-slate-700 dark:text-white text-base font-bold leading-normal tracking-[0.015em]">
+<img alt="logo" class="w-6 h-6 mr-3" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9R3jG1XMFGjUGZEVwbGFEtowgT7RvT6Juz9dY-30lMbeO_F85wCNVySihZPKxzzemEWZoRDaelg4CzIquof0-gKc0AJ1-c7ems-9jopM4DJ2LteZa5keeAZ8SJJ9hozYPmgavYXK5ZnOmeHpF4LhdxWj7t3M0OQwT4CPvISkYV31qRa-O2a3YcyI0fOFEGKVDfA8pAhGx_WSylr1iIQQHp2XRebWWKT5dEEFNQVWgnqggEprf4_f5c2ivsS3StaWsgrfDuMSzEKPu"/>
+<span class="truncate">Continue with Google</span>
+</button>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 flex-1 bg-[#1877F2] text-white text-base font-bold leading-normal tracking-[0.015em]">
+<svg class="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"></path>
+</svg>
+<span class="truncate">Continue with Facebook</span>
+</button>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-normal leading-normal py-3 px-4 text-center">Already have an account? <a class="font-bold text-primary" href="#">Log In</a></p>
+</div>
+</main>
+</div>
+
+</body></html>

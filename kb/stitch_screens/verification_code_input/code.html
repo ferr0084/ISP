@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Verification Code</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#0088cc",
+              "background-light": "#F0F4F7",
+              "background-dark": "#101c22",
+              "text-light": "#212121",
+              "text-dark": "#F0F4F7",
+              "text-secondary-light": "#8A8A8F",
+              "text-secondary-dark": "#8A8A8F",
+              "error": "#FF3B30"
+            },
+            fontFamily: {
+              "display": ["Manrope", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "0.75rem", "xl": "1rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+      }
+      .code-input:focus {
+        border-color: #0088cc;
+        box-shadow: 0 2px 0 0 #0088cc;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex h-screen w-full flex-col group/design-root overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between shrink-0">
+<button class="text-text-light dark:text-text-dark flex size-10 items-center justify-center rounded-full">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<h1 class="text-text-light dark:text-text-dark text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-10">Enter Code</h1>
+</header>
+<main class="flex flex-col flex-1 px-5 pt-8 pb-6">
+<div class="flex-grow flex flex-col items-center">
+<!-- HeadlineText -->
+<h2 class="text-text-light dark:text-text-dark tracking-tight text-3xl font-bold leading-tight text-center pb-3">Check your email</h2>
+<!-- BodyText -->
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-base font-normal leading-normal pb-3 pt-1 text-center max-w-sm">We've sent a 6-digit code to <span class="font-medium text-text-light dark:text-text-dark">your_email@domain.com</span></p>
+<!-- ConfirmationCode -->
+<div class="flex justify-center w-full px-4 pt-8 pb-4">
+<fieldset class="relative flex gap-3">
+<input class="code-input flex h-14 w-12 text-center text-xl font-bold [appearance:textfield] focus:outline-0 focus:ring-0 [&amp;::-webkit-inner-spin-button]:appearance-none [&amp;::-webkit-outer-spin-button]:appearance-none border-0 border-b-2 border-gray-300 dark:border-gray-600 bg-transparent text-text-light dark:text-text-dark transition-colors duration-200" maxlength="1" onkeydown="javascript:(event.key=='Backspace'&amp;&amp;this.value===''&amp;&amp;this.previousSibling&amp;&amp;((this.previousSibling.value=''),this.previousSibling.focus()))||(event.key==='ArrowLeft'&amp;&amp;this.previousSibling&amp;&amp;this.previousSibling.focus())||(event.key==='ArrowRight'&amp;&amp;this.nextSibling&amp;&amp;this.nextSibling.focus());" onkeyup="javascript:event.key.match(/^\d$/)&amp;&amp;((this.value.length&gt;1&amp;&amp;((this.nextSibling&amp;&amp;(this.nextSibling.value=this.value.slice(1))),(this.value=this.value[0]))),(this.nextSibling&amp;&amp;this.nextSibling.focus()));" type="number"/>
+<input class="code-input flex h-14 w-12 text-center text-xl font-bold [appearance:textfield] focus:outline-0 focus:ring-0 [&amp;::-webkit-inner-spin-button]:appearance-none [&amp;::-webkit-outer-spin-button]:appearance-none border-0 border-b-2 border-gray-300 dark:border-gray-600 bg-transparent text-text-light dark:text-text-dark transition-colors duration-200" maxlength="1" onkeydown="javascript:(event.key=='Backspace'&amp;&amp;this.value===''&amp;&amp;this.previousSibling&amp;&amp;((this.previousSibling.value=''),this.previousSibling.focus()))||(event.key==='ArrowLeft'&amp;&amp;this.previousSibling&amp;&amp;this.previousSibling.focus())||(event.key==='ArrowRight'&amp;&amp;this.nextSibling&amp;&amp;this.nextSibling.focus());" onkeyup="javascript:event.key.match(/^\d$/)&amp;&amp;((this.value.length&gt;1&amp;&amp;((this.nextSibling&amp;&amp;(this.nextSibling.value=this.value.slice(1))),(this.value=this.value[0]))),(this.nextSibling&amp;&amp;this.nextSibling.focus()));" type="number"/>
+<input class="code-input flex h-14 w-12 text-center text-xl font-bold [appearance:textfield] focus:outline-0 focus:ring-0 [&amp;::-webkit-inner-spin-button]:appearance-none [&amp;::-webkit-outer-spin-button]:appearance-none border-0 border-b-2 border-gray-300 dark:border-gray-600 bg-transparent text-text-light dark:text-text-dark transition-colors duration-200" maxlength="1" onkeydown="javascript:(event.key=='Backspace'&amp;&amp;this.value===''&amp;&amp;this.previousSibling&amp;&amp;((this.previousSibling.value=''),this.previousSibling.focus()))||(event.key==='ArrowLeft'&amp;&amp;this.previousSibling&amp;&amp;this.previousSibling.focus())||(event.key==='ArrowRight'&amp;&amp;this.nextSibling&amp;&amp;this.nextSibling.focus());" onkeyup="javascript:event.key.match(/^\d$/)&amp;&amp;((this.value.length&gt;1&amp;&amp;((this.nextSibling&amp;&amp;(this.nextSibling.value=this.value.slice(1))),(this.value=this.value[0]))),(this.nextSibling&amp;&amp;this.nextSibling.focus()));" type="number"/>
+<input class="code-input flex h-14 w-12 text-center text-xl font-bold [appearance:textfield] focus:outline-0 focus:ring-0 [&amp;::-webkit-inner-spin-button]:appearance-none [&amp;::-webkit-outer-spin-button]:appearance-none border-0 border-b-2 border-gray-300 dark:border-gray-600 bg-transparent text-text-light dark:text-text-dark transition-colors duration-200" maxlength="1" onkeydown="javascript:(event.key=='Backspace'&amp;&amp;this.value===''&amp;&amp;this.previousSibling&amp;&amp;((this.previousSibling.value=''),this.previousSibling.focus()))||(event.key==='ArrowLeft'&amp;&amp;this.previousSibling&amp;&amp;this.previousSibling.focus())||(event.key==='ArrowRight'&amp;&amp;this.nextSibling&amp;&amp;this.nextSibling.focus());" onkeyup="javascript:event.key.match(/^\d$/)&amp;&amp;((this.value.length&gt;1&amp;&amp;((this.nextSibling&amp;&amp;(this.nextSibling.value=this.value.slice(1))),(this.value=this.value[0]))),(this.nextSibling&amp;&amp;this.nextSibling.focus()));" type="number"/>
+<input class="code-input flex h-14 w-12 text-center text-xl font-bold [appearance:textfield] focus:outline-0 focus:ring-0 [&amp;::-webkit-inner-spin-button]:appearance-none [&amp;::-webkit-outer-spin-button]:appearance-none border-0 border-b-2 border-gray-300 dark:border-gray-600 bg-transparent text-text-light dark:text-text-dark transition-colors duration-200" maxlength="1" onkeydown="javascript:(event.key=='Backspace'&amp;&amp;this.value===''&amp;&amp;this.previousSibling&amp;&amp;((this.previousSibling.value=''),this.previousSibling.focus()))||(event.key==='ArrowLeft'&amp;&amp;this.previousSibling&amp;&amp;this.previousSibling.focus())||(event.key==='ArrowRight'&amp;&amp;this.nextSibling&amp;&amp;this.nextSibling.focus());" onkeyup="javascript:event.key.match(/^\d$/)&amp;&amp;((this.value.length&gt;1&amp;&amp;((this.nextSibling&amp;&amp;(this.nextSibling.value=this.value.slice(1))),(this.value=this.value[0]))),(this.nextSibling&amp;&amp;this.nextSibling.focus()));" type="number"/>
+<input class="code-input flex h-14 w-12 text-center text-xl font-bold [appearance:textfield] focus:outline-0 focus:ring-0 [&amp;::-webkit-inner-spin-button]:appearance-none [&amp;::-webkit-outer-spin-button]:appearance-none border-0 border-b-2 border-gray-300 dark:border-gray-600 bg-transparent text-text-light dark:text-text-dark transition-colors duration-200" maxlength="1" onkeydown="javascript:(event.key=='Backspace'&amp;&amp;this.value===''&amp;&amp;this.previousSibling&amp;&amp;((this.previousSibling.value=''),this.previousSibling.focus()))||(event.key==='ArrowLeft'&amp;&amp;this.previousSibling&amp;&amp;this.previousSibling.focus())||(event.key==='ArrowRight'&amp;&amp;this.nextSibling&amp;&amp;this.nextSibling.focus());" onkeyup="javascript:event.key.match(/^\d$/)&amp;&amp;((this.value.length&gt;1&amp;&amp;((this.nextSibling&amp;&amp;(this.nextSibling.value=this.value.slice(1))),(this.value=this.value[0]))),(this.nextSibling&amp;&amp;this.nextSibling.focus()));" type="number"/>
+</fieldset>
+</div>
+<!-- MetaText / Error Message -->
+<p class="text-error text-sm font-normal leading-normal text-center h-5">The code you entered is incorrect.</p>
+<!-- Resend Code section -->
+<div class="flex items-center justify-center space-x-1 pt-6 text-sm text-text-secondary-light dark:text-text-secondary-dark">
+<span>Didn't receive a code?</span>
+<button class="font-bold text-primary disabled:text-text-secondary-light dark:disabled:text-text-secondary-dark" disabled="">Resend in 00:59</button>
+</div>
+</div>
+<div class="w-full pt-4">
+<!-- Primary CTA Button -->
+<button class="flex h-12 w-full items-center justify-center rounded-lg bg-primary px-6 text-base font-bold text-white shadow-sm transition-all hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-50 disabled:cursor-not-allowed">Verify</button>
+</div>
+</main>
+</div>
+</body></html>
