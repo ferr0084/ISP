@@ -4,12 +4,13 @@ import '../../features/auth/presentation/screens/login_callback_screen.dart';
 import '../../features/auth/presentation/screens/login_or_create_account_screen.dart';
 import '../../features/auth/presentation/screens/welcome_screen.dart';
 import '../../features/home/presentation/pages/home_page.dart';
-import '../../features/common/presentation/pages/chats_page.dart';
-import '../../features/common/presentation/pages/groups_page.dart';
-import '../../features/common/presentation/pages/events_page.dart';
-import '../../features/common/presentation/pages/expenses_page.dart';
-import '../../features/common/presentation/pages/idiot_game_page.dart';
-import '../../features/common/presentation/pages/contacts_page.dart';
+import '../../features/chats/presentation/screens/chat_list_screen.dart';
+import '../../features/groups/presentation/screens/group_home_screen.dart';
+import '../../features/groups/presentation/screens/my_groups_overview_screen.dart'; // New import
+import '../../features/events/presentation/screens/events_dashboard_screen.dart';
+import '../../features/expenses/presentation/screens/expenses_home_screen.dart'; // New import
+import '../../features/idiot_game/presentation/screens/idiot_game_dashboard_screen.dart'; // New import
+import '../../features/contacts/presentation/screens/contact_list_screen.dart';
 import '../../features/common/presentation/pages/settings_page.dart';
 
 class AppRouter {
@@ -23,26 +24,35 @@ class AppRouter {
     routes: [
       GoRoute(
         path: '/',
-        builder: (context, state) => const WelcomeScreen(),
+        builder: (context, state) => WelcomeScreen(),
         routes: [
           GoRoute(
             path: 'login-or-create-account',
-            builder: (context, state) => const LoginOrCreateAccountScreen(),
+            builder: (context, state) => LoginOrCreateAccountScreen(),
           ),
           GoRoute(
             path: 'login-callback',
-            builder: (context, state) => const LoginCallbackScreen(),
+            builder: (context, state) => LoginCallbackScreen(),
           ),
         ],
       ),
-      GoRoute(path: '/home', builder: (context, state) => const HomePage()),
-      GoRoute(path: '/chats', builder: (context, state) => const ChatsPage()),
-      GoRoute(path: '/groups', builder: (context, state) => const GroupsPage()),
-      GoRoute(path: '/events', builder: (context, state) => const EventsPage()),
-      GoRoute(path: '/expenses', builder: (context, state) => const ExpensesPage()),
-      GoRoute(path: '/idiot-game', builder: (context, state) => const IdiotGamePage()),
-      GoRoute(path: '/contacts', builder: (context, state) => const ContactsPage()),
-      GoRoute(path: '/settings', builder: (context, state) => const SettingsPage()),
+      GoRoute(path: '/home', builder: (context, state) => HomePage()),
+      GoRoute(path: '/chats', builder: (context, state) => ChatListScreen()),
+      GoRoute(
+        path: '/groups',
+        builder: (context, state) => MyGroupsOverviewScreen(), // Changed to MyGroupsOverviewScreen
+        routes: [
+          GoRoute(
+            path: 'detail', // Sub-route for GroupHomeScreen
+            builder: (context, state) => GroupHomeScreen(),
+          ),
+        ],
+      ),
+      GoRoute(path: '/events', builder: (context, state) => EventsDashboardScreen()),
+      GoRoute(path: '/expenses', builder: (context, state) => ExpensesHomeScreen()),
+      GoRoute(path: '/idiot-game', builder: (context, state) => IdiotGameDashboardScreen()),
+      GoRoute(path: '/contacts', builder: (context, state) => ContactListScreen()),
+      GoRoute(path: '/settings', builder: (context, state) => SettingsPage()),
     ],
     redirect: (context, state) {
       final user = _userProvider.user;

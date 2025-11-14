@@ -17,7 +17,7 @@ To build and run the project, use the following standard Flutter commands:
 
 ### State Management
 
-The project uses `ChangeNotifier` with `ListenableBuilder` for state management, particularly for user profiles.
+The project uses `ChangeNotifier` with `ListenableBuilder` for state management, particularly for user profiles. The `provider` package is used to expose `ChangeNotifier` instances to the widget tree.
 
 ### Routing
 
