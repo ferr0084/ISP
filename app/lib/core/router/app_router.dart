@@ -3,7 +3,7 @@ import '../../features/auth/presentation/providers/user_provider.dart';
 import '../../features/auth/presentation/screens/login_callback_screen.dart';
 import '../../features/auth/presentation/screens/login_or_create_account_screen.dart';
 import '../../features/auth/presentation/screens/welcome_screen.dart';
-import '../../features/home/presentation/screens/home_screen.dart';
+import '../../features/home/presentation/pages/home_page.dart';
 
 class AppRouter {
   final UserProvider _userProvider;
@@ -28,7 +28,7 @@ class AppRouter {
           ),
         ],
       ),
-      GoRoute(path: '/home', builder: (context, state) => const HomeScreen()),
+      GoRoute(path: '/home', builder: (context, state) => const HomePage()),
     ],
     redirect: (context, state) {
       final user = _userProvider.user;
