@@ -1,18 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class Contact {
-  final String name;
-  final String avatarUrl;
-  final String status;
-  final bool isOnline;
-
-  Contact({
-    required this.name,
-    required this.avatarUrl,
-    required this.status,
-    this.isOnline = false,
-  });
-}
+import '../../domain/entities/contact.dart';
+import '../notifiers/contact_list_notifier.dart';
 
 class ContactListScreen extends StatefulWidget {
   const ContactListScreen({super.key});
@@ -22,77 +12,14 @@ class ContactListScreen extends StatefulWidget {
 }
 
 class ContactListScreenState extends State<ContactListScreen> {
-  // Dummy data for contacts
-  final List<Contact> _allContacts = [
-    Contact(
-      name: 'Aaron Davis',
-      avatarUrl: 'assets/images/avatar_chris.png', // Placeholder
-      status: 'last seen recently',
-      isOnline: true,
-    ),
-    Contact(
-      name: 'Abigail Harris',
-      avatarUrl: 'assets/images/avatar_jessica.png', // Placeholder
-      status: 'last seen yesterday at 10:42 PM',
-    ),
-    Contact(
-      name: 'Benjamin Clark',
-      avatarUrl: 'assets/images/avatar_david.png', // Placeholder
-      status: 'last seen a long time ago',
-    ),
-    Contact(
-      name: 'Chloe Lewis',
-      avatarUrl: 'assets/images/avatar_maria.png', // Placeholder
-      status: 'online',
-      isOnline: true,
-    ),
-    Contact(
-      name: 'Christopher Walker',
-      avatarUrl: 'assets/images/avatar_james.png', // Placeholder
-      status: 'last seen on Tuesday',
-    ),
-    Contact(
-      name: 'David Smith',
-      avatarUrl: 'assets/images/avatar_david.png', // Placeholder
-      status: 'online',
-      isOnline: true,
-    ),
-    Contact(
-      name: 'Emily White',
-      avatarUrl: 'assets/images/avatar_jessica.png', // Placeholder
-      status: 'last seen recently',
-    ),
-    Contact(
-      name: 'Frank Green',
-      avatarUrl: 'assets/images/avatar_chris.png', // Placeholder
-      status: 'last seen a long time ago',
-    ),
-    Contact(
-      name: 'Grace Hall',
-      avatarUrl: 'assets/images/avatar_maria.png', // Placeholder
-      status: 'online',
-      isOnline: true,
-    ),
-    Contact(
-      name: 'Henry King',
-      avatarUrl: 'assets/images/avatar_james.png', // Placeholder
-      status: 'last seen on Monday',
-    ),
-  ];
-
   // Group contacts by the first letter of their name
   final Map<String, List<Contact>> _groupedContacts = {};
   List<String> _alphabet = [];
 
-  @override
-  void initState() {
-    super.initState();
-    _groupContacts();
-  }
-
-  void _groupContacts() {
-    _allContacts.sort((a, b) => a.name.compareTo(b.name));
-    for (var contact in _allContacts) {
+  void _groupContacts(List<Contact> contacts) {
+    _groupedContacts.clear();
+    contacts.sort((a, b) => a.name.compareTo(b.name));
+    for (var contact in contacts) {
       final firstLetter = contact.name[0].toUpperCase();
       if (!_groupedContacts.containsKey(firstLetter)) {
         _groupedContacts[firstLetter] = [];
@@ -140,160 +67,182 @@ class ContactListScreenState extends State<ContactListScreen> {
           ),
         ],
       ),
-      body: Stack(
-        children: [
-          Column(
+      body: Consumer<ContactListNotifier>(
+        builder: (context, notifier, child) {
+          if (notifier.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          _groupContacts(notifier.contacts);
+
+          return Stack(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: TextField(
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                  decoration: InputDecoration(
-                    hintText: 'Search by name',
-                    hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withAlpha(153), // 0.6 * 255 = 153
-                    ),
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withAlpha(153), // 0.6 * 255 = 153
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      borderSide: BorderSide.none,
-                    ),
-                    filled: true,
-                    fillColor: Theme.of(context).cardTheme.color,
-                  ),
-                ),
-              ),
-              ListTile(
-                leading: Container(
-                  padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary,
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Icon(
-                    Icons.person_add,
-                    color: Theme.of(context).colorScheme.onPrimary,
-                  ),
-                ),
-                title: Text(
-                  'Invite Friends',
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-                onTap: () {
-                  // TODO: Implement invite friends functionality
-                },
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: _alphabet.length,
-                  itemBuilder: (context, index) {
-                    final String letter = _alphabet[index];
-                    final List<Contact> contacts = _groupedContacts[letter]!;
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16.0,
-                            vertical: 8.0,
-                          ),
-                          child: Text(
-                            letter,
-                            style: Theme.of(context).textTheme.titleLarge
-                                ?.copyWith(
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
-                          ),
+              Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: TextField(
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                      decoration: InputDecoration(
+                        hintText: 'Search by name',
+                        hintStyle:
+                        Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withAlpha(153),
                         ),
-                        ...contacts.map((contact) {
-                          return ListTile(
-                            leading: CircleAvatar(
-                              backgroundImage: AssetImage(contact.avatarUrl),
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withAlpha(153),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                        fillColor: Theme.of(context).cardTheme.color,
+                      ),
+                    ),
+                  ),
+                  ListTile(
+                    leading: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primary,
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: Icon(
+                        Icons.person_add,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                    ),
+                    title: Text(
+                      'Invite Friends',
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                    onTap: () {
+                      // TODO: Implement invite friends functionality
+                    },
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: _alphabet.length,
+                      itemBuilder: (context, index) {
+                        final String letter = _alphabet[index];
+                        final List<Contact> contacts =
+                        _groupedContacts[letter]!;
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                                vertical: 8.0,
+                              ),
+                              child: Text(
+                                letter,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleLarge
+                                    ?.copyWith(
+                                  color:
+                                  Theme.of(context).colorScheme.primary,
+                                ),
+                              ),
                             ),
-                            title: Text(
-                              contact.name,
-                              style: Theme.of(context).textTheme.bodyLarge
-                                  ?.copyWith(
+                            ...contacts.map((contact) {
+                              return ListTile(
+                                leading: CircleAvatar(
+                                  backgroundImage: NetworkImage(contact.avatarUrl),
+                                ),
+                                title: Text(
+                                  contact.name,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.copyWith(
                                     color: Theme.of(
                                       context,
                                     ).colorScheme.onSurface,
                                   ),
-                            ),
-                            subtitle: Text(
-                              contact.status,
-                              style: Theme.of(context).textTheme.bodyMedium
-                                  ?.copyWith(
+                                ),
+                                subtitle: Text(
+                                  contact.status,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
                                     color: Theme.of(context)
                                         .colorScheme
                                         .onSurface
-                                        .withAlpha(178), // 0.7 * 255 = 178.5
+                                        .withAlpha(178),
                                   ),
+                                ),
+                                trailing: contact.isOnline
+                                    ? Container(
+                                  width: 10,
+                                  height: 10,
+                                  decoration: const BoxDecoration(
+                                    color: Colors.green,
+                                    shape: BoxShape.circle,
+                                  ),
+                                )
+                                    : null,
+                                onTap: () {
+                                  // TODO: Implement contact detail view
+                                },
+                              );
+                            }),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              Positioned(
+                right: 0,
+                top: 0,
+                bottom: 0,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  alignment: Alignment.center,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: _alphabet.map((letter) {
+                      return GestureDetector(
+                        onTap: () {
+                          // TODO: Implement scrolling to the letter
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 2.0,
+                            horizontal: 8.0,
+                          ),
+                          child: Text(
+                            letter,
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelSmall
+                                ?.copyWith(
+                              color: Theme.of(context).colorScheme.primary,
                             ),
-                            trailing: contact.isOnline
-                                ? Container(
-                                    width: 10,
-                                    height: 10,
-                                    decoration: const BoxDecoration(
-                                      color: Colors.green,
-                                      shape: BoxShape.circle,
-                                    ),
-                                  )
-                                : null,
-                            onTap: () {
-                              // TODO: Implement contact detail view
-                            },
-                          );
-                        }),
-                      ],
-                    );
-                  },
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
                 ),
               ),
             ],
-          ),
-          Positioned(
-            right: 0,
-            top: 0,
-            bottom: 0,
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              alignment: Alignment.center,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: _alphabet.map((letter) {
-                  return GestureDetector(
-                    onTap: () {
-                      // TODO: Implement scrolling to the letter
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 2.0,
-                        horizontal: 8.0,
-                      ),
-                      child: Text(
-                        letter,
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }

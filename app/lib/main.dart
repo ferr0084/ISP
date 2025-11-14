@@ -5,6 +5,7 @@ import 'core/router/app_router.dart';
 import 'core/supabase/supabase_initializer.dart';
 import 'core/utils/service_locator.dart';
 import 'features/auth/presentation/providers/user_provider.dart';
+import 'features/contacts/presentation/notifiers/contact_list_notifier.dart';
 import 'features/groups/presentation/providers/group_provider.dart';
 import 'core/theme/theme_data.dart'; // Import AppTheme
 import 'core/theme/theme_provider.dart'; // Import ThemeProvider
@@ -24,6 +25,7 @@ Future<void> main() async {
             create: (_) => ThemeProvider(),
           ), // Provide ThemeProvider
           ChangeNotifierProvider(create: (_) => sl<GroupProvider>()),
+          ChangeNotifierProvider(create: (_) => sl<ContactListNotifier>()),
         ],
         child: const MyApp(),
       ),

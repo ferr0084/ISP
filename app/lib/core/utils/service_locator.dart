@@ -9,6 +9,9 @@ import '../../features/auth/domain/usecases/logout.dart';
 import '../../features/auth/domain/usecases/sign_up.dart';
 import '../../features/auth/presentation/providers/user_provider.dart';
 import '../../features/groups/data/repositories/group_repository_impl.dart';
+import '../../features/contacts/data/repositories/contact_repository_impl.dart';
+import '../../features/contacts/domain/repositories/contact_repository.dart';
+import '../../features/contacts/presentation/notifiers/contact_list_notifier.dart';
 import '../../features/groups/domain/repositories/group_repository.dart';
 import '../../features/groups/presentation/providers/group_provider.dart';
 
@@ -48,5 +51,15 @@ void setupServiceLocator() {
   // Group Provider
   sl.registerLazySingleton<GroupProvider>(
     () => GroupProvider(sl<GroupRepository>()),
+  );
+
+  // Contact Repository
+  sl.registerLazySingleton<ContactRepository>(
+    () => ContactRepositoryImpl(supabaseClient: sl<SupabaseClient>()),
+  );
+
+  // Contact Notifier
+  sl.registerLazySingleton<ContactListNotifier>(
+    () => ContactListNotifier(sl<ContactRepository>()),
   );
 }
