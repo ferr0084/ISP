@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class Chat {
   final String avatarAsset;
@@ -37,7 +36,8 @@ class ChatListScreen extends StatelessWidget {
       time: '10:42 AM',
     ),
     Chat(
-      avatarAsset: 'assets/images/group_design_team.png', // Placeholder for group avatar
+      avatarAsset:
+          'assets/images/group_design_team.png', // Placeholder for group avatar
       title: 'Work Group',
       lastMessage: 'John: Don\'t forget the meeting...',
       time: 'Yesterday',
@@ -72,18 +72,26 @@ class ChatListScreen extends StatelessWidget {
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: Theme.of(context).appBarTheme.elevation,
         leading: IconButton(
-          icon: Icon(Icons.menu, color: Theme.of(context).appBarTheme.foregroundColor),
+          icon: Icon(
+            Icons.menu,
+            color: Theme.of(context).appBarTheme.foregroundColor,
+          ),
           onPressed: () {
             // TODO: Implement drawer functionality
           },
         ),
         title: Text(
           'Chats',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).appBarTheme.foregroundColor),
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            color: Theme.of(context).appBarTheme.foregroundColor,
+          ),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.search, color: Theme.of(context).appBarTheme.foregroundColor),
+            icon: Icon(
+              Icons.search,
+              color: Theme.of(context).appBarTheme.foregroundColor,
+            ),
             onPressed: () {
               // TODO: Implement search functionality
             },
@@ -102,18 +110,30 @@ class ChatListScreen extends StatelessWidget {
               children: [
                 Text(
                   chat.title,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                 ),
                 if (chat.isGroup)
                   Padding(
                     padding: const EdgeInsets.only(left: 4.0),
-                    child: Icon(Icons.people, size: 16, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
+                    child: Icon(
+                      Icons.people,
+                      size: 16,
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withAlpha(153), // 0.6 * 255 = 153
+                    ),
                   ),
               ],
             ),
             subtitle: Text(
               chat.lastMessage,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurface.withAlpha(178), // 0.7 * 255 = 178.5
+              ),
             ),
             trailing: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -121,7 +141,11 @@ class ChatListScreen extends StatelessWidget {
               children: [
                 Text(
                   chat.time,
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withAlpha(178), // 0.7 * 255 = 178.5
+                  ),
                 ),
                 if (chat.unreadCount != null && chat.unreadCount! > 0)
                   Container(
@@ -137,7 +161,9 @@ class ChatListScreen extends StatelessWidget {
                     ),
                     child: Text(
                       '${chat.unreadCount}',
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                   ),

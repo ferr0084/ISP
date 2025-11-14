@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-
 import '../../domain/usecases/login_with_email_and_password.dart';
 import '../../domain/usecases/logout.dart';
 import '../../domain/usecases/sign_up.dart';

@@ -5,6 +5,7 @@ import 'core/router/app_router.dart';
 import 'core/supabase/supabase_initializer.dart';
 import 'core/utils/service_locator.dart';
 import 'features/auth/presentation/providers/user_provider.dart';
+import 'features/groups/presentation/providers/group_provider.dart';
 import 'core/theme/theme_data.dart'; // Import AppTheme
 import 'core/theme/theme_provider.dart'; // Import ThemeProvider
 
@@ -19,7 +20,10 @@ Future<void> main() async {
       MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => sl<UserProvider>()),
-          ChangeNotifierProvider(create: (_) => ThemeProvider()), // Provide ThemeProvider
+          ChangeNotifierProvider(
+            create: (_) => ThemeProvider(),
+          ), // Provide ThemeProvider
+          ChangeNotifierProvider(create: (_) => sl<GroupProvider>()),
         ],
         child: const MyApp(),
       ),
@@ -40,10 +44,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(
-      context,
-      listen: false,
-    );
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
     final appRouter = AppRouter(userProvider);
 
     return Consumer<ThemeProvider>(

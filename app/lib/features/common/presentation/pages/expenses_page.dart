@@ -6,12 +6,8 @@ class ExpensesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Expenses'),
-      ),
-      body: const Center(
-        child: Text('Expenses Page Content'),
-      ),
+      appBar: AppBar(title: const Text('Expenses')),
+      body: const Center(child: Text('Expenses Page Content')),
     );
   }
 }

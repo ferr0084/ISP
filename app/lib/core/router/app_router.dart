@@ -6,6 +6,8 @@ import '../../features/auth/presentation/screens/welcome_screen.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/chats/presentation/screens/chat_list_screen.dart';
 import '../../features/groups/presentation/screens/group_home_screen.dart';
+import '../../features/groups/presentation/screens/create_group_screen.dart';
+import '../../features/groups/presentation/screens/edit_group_screen.dart';
 import '../../features/groups/presentation/screens/my_groups_overview_screen.dart'; // New import
 import '../../features/events/presentation/screens/events_dashboard_screen.dart';
 import '../../features/expenses/presentation/screens/expenses_home_screen.dart'; // New import
@@ -40,18 +42,45 @@ class AppRouter {
       GoRoute(path: '/chats', builder: (context, state) => ChatListScreen()),
       GoRoute(
         path: '/groups',
-        builder: (context, state) => MyGroupsOverviewScreen(), // Changed to MyGroupsOverviewScreen
+        builder: (context, state) =>
+            MyGroupsOverviewScreen(), // Changed to MyGroupsOverviewScreen
         routes: [
           GoRoute(
+            path: 'create',
+            builder: (context, state) => CreateGroupScreen(),
+          ),
+          GoRoute(
+            path: 'edit',
+            builder: (context, state) {
+              final groupId = state.extra as String;
+              return EditGroupScreen(groupId: groupId);
+            },
+          ),
+          GoRoute(
             path: 'detail', // Sub-route for GroupHomeScreen
-            builder: (context, state) => GroupHomeScreen(),
+            builder: (context, state) {
+              final groupId = state.extra as String;
+              return GroupHomeScreen(groupId: groupId);
+            },
           ),
         ],
       ),
-      GoRoute(path: '/events', builder: (context, state) => EventsDashboardScreen()),
-      GoRoute(path: '/expenses', builder: (context, state) => ExpensesHomeScreen()),
-      GoRoute(path: '/idiot-game', builder: (context, state) => IdiotGameDashboardScreen()),
-      GoRoute(path: '/contacts', builder: (context, state) => ContactListScreen()),
+      GoRoute(
+        path: '/events',
+        builder: (context, state) => EventsDashboardScreen(),
+      ),
+      GoRoute(
+        path: '/expenses',
+        builder: (context, state) => ExpensesHomeScreen(),
+      ),
+      GoRoute(
+        path: '/idiot-game',
+        builder: (context, state) => IdiotGameDashboardScreen(),
+      ),
+      GoRoute(
+        path: '/contacts',
+        builder: (context, state) => ContactListScreen(),
+      ),
       GoRoute(path: '/settings', builder: (context, state) => SettingsPage()),
     ],
     redirect: (context, state) {

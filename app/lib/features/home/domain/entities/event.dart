@@ -1,5 +1,3 @@
-
-
 class Event {
   final String month; // e.g., "SEP"
   final String day; // e.g., "28"

@@ -1,5 +1,3 @@
-
-
 class FriendStatus {
   final String name;
   final String avatarUrl;

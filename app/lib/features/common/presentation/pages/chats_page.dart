@@ -6,12 +6,8 @@ class ChatsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Chats'),
-      ),
-      body: const Center(
-        child: Text('Chats Page Content'),
-      ),
+      appBar: AppBar(title: const Text('Chats')),
+      body: const Center(child: Text('Chats Page Content')),
     );
   }
 }

@@ -1,5 +1,3 @@
-
-
 class Chat {
   final String senderName;
   final String avatarUrl;

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class Contact {
   final String name;
@@ -19,10 +18,10 @@ class ContactListScreen extends StatefulWidget {
   const ContactListScreen({super.key});
 
   @override
-  State<ContactListScreen> createState() => _ContactListScreenState();
+  ContactListScreenState createState() => ContactListScreenState();
 }
 
-class _ContactListScreenState extends State<ContactListScreen> {
+class ContactListScreenState extends State<ContactListScreen> {
   // Dummy data for contacts
   final List<Contact> _allContacts = [
     Contact(
@@ -82,7 +81,7 @@ class _ContactListScreenState extends State<ContactListScreen> {
   ];
 
   // Group contacts by the first letter of their name
-  Map<String, List<Contact>> _groupedContacts = {};
+  final Map<String, List<Contact>> _groupedContacts = {};
   List<String> _alphabet = [];
 
   @override
@@ -113,7 +112,10 @@ class _ContactListScreenState extends State<ContactListScreen> {
         leading: Builder(
           builder: (context) {
             return IconButton(
-              icon: Icon(Icons.menu, color: Theme.of(context).appBarTheme.foregroundColor),
+              icon: Icon(
+                Icons.menu,
+                color: Theme.of(context).appBarTheme.foregroundColor,
+              ),
               onPressed: () {
                 Scaffold.of(context).openDrawer();
               },
@@ -122,11 +124,16 @@ class _ContactListScreenState extends State<ContactListScreen> {
         ),
         title: Text(
           'Contacts',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).appBarTheme.foregroundColor),
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            color: Theme.of(context).appBarTheme.foregroundColor,
+          ),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.add, color: Theme.of(context).appBarTheme.foregroundColor),
+            icon: Icon(
+              Icons.add,
+              color: Theme.of(context).appBarTheme.foregroundColor,
+            ),
             onPressed: () {
               // TODO: Implement add contact functionality
             },
@@ -140,11 +147,22 @@ class _ContactListScreenState extends State<ContactListScreen> {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: TextField(
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                   decoration: InputDecoration(
                     hintText: 'Search by name',
-                    hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
-                    prefixIcon: Icon(Icons.search, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
+                    hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withAlpha(153), // 0.6 * 255 = 153
+                    ),
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withAlpha(153), // 0.6 * 255 = 153
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                       borderSide: BorderSide.none,
@@ -161,11 +179,16 @@ class _ContactListScreenState extends State<ContactListScreen> {
                     color: Theme.of(context).colorScheme.primary,
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-                  child: Icon(Icons.person_add, color: Theme.of(context).colorScheme.onPrimary),
+                  child: Icon(
+                    Icons.person_add,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
                 ),
                 title: Text(
                   'Invite Friends',
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                 ),
                 onTap: () {
                   // TODO: Implement invite friends functionality
@@ -187,7 +210,10 @@ class _ContactListScreenState extends State<ContactListScreen> {
                           ),
                           child: Text(
                             letter,
-                            style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
+                            style: Theme.of(context).textTheme.titleLarge
+                                ?.copyWith(
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
                           ),
                         ),
                         ...contacts.map((contact) {
@@ -197,11 +223,22 @@ class _ContactListScreenState extends State<ContactListScreen> {
                             ),
                             title: Text(
                               contact.name,
-                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                              style: Theme.of(context).textTheme.bodyLarge
+                                  ?.copyWith(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurface,
+                                  ),
                             ),
                             subtitle: Text(
                               contact.status,
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withAlpha(178), // 0.7 * 255 = 178.5
+                                  ),
                             ),
                             trailing: contact.isOnline
                                 ? Container(
@@ -217,7 +254,7 @@ class _ContactListScreenState extends State<ContactListScreen> {
                               // TODO: Implement contact detail view
                             },
                           );
-                        }).toList(),
+                        }),
                       ],
                     );
                   },
@@ -240,10 +277,15 @@ class _ContactListScreenState extends State<ContactListScreen> {
                       // TODO: Implement scrolling to the letter
                     },
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 8.0),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 2.0,
+                        horizontal: 8.0,
+                      ),
                       child: Text(
                         letter,
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(color: Theme.of(context).colorScheme.primary),
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
                       ),
                     ),
                   );

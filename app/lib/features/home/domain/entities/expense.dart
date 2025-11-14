@@ -1,5 +1,3 @@
-
-
 enum ExpenseType { owedByYou, owedToYou }
 
 class Expense {

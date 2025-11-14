@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 // Data Models
 enum EventStatus { pending, accepted }
@@ -36,10 +35,10 @@ class EventsDashboardScreen extends StatefulWidget {
   const EventsDashboardScreen({super.key});
 
   @override
-  State<EventsDashboardScreen> createState() => _EventsDashboardScreenState();
+  EventsDashboardScreenState createState() => EventsDashboardScreenState();
 }
 
-class _EventsDashboardScreenState extends State<EventsDashboardScreen> {
+class EventsDashboardScreenState extends State<EventsDashboardScreen> {
   String _selectedView = 'List'; // State for segmented control
 
   // Dummy Data
@@ -75,7 +74,10 @@ class _EventsDashboardScreenState extends State<EventsDashboardScreen> {
         leading: Builder(
           builder: (context) {
             return IconButton(
-              icon: Icon(Icons.menu, color: Theme.of(context).appBarTheme.foregroundColor),
+              icon: Icon(
+                Icons.menu,
+                color: Theme.of(context).appBarTheme.foregroundColor,
+              ),
               onPressed: () {
                 Scaffold.of(context).openDrawer();
               },
@@ -116,15 +118,30 @@ class _EventsDashboardScreenState extends State<EventsDashboardScreen> {
                         child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           decoration: BoxDecoration(
-                            color: _selectedView == 'List' ? Theme.of(context).colorScheme.surface : Colors.transparent,
+                            color: _selectedView == 'List'
+                                ? Theme.of(context).colorScheme.surface
+                                : Colors.transparent,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Center(
                             child: Text(
                               'List',
                               style: _selectedView == 'List'
-                                  ? Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface)
-                                  : Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
+                                  ? Theme.of(
+                                      context,
+                                    ).textTheme.bodyLarge?.copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurface,
+                                    )
+                                  : Theme.of(
+                                      context,
+                                    ).textTheme.bodyLarge?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface
+                                          .withAlpha(178), // 0.7 * 255 = 178.5
+                                    ),
                             ),
                           ),
                         ),
@@ -140,15 +157,30 @@ class _EventsDashboardScreenState extends State<EventsDashboardScreen> {
                         child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           decoration: BoxDecoration(
-                            color: _selectedView == 'Calendar' ? Theme.of(context).colorScheme.surface : Colors.transparent,
+                            color: _selectedView == 'Calendar'
+                                ? Theme.of(context).colorScheme.surface
+                                : Colors.transparent,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Center(
                             child: Text(
                               'Calendar',
                               style: _selectedView == 'Calendar'
-                                  ? Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface)
-                                  : Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
+                                  ? Theme.of(
+                                      context,
+                                    ).textTheme.bodyLarge?.copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurface,
+                                    )
+                                  : Theme.of(
+                                      context,
+                                    ).textTheme.bodyLarge?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface
+                                          .withAlpha(178), // 0.7 * 255 = 178.5
+                                    ),
                             ),
                           ),
                         ),
@@ -162,7 +194,9 @@ class _EventsDashboardScreenState extends State<EventsDashboardScreen> {
               // Pending Invitations Section
               Text(
                 'Pending Invitations',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
               ),
               const SizedBox(height: 16),
               ..._pendingInvitations.map((invitation) {
@@ -176,21 +210,33 @@ class _EventsDashboardScreenState extends State<EventsDashboardScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          invitation.status == EventStatus.pending ? 'Pending' : 'Accepted',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: invitation.status == EventStatus.pending ? Colors.orange : Colors.green,
+                          invitation.status == EventStatus.pending
+                              ? 'Pending'
+                              : 'Accepted',
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: invitation.status == EventStatus.pending
+                                    ? Colors.orange
+                                    : Colors.green,
                                 fontWeight: FontWeight.bold,
                               ),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           invitation.title,
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           invitation.dateTimeLocation,
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurface
+                                    .withAlpha(178), // 0.7 * 255 = 178.5
+                              ),
                         ),
                         const SizedBox(height: 16),
                         Row(
@@ -201,15 +247,24 @@ class _EventsDashboardScreenState extends State<EventsDashboardScreen> {
                                   // TODO: Accept invitation
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Theme.of(context).colorScheme.primary,
-                                  padding: const EdgeInsets.symmetric(vertical: 12),
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.primary,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 12,
+                                  ),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
                                 child: Text(
                                   'Accept',
-                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
+                                  style: Theme.of(context).textTheme.bodyLarge
+                                      ?.copyWith(
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onPrimary,
+                                      ),
                                 ),
                               ),
                             ),
@@ -220,15 +275,27 @@ class _EventsDashboardScreenState extends State<EventsDashboardScreen> {
                                   // TODO: Decline invitation
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Theme.of(context).colorScheme.surface,
-                                  padding: const EdgeInsets.symmetric(vertical: 12),
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.surface,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 12,
+                                  ),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
                                 child: Text(
                                   'Decline',
-                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
+                                  style: Theme.of(context).textTheme.bodyLarge
+                                      ?.copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface
+                                            .withAlpha(
+                                              178,
+                                            ), // 0.7 * 255 = 178.5
+                                      ),
                                 ),
                               ),
                             ),
@@ -238,13 +305,15 @@ class _EventsDashboardScreenState extends State<EventsDashboardScreen> {
                     ),
                   ),
                 );
-              }).toList(),
+              }),
               const SizedBox(height: 24),
 
               // Upcoming Events Section
               Text(
                 'Upcoming Events',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
               ),
               const SizedBox(height: 16),
               ..._upcomingEvents.map((event) {
@@ -261,21 +330,37 @@ class _EventsDashboardScreenState extends State<EventsDashboardScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                event.status == EventStatus.pending ? 'Pending' : 'Accepted',
-                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                      color: event.status == EventStatus.pending ? Colors.orange : Colors.green,
+                                event.status == EventStatus.pending
+                                    ? 'Pending'
+                                    : 'Accepted',
+                                style: Theme.of(context).textTheme.bodyMedium
+                                    ?.copyWith(
+                                      color: event.status == EventStatus.pending
+                                          ? Colors.orange
+                                          : Colors.green,
                                       fontWeight: FontWeight.bold,
                                     ),
                               ),
                               const SizedBox(height: 8),
                               Text(
                                 event.title,
-                                style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                                style: Theme.of(context).textTheme.titleLarge
+                                    ?.copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurface,
+                                    ),
                               ),
                               const SizedBox(height: 4),
                               Text(
                                 '${event.dateTimeLocation} • ${event.groupName}',
-                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
+                                style: Theme.of(context).textTheme.bodyMedium
+                                    ?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface
+                                          .withAlpha(178), // 0.7 * 255 = 178.5
+                                    ),
                               ),
                             ],
                           ),
@@ -296,7 +381,7 @@ class _EventsDashboardScreenState extends State<EventsDashboardScreen> {
                     ),
                   ),
                 );
-              }).toList(),
+              }),
             ],
           ),
         ),

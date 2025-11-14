@@ -13,34 +13,96 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     // Dummy Data (will be replaced by actual data from domain layer)
     final List<FriendStatus> friendStatuses = [
-      FriendStatus(name: 'Maria', avatarUrl: 'assets/images/avatar_maria.png', isOnline: true),
+      FriendStatus(
+        name: 'Maria',
+        avatarUrl: 'assets/images/avatar_maria.png',
+        isOnline: true,
+      ),
       FriendStatus(name: 'David', avatarUrl: 'assets/images/avatar_david.png'),
-      FriendStatus(name: 'Jessica', avatarUrl: 'assets/images/avatar_jessica.png', isOnline: true),
+      FriendStatus(
+        name: 'Jessica',
+        avatarUrl: 'assets/images/avatar_jessica.png',
+        isOnline: true,
+      ),
       FriendStatus(name: 'Chris', avatarUrl: 'assets/images/avatar_chris.png'),
       FriendStatus(name: 'S', avatarUrl: 'assets/images/avatar_s.png'),
     ];
 
     final List<Group> myGroups = [
-      Group(name: 'Design Team', avatarUrl: 'assets/images/group_design_team.png', description: '5 new messages'),
-      Group(name: 'Project Phoenix', avatarUrl: 'assets/images/group_project_phoenix.png', description: 'Kickoff meeting today @ 2:30 PM'),
-      Group(name: 'Weekend Trip', avatarUrl: 'assets/images/group_weekend_trip.png', description: 'You owe \u002445 for gas'),
+      Group(
+        name: 'Design Team',
+        avatarUrl: 'assets/images/group_design_team.png',
+        description: '5 new messages',
+      ),
+      Group(
+        name: 'Project Phoenix',
+        avatarUrl: 'assets/images/group_project_phoenix.png',
+        description: 'Kickoff meeting today @ 2:30 PM',
+      ),
+      Group(
+        name: 'Weekend Trip',
+        avatarUrl: 'assets/images/group_weekend_trip.png',
+        description: 'You owe \u002445 for gas',
+      ),
     ];
 
     final List<Chat> recentChats = [
-      Chat(senderName: 'Jessica', avatarUrl: 'assets/images/avatar_jessica.png', message: 'Awesome, see you there!', time: '10:42 AM', unreadCount: 5),
-      Chat(senderName: 'Maria', avatarUrl: 'assets/images/avatar_maria.png', message: 'Can you send me the file?', time: '9:15 AM', unreadCount: 2),
-      Chat(senderName: 'David', avatarUrl: 'assets/images/avatar_david.png', message: 'Sounds good, let\'s do it.', time: 'Yesterday'),
+      Chat(
+        senderName: 'Jessica',
+        avatarUrl: 'assets/images/avatar_jessica.png',
+        message: 'Awesome, see you there!',
+        time: '10:42 AM',
+        unreadCount: 5,
+      ),
+      Chat(
+        senderName: 'Maria',
+        avatarUrl: 'assets/images/avatar_maria.png',
+        message: 'Can you send me the file?',
+        time: '9:15 AM',
+        unreadCount: 2,
+      ),
+      Chat(
+        senderName: 'David',
+        avatarUrl: 'assets/images/avatar_david.png',
+        message: 'Sounds good, let\'s do it.',
+        time: 'Yesterday',
+      ),
     ];
 
     final List<Event> upcomingEvents = [
-      Event(month: 'SEP', day: '28', title: 'Design Team Sync', timeLocation: '10:00 AM - Conference Room'),
-      Event(month: 'OCT', day: '02', title: 'Project Phoenix Kickoff', timeLocation: '2:30 PM - Main Office'),
+      Event(
+        month: 'SEP',
+        day: '28',
+        title: 'Design Team Sync',
+        timeLocation: '10:00 AM - Conference Room',
+      ),
+      Event(
+        month: 'OCT',
+        day: '02',
+        title: 'Project Phoenix Kickoff',
+        timeLocation: '2:30 PM - Main Office',
+      ),
     ];
 
     final List<Expense> pendingExpenses = [
-      Expense(type: ExpenseType.owedByYou, description: 'You owe Maria', forWhat: 'For "Team Lunch"', amount: 15.50),
-      Expense(type: ExpenseType.owedToYou, description: 'David owes you', forWhat: 'For "Movie Tickets"', amount: 25.00),
-      Expense(type: ExpenseType.owedByYou, description: 'You owe Chris', forWhat: 'For "Coffee Run"', amount: 8.75),
+      Expense(
+        type: ExpenseType.owedByYou,
+        description: 'You owe Maria',
+        forWhat: 'For "Team Lunch"',
+        amount: 15.50,
+      ),
+      Expense(
+        type: ExpenseType.owedToYou,
+        description: 'David owes you',
+        forWhat: 'For "Movie Tickets"',
+        amount: 25.00,
+      ),
+      Expense(
+        type: ExpenseType.owedByYou,
+        description: 'You owe Chris',
+        forWhat: 'For "Coffee Run"',
+        amount: 8.75,
+      ),
     ];
 
     return Scaffold(
@@ -103,14 +165,22 @@ class HomePage extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     color: Colors.green,
                                     shape: BoxShape.circle,
-                                    border: Border.all(color: Theme.of(context).scaffoldBackgroundColor, width: 2),
+                                    border: Border.all(
+                                      color: Theme.of(
+                                        context,
+                                      ).scaffoldBackgroundColor,
+                                      width: 2,
+                                    ),
                                   ),
                                 ),
                               ),
                           ],
                         ),
                         const SizedBox(height: 8.0),
-                        Text(status.name, style: Theme.of(context).textTheme.bodySmall),
+                        Text(
+                          status.name,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
                       ],
                     ),
                   );
@@ -131,11 +201,21 @@ class HomePage extends StatelessWidget {
                 final group = myGroups[index];
                 return ListTile(
                   leading: CircleAvatar(
-                    backgroundImage: group.avatarUrl != null ? AssetImage(group.avatarUrl!) : null,
-                    child: group.avatarUrl == null ? const Icon(Icons.group) : null,
+                    backgroundImage: group.avatarUrl != null
+                        ? AssetImage(group.avatarUrl!)
+                        : null,
+                    child: group.avatarUrl == null
+                        ? const Icon(Icons.group)
+                        : null,
                   ),
-                  title: Text(group.name, style: Theme.of(context).textTheme.titleMedium),
-                  subtitle: Text(group.description, style: Theme.of(context).textTheme.bodySmall),
+                  title: Text(
+                    group.name,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  subtitle: Text(
+                    group.description,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16.0),
                   onTap: () {
                     // Handle group tap
@@ -158,9 +238,7 @@ class HomePage extends StatelessWidget {
                 return ListTile(
                   leading: Stack(
                     children: [
-                      CircleAvatar(
-                        backgroundImage: AssetImage(chat.avatarUrl),
-                      ),
+                      CircleAvatar(backgroundImage: AssetImage(chat.avatarUrl)),
                       if (chat.unreadCount != null && chat.unreadCount! > 0)
                         Positioned(
                           bottom: 0,
@@ -173,18 +251,28 @@ class HomePage extends StatelessWidget {
                             ),
                             child: Text(
                               chat.unreadCount.toString(),
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white),
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(color: Colors.white),
                             ),
                           ),
                         ),
                     ],
                   ),
-                  title: Text(chat.senderName, style: Theme.of(context).textTheme.titleMedium),
-                  subtitle: Text(chat.message, style: Theme.of(context).textTheme.bodySmall),
+                  title: Text(
+                    chat.senderName,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  subtitle: Text(
+                    chat.message,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
                   trailing: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(chat.time, style: Theme.of(context).textTheme.bodySmall),
+                      Text(
+                        chat.time,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
                     ],
                   ),
                   onTap: () {
@@ -216,13 +304,35 @@ class HomePage extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(event.month, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onPrimaryContainer)),
-                        Text(event.day, style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).colorScheme.onPrimaryContainer)),
+                        Text(
+                          event.month,
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onPrimaryContainer,
+                              ),
+                        ),
+                        Text(
+                          event.day,
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onPrimaryContainer,
+                              ),
+                        ),
                       ],
                     ),
                   ),
-                  title: Text(event.title, style: Theme.of(context).textTheme.titleMedium),
-                  subtitle: Text(event.timeLocation, style: Theme.of(context).textTheme.bodySmall),
+                  title: Text(
+                    event.title,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  subtitle: Text(
+                    event.timeLocation,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
                   onTap: () {
                     // Handle event tap
                   },
@@ -243,23 +353,41 @@ class HomePage extends StatelessWidget {
                 final expense = pendingExpenses[index];
                 return ListTile(
                   leading: CircleAvatar(
-                    backgroundColor: expense.type == ExpenseType.owedByYou ? Colors.orange : Colors.blue,
+                    backgroundColor: expense.type == ExpenseType.owedByYou
+                        ? Colors.orange
+                        : Colors.blue,
                     child: Icon(
-                      expense.type == ExpenseType.owedByYou ? Icons.arrow_downward : Icons.arrow_upward,
+                      expense.type == ExpenseType.owedByYou
+                          ? Icons.arrow_downward
+                          : Icons.arrow_upward,
                       color: Colors.white,
                     ),
                   ),
-                  title: Text(expense.description, style: Theme.of(context).textTheme.titleMedium),
-                  subtitle: Text(expense.forWhat, style: Theme.of(context).textTheme.bodySmall),
+                  title: Text(
+                    expense.description,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  subtitle: Text(
+                    expense.forWhat,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
                   trailing: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12.0,
+                      vertical: 8.0,
+                    ),
                     decoration: BoxDecoration(
-                      color: expense.type == ExpenseType.owedByYou ? Colors.orange.shade700 : Colors.blue.shade700,
+                      color: expense.type == ExpenseType.owedByYou
+                          ? Colors.orange.shade700
+                          : Colors.blue.shade700,
                       borderRadius: BorderRadius.circular(20.0),
                     ),
                     child: Text(
                       '\$${expense.amount.toStringAsFixed(2)}',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   onTap: () {
@@ -274,19 +402,27 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionHeader(BuildContext context, String title, VoidCallback onViewAll) {
+  Widget _buildSectionHeader(
+    BuildContext context,
+    String title,
+    VoidCallback onViewAll,
+  ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           title,
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+          style: Theme.of(
+            context,
+          ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
         ),
         TextButton(
           onPressed: onViewAll,
           child: Text(
             'View All',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: Theme.of(context).colorScheme.primary,
+            ),
           ),
         ),
       ],

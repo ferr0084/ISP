@@ -8,7 +8,9 @@ class MainDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentRoute = GoRouter.of(context).routerDelegate.currentConfiguration.uri.toString();
+    final currentRoute = GoRouter.of(
+      context,
+    ).routerDelegate.currentConfiguration.uri.toString();
 
     return Drawer(
       child: ListView(
@@ -17,8 +19,10 @@ class MainDrawer extends StatelessWidget {
           Consumer<UserProvider>(
             builder: (context, userProvider, child) {
               final user = userProvider.user;
-              final userName = user?.email ?? 'Guest'; // Fallback to email or 'Guest'
-              final userAvatarUrl = user?.userMetadata?['avatar_url'] as String?;
+              final userName =
+                  user?.email ?? 'Guest'; // Fallback to email or 'Guest'
+              final userAvatarUrl =
+                  user?.userMetadata?['avatar_url'] as String?;
 
               return DrawerHeader(
                 decoration: BoxDecoration(
@@ -31,16 +35,21 @@ class MainDrawer extends StatelessWidget {
                       radius: 30,
                       backgroundImage: userAvatarUrl != null
                           ? NetworkImage(userAvatarUrl)
-                          : const AssetImage('assets/images/avatar_james.png') as ImageProvider, // Default avatar
+                          : const AssetImage('assets/images/avatar_james.png')
+                                as ImageProvider, // Default avatar
                     ),
                     const SizedBox(height: 8.0),
                     Text(
                       userName,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.white),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.titleLarge?.copyWith(color: Colors.white),
                     ),
                     Text(
                       'View Profile',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white70),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.copyWith(color: Colors.white70),
                     ),
                   ],
                 ),
@@ -108,11 +117,16 @@ class MainDrawer extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Row(
               children: [
-                Icon(Icons.dark_mode, color: Theme.of(context).colorScheme.onSurface),
+                Icon(
+                  Icons.dark_mode,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
                 const SizedBox(width: 16.0),
                 Text(
                   'Dark Mode',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                 ),
                 const Spacer(),
                 Switch(
@@ -138,12 +152,19 @@ class MainDrawer extends StatelessWidget {
   }) {
     final isSelected = currentRoute == route;
     return ListTile(
-      leading: Icon(icon, color: isSelected ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).colorScheme.onSurface),
+      leading: Icon(
+        icon,
+        color: isSelected
+            ? Theme.of(context).colorScheme.onPrimary
+            : Theme.of(context).colorScheme.onSurface,
+      ),
       title: Text(
         title,
         style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: isSelected ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).colorScheme.onSurface,
-            ),
+          color: isSelected
+              ? Theme.of(context).colorScheme.onPrimary
+              : Theme.of(context).colorScheme.onSurface,
+        ),
       ),
       selected: isSelected,
       selectedTileColor: Theme.of(context).colorScheme.primary,

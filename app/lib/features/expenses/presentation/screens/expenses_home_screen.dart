@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 // Data Models
 class ExpenseSummary {
@@ -79,18 +78,26 @@ class ExpensesHomeScreen extends StatelessWidget {
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: Theme.of(context).appBarTheme.elevation,
         leading: IconButton(
-          icon: Icon(Icons.menu, color: Theme.of(context).appBarTheme.foregroundColor),
+          icon: Icon(
+            Icons.menu,
+            color: Theme.of(context).appBarTheme.foregroundColor,
+          ),
           onPressed: () {
             // TODO: Implement drawer functionality
           },
         ),
         title: Text(
           'Expenses',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).appBarTheme.foregroundColor),
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            color: Theme.of(context).appBarTheme.foregroundColor,
+          ),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.filter_list, color: Theme.of(context).appBarTheme.foregroundColor),
+            icon: Icon(
+              Icons.filter_list,
+              color: Theme.of(context).appBarTheme.foregroundColor,
+            ),
             onPressed: () {
               // TODO: Implement filter/sort functionality
             },
@@ -114,7 +121,10 @@ class ExpensesHomeScreen extends StatelessWidget {
                     children: [
                       Text(
                         _expenseSummary.period,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface
+                              .withAlpha(178), // 0.7 * 255 = 178.5
+                        ),
                       ),
                       const SizedBox(height: 8),
                       Row(
@@ -122,19 +132,32 @@ class ExpensesHomeScreen extends StatelessWidget {
                         children: [
                           Text(
                             '\$${_expenseSummary.totalExpenses.toStringAsFixed(2)}',
-                            style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                            style: Theme.of(context).textTheme.displayLarge
+                                ?.copyWith(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurface,
+                                ),
                           ),
                           Text(
                             'of \$${_expenseSummary.budget.toStringAsFixed(2)} Budget',
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
+                            style: Theme.of(context).textTheme.bodyLarge
+                                ?.copyWith(
+                                  color: Theme.of(context).colorScheme.onSurface
+                                      .withAlpha(178), // 0.7 * 255 = 178.5
+                                ),
                           ),
                         ],
                       ),
                       const SizedBox(height: 16),
                       LinearProgressIndicator(
-                        value: _expenseSummary.totalExpenses / _expenseSummary.budget,
+                        value:
+                            _expenseSummary.totalExpenses /
+                            _expenseSummary.budget,
                         backgroundColor: Theme.of(context).colorScheme.surface,
-                        valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.primary),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Theme.of(context).colorScheme.primary,
+                        ),
                       ),
                     ],
                   ),
@@ -148,7 +171,9 @@ class ExpensesHomeScreen extends StatelessWidget {
                 children: [
                   Text(
                     'Recent Transactions',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
                   ),
                   TextButton(
                     onPressed: () {
@@ -156,7 +181,9 @@ class ExpensesHomeScreen extends StatelessWidget {
                     },
                     child: Text(
                       'View All',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
                     ),
                   ),
                 ],
@@ -174,15 +201,23 @@ class ExpensesHomeScreen extends StatelessWidget {
                           color: Theme.of(context).colorScheme.surface,
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Icon(transaction.categoryIcon, color: Theme.of(context).colorScheme.onSurface),
+                        child: Icon(
+                          transaction.categoryIcon,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
                       ),
                       title: Text(
                         transaction.description,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
                       ),
                       subtitle: Text(
                         transaction.category,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface
+                              .withAlpha(178), // 0.7 * 255 = 178.5
+                        ),
                       ),
                       trailing: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
@@ -190,11 +225,19 @@ class ExpensesHomeScreen extends StatelessWidget {
                         children: [
                           Text(
                             '-\$${transaction.amount.toStringAsFixed(2)}',
-                            style: const TextStyle(color: Colors.red, fontSize: 16, fontWeight: FontWeight.bold),
+                            style: const TextStyle(
+                              color: Colors.red,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           Text(
                             '${transaction.date.month}/${transaction.date.day}',
-                            style: Theme.of(context).textTheme.labelSmall?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
+                            style: Theme.of(context).textTheme.labelSmall
+                                ?.copyWith(
+                                  color: Theme.of(context).colorScheme.onSurface
+                                      .withAlpha(178), // 0.7 * 255 = 178.5
+                                ),
                           ),
                         ],
                       ),

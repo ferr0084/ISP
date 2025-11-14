@@ -15,7 +15,10 @@ class SettingsPage extends StatelessWidget {
         leading: Builder(
           builder: (context) {
             return IconButton(
-              icon: Icon(Icons.menu, color: Theme.of(context).appBarTheme.foregroundColor),
+              icon: Icon(
+                Icons.menu,
+                color: Theme.of(context).appBarTheme.foregroundColor,
+              ),
               onPressed: () {
                 Scaffold.of(context).openDrawer();
               },
@@ -24,7 +27,9 @@ class SettingsPage extends StatelessWidget {
         ),
         title: Text(
           'Settings',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).appBarTheme.foregroundColor),
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            color: Theme.of(context).appBarTheme.foregroundColor,
+          ),
         ),
       ),
       body: ListView(
@@ -34,7 +39,9 @@ class SettingsPage extends StatelessWidget {
               return SwitchListTile(
                 title: Text(
                   'Dark Mode',
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                 ),
                 value: themeProvider.themeMode == ThemeMode.dark,
                 onChanged: (value) {

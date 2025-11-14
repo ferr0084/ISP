@@ -4,7 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<bool> initSupabase() async {
   try {
-    await dotenv.load(fileName: "../.env");
+    await dotenv.load();
 
     debugPrint('SUPABASE_URL: ${dotenv.env['SUPABASE_URL']}');
     debugPrint('SUPABASE_ANON_KEY: ${dotenv.env['SUPABASE_ANON_KEY']}');

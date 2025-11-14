@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 // Data Models
 class CurrentIdiot {
@@ -67,7 +66,10 @@ class IdiotGameDashboardScreen extends StatelessWidget {
         leading: Builder(
           builder: (context) {
             return IconButton(
-              icon: Icon(Icons.menu, color: Theme.of(context).appBarTheme.foregroundColor),
+              icon: Icon(
+                Icons.menu,
+                color: Theme.of(context).appBarTheme.foregroundColor,
+              ),
               onPressed: () {
                 Scaffold.of(context).openDrawer();
               },
@@ -76,11 +78,16 @@ class IdiotGameDashboardScreen extends StatelessWidget {
         ),
         title: Text(
           'Idiot Tracker',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).appBarTheme.foregroundColor),
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            color: Theme.of(context).appBarTheme.foregroundColor,
+          ),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.bar_chart, color: Theme.of(context).appBarTheme.foregroundColor),
+            icon: Icon(
+              Icons.bar_chart,
+              color: Theme.of(context).appBarTheme.foregroundColor,
+            ),
             onPressed: () {
               // TODO: Implement view stats functionality
             },
@@ -95,7 +102,9 @@ class IdiotGameDashboardScreen extends StatelessWidget {
             children: [
               Text(
                 'Current Idiot',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
               ),
               const SizedBox(height: 16),
               Card(
@@ -120,21 +129,33 @@ class IdiotGameDashboardScreen extends StatelessWidget {
                       const SizedBox(height: 16),
                       Text(
                         'Loser ${_currentIdiot.losses} times',
-                        style: const TextStyle(color: Colors.orange, fontSize: 14),
+                        style: const TextStyle(
+                          color: Colors.orange,
+                          fontSize: 14,
+                        ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         _currentIdiot.name,
-                        style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                        style: Theme.of(context).textTheme.displayLarge
+                            ?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         'Is the Current Idiot',
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface
+                              .withAlpha(178), // 0.7 * 255 = 178.5
+                        ),
                       ),
                       Text(
                         'Lost on ${_currentIdiot.lastLostDate}',
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface
+                              .withAlpha(178), // 0.7 * 255 = 178.5
+                        ),
                       ),
                     ],
                   ),
@@ -156,7 +177,9 @@ class IdiotGameDashboardScreen extends StatelessWidget {
                   ),
                   child: Text(
                     'View All Players',
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
                   ),
                 ),
               ),
@@ -166,7 +189,9 @@ class IdiotGameDashboardScreen extends StatelessWidget {
                 children: [
                   Text(
                     'Recent Games',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
                   ),
                   TextButton(
                     onPressed: () {
@@ -174,7 +199,9 @@ class IdiotGameDashboardScreen extends StatelessWidget {
                     },
                     child: Text(
                       'View All',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
                     ),
                   ),
                 ],
@@ -197,18 +224,27 @@ class IdiotGameDashboardScreen extends StatelessWidget {
                         Expanded(
                           child: Text(
                             game.description,
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                            style: Theme.of(context).textTheme.bodyLarge
+                                ?.copyWith(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurface,
+                                ),
                           ),
                         ),
                         Text(
                           game.date,
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurface
+                                    .withAlpha(178), // 0.7 * 255 = 178.5
+                              ),
                         ),
                       ],
                     ),
                   ),
                 );
-              }).toList(),
+              }),
             ],
           ),
         ),

@@ -19,8 +19,16 @@ class AppTheme {
     ),
     scaffoldBackgroundColor: Colors.white,
     textTheme: const TextTheme(
-      displayLarge: TextStyle(fontSize: 57.0, fontWeight: FontWeight.bold, color: Colors.black),
-      titleLarge: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold, color: Colors.black),
+      displayLarge: TextStyle(
+        fontSize: 57.0,
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
+      ),
+      titleLarge: TextStyle(
+        fontSize: 22.0,
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
+      ),
       bodyLarge: TextStyle(fontSize: 16.0, height: 1.5, color: Colors.black),
       bodyMedium: TextStyle(fontSize: 14.0, height: 1.4, color: Colors.black),
       labelSmall: TextStyle(fontSize: 11.0, color: Colors.grey),
@@ -46,8 +54,16 @@ class AppTheme {
     ),
     scaffoldBackgroundColor: const Color(0xFF1C2128),
     textTheme: const TextTheme(
-      displayLarge: TextStyle(fontSize: 57.0, fontWeight: FontWeight.bold, color: Colors.white),
-      titleLarge: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold, color: Colors.white),
+      displayLarge: TextStyle(
+        fontSize: 57.0,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+      titleLarge: TextStyle(
+        fontSize: 22.0,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
       bodyLarge: TextStyle(fontSize: 16.0, height: 1.5, color: Colors.white),
       bodyMedium: TextStyle(fontSize: 14.0, height: 1.4, color: Colors.white),
       labelSmall: TextStyle(fontSize: 11.0, color: Colors.grey),
