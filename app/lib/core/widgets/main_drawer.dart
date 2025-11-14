@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:app/features/auth/presentation/providers/user_provider.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({super.key});
@@ -12,28 +14,38 @@ class MainDrawer extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          DrawerHeader(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CircleAvatar(
-                  radius: 30,
-                  backgroundImage: AssetImage('assets/images/avatar_james.png'), // Placeholder for James's avatar
+          Consumer<UserProvider>(
+            builder: (context, userProvider, child) {
+              final user = userProvider.user;
+              final userName = user?.email ?? 'Guest'; // Fallback to email or 'Guest'
+              final userAvatarUrl = user?.userMetadata?['avatar_url'] as String?;
+
+              return DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
                 ),
-                const SizedBox(height: 8.0),
-                Text(
-                  'James',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.white),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CircleAvatar(
+                      radius: 30,
+                      backgroundImage: userAvatarUrl != null
+                          ? NetworkImage(userAvatarUrl)
+                          : const AssetImage('assets/images/avatar_james.png') as ImageProvider, // Default avatar
+                    ),
+                    const SizedBox(height: 8.0),
+                    Text(
+                      userName,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.white),
+                    ),
+                    Text(
+                      'View Profile',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white70),
+                    ),
+                  ],
                 ),
-                Text(
-                  'View Profile',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white70),
-                ),
-              ],
-            ),
+              );
+            },
           ),
           _buildDrawerItem(
             context,

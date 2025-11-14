@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../domain/usecases/get_user.dart';
+
 import '../../domain/usecases/login_with_email_and_password.dart';
 import '../../domain/usecases/logout.dart';
 import '../../domain/usecases/sign_up.dart';
 
 class UserProvider extends ChangeNotifier {
-  final GetUser _getUser;
   final SignUp _signUp;
   final LoginWithEmailAndPassword _signIn;
   final Logout _signOut;
 
   User? _user;
 
-  UserProvider(this._getUser, this._signUp, this._signIn, this._signOut) {
-    _user = _getUser();
+  UserProvider(this._signUp, this._signIn, this._signOut) {
+    Supabase.instance.client.auth.onAuthStateChange.listen((data) {
+      _user = data.session?.user;
+      notifyListeners();
+    });
   }
 
   User? get user => _user;

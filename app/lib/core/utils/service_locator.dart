@@ -31,7 +31,6 @@ void setupServiceLocator() {
   // Auth Provider
   sl.registerLazySingleton(
     () => UserProvider(
-      sl<GetUser>(),
       sl<SignUp>(),
       sl<LoginWithEmailAndPassword>(),
       sl<Logout>(),
