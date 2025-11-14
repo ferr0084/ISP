@@ -74,23 +74,23 @@ class ExpensesHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1C2128), // Dark background color
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1C2128),
-        elevation: 0,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        elevation: Theme.of(context).appBarTheme.elevation,
         leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.white),
+          icon: Icon(Icons.menu, color: Theme.of(context).appBarTheme.foregroundColor),
           onPressed: () {
             // TODO: Implement drawer functionality
           },
         ),
-        title: const Text(
+        title: Text(
           'Expenses',
-          style: TextStyle(color: Colors.white),
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).appBarTheme.foregroundColor),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.filter_list, color: Colors.white),
+            icon: Icon(Icons.filter_list, color: Theme.of(context).appBarTheme.foregroundColor),
             onPressed: () {
               // TODO: Implement filter/sort functionality
             },
@@ -105,10 +105,8 @@ class ExpensesHomeScreen extends StatelessWidget {
             children: [
               // Expense Summary Card
               Card(
-                color: const Color(0xFF2D333B),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                color: Theme.of(context).cardTheme.color,
+                shape: Theme.of(context).cardTheme.shape,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
@@ -116,7 +114,7 @@ class ExpensesHomeScreen extends StatelessWidget {
                     children: [
                       Text(
                         _expenseSummary.period,
-                        style: TextStyle(color: Colors.grey[400], fontSize: 14),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
                       ),
                       const SizedBox(height: 8),
                       Row(
@@ -124,23 +122,19 @@ class ExpensesHomeScreen extends StatelessWidget {
                         children: [
                           Text(
                             '\$${_expenseSummary.totalExpenses.toStringAsFixed(2)}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
                           ),
                           Text(
                             'of \$${_expenseSummary.budget.toStringAsFixed(2)} Budget',
-                            style: TextStyle(color: Colors.grey[400], fontSize: 16),
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
                           ),
                         ],
                       ),
                       const SizedBox(height: 16),
                       LinearProgressIndicator(
                         value: _expenseSummary.totalExpenses / _expenseSummary.budget,
-                        backgroundColor: Colors.grey[700],
-                        valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+                        backgroundColor: Theme.of(context).colorScheme.surface,
+                        valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.primary),
                       ),
                     ],
                   ),
@@ -152,49 +146,43 @@ class ExpensesHomeScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     'Recent Transactions',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
                   ),
                   TextButton(
                     onPressed: () {
                       // TODO: Navigate to all transactions
                     },
-                    child: const Text(
+                    child: Text(
                       'View All',
-                      style: TextStyle(color: Colors.blue, fontSize: 16),
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 16),
               Card(
-                color: const Color(0xFF2D333B),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                color: Theme.of(context).cardTheme.color,
+                shape: Theme.of(context).cardTheme.shape,
                 child: Column(
                   children: _recentTransactions.map((transaction) {
                     return ListTile(
                       leading: Container(
                         padding: const EdgeInsets.all(8.0),
                         decoration: BoxDecoration(
-                          color: Colors.grey[700],
+                          color: Theme.of(context).colorScheme.surface,
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Icon(transaction.categoryIcon, color: Colors.white),
+                        child: Icon(transaction.categoryIcon, color: Theme.of(context).colorScheme.onSurface),
                       ),
                       title: Text(
                         transaction.description,
-                        style: const TextStyle(color: Colors.white, fontSize: 16),
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
                       ),
                       subtitle: Text(
                         transaction.category,
-                        style: TextStyle(color: Colors.grey[400], fontSize: 14),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
                       ),
                       trailing: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
@@ -206,7 +194,7 @@ class ExpensesHomeScreen extends StatelessWidget {
                           ),
                           Text(
                             '${transaction.date.month}/${transaction.date.day}',
-                            style: TextStyle(color: Colors.grey[400], fontSize: 12),
+                            style: Theme.of(context).textTheme.labelSmall?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
                           ),
                         ],
                       ),
@@ -225,8 +213,8 @@ class ExpensesHomeScreen extends StatelessWidget {
         onPressed: () {
           // TODO: Implement add new expense functionality
         },
-        backgroundColor: Colors.blue,
-        child: const Icon(Icons.add, color: Colors.white),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        child: Icon(Icons.add, color: Theme.of(context).colorScheme.onPrimary),
       ),
     );
   }

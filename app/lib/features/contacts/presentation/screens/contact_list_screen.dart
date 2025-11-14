@@ -106,23 +106,27 @@ class _ContactListScreenState extends State<ContactListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1C2128), // Dark background color
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1C2128), // Dark background color
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            context.pop(); // Navigate back using go_router
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        elevation: Theme.of(context).appBarTheme.elevation,
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: Icon(Icons.menu, color: Theme.of(context).appBarTheme.foregroundColor),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
           },
         ),
-        title: const Text(
+        title: Text(
           'Contacts',
-          style: TextStyle(color: Colors.white),
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).appBarTheme.foregroundColor),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.add, color: Colors.white),
+            icon: Icon(Icons.add, color: Theme.of(context).appBarTheme.foregroundColor),
             onPressed: () {
               // TODO: Implement add contact functionality
             },
@@ -136,17 +140,17 @@ class _ContactListScreenState extends State<ContactListScreen> {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: TextField(
-                  style: const TextStyle(color: Colors.white), // Text color for input
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface),
                   decoration: InputDecoration(
                     hintText: 'Search by name',
-                    hintStyle: TextStyle(color: Colors.grey[400]),
-                    prefixIcon: Icon(Icons.search, color: Colors.grey[400]),
+                    hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
+                    prefixIcon: Icon(Icons.search, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                       borderSide: BorderSide.none,
                     ),
                     filled: true,
-                    fillColor: const Color(0xFF2D333B), // Darker background for search bar
+                    fillColor: Theme.of(context).cardTheme.color,
                   ),
                 ),
               ),
@@ -154,14 +158,14 @@ class _ContactListScreenState extends State<ContactListScreen> {
                 leading: Container(
                   padding: const EdgeInsets.all(8.0),
                   decoration: BoxDecoration(
-                    color: Colors.blue[700],
+                    color: Theme.of(context).colorScheme.primary,
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-                  child: const Icon(Icons.person_add, color: Colors.white),
+                  child: Icon(Icons.person_add, color: Theme.of(context).colorScheme.onPrimary),
                 ),
-                title: const Text(
+                title: Text(
                   'Invite Friends',
-                  style: TextStyle(color: Colors.blue, fontSize: 18),
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
                 ),
                 onTap: () {
                   // TODO: Implement invite friends functionality
@@ -183,11 +187,7 @@ class _ContactListScreenState extends State<ContactListScreen> {
                           ),
                           child: Text(
                             letter,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue,
-                            ),
+                            style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
                           ),
                         ),
                         ...contacts.map((contact) {
@@ -197,11 +197,11 @@ class _ContactListScreenState extends State<ContactListScreen> {
                             ),
                             title: Text(
                               contact.name,
-                              style: const TextStyle(color: Colors.white),
+                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
                             ),
                             subtitle: Text(
                               contact.status,
-                              style: TextStyle(color: Colors.grey[400]),
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
                             ),
                             trailing: contact.isOnline
                                 ? Container(
@@ -243,7 +243,7 @@ class _ContactListScreenState extends State<ContactListScreen> {
                       padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 8.0),
                       child: Text(
                         letter,
-                        style: const TextStyle(color: Colors.blue, fontSize: 12),
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(color: Theme.of(context).colorScheme.primary),
                       ),
                     ),
                   );

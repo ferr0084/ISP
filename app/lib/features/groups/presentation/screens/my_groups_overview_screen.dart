@@ -52,19 +52,19 @@ class MyGroupsOverviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1C2128), // Dark background color
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1C2128),
-        elevation: 0,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        elevation: Theme.of(context).appBarTheme.elevation,
         leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.white),
+          icon: Icon(Icons.menu, color: Theme.of(context).appBarTheme.foregroundColor),
           onPressed: () {
             // TODO: Implement drawer functionality
           },
         ),
-        title: const Text(
+        title: Text(
           'My Groups',
-          style: TextStyle(color: Colors.white),
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).appBarTheme.foregroundColor),
         ),
       ),
       body: Column(
@@ -72,17 +72,17 @@ class MyGroupsOverviewScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: TextField(
-              style: const TextStyle(color: Colors.white),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface),
               decoration: InputDecoration(
-                hintText: 'Search groups...', 
-                hintStyle: TextStyle(color: Colors.grey[400]),
-                prefixIcon: Icon(Icons.search, color: Colors.grey[400]),
+                hintText: 'Search groups...',
+                hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
+                prefixIcon: Icon(Icons.search, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide.none,
                 ),
                 filled: true,
-                fillColor: const Color(0xFF2D333B),
+                fillColor: Theme.of(context).cardTheme.color,
               ),
             ),
           ),
@@ -97,11 +97,11 @@ class MyGroupsOverviewScreen extends StatelessWidget {
                   ),
                   title: Text(
                     group.title,
-                    style: const TextStyle(color: Colors.white),
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
                   ),
                   subtitle: Text(
                     group.lastMessage,
-                    style: TextStyle(color: Colors.grey[400]),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
                   ),
                   trailing: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -109,14 +109,14 @@ class MyGroupsOverviewScreen extends StatelessWidget {
                     children: [
                       Text(
                         group.time,
-                        style: TextStyle(color: Colors.grey[400], fontSize: 12),
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
                       ),
                       if (group.unreadCount != null && group.unreadCount! > 0)
                         Container(
                           margin: const EdgeInsets.only(top: 4.0),
                           padding: const EdgeInsets.all(5.0),
                           decoration: BoxDecoration(
-                            color: Colors.blue,
+                            color: Theme.of(context).colorScheme.primary,
                             borderRadius: BorderRadius.circular(12.0),
                           ),
                           constraints: const BoxConstraints(
@@ -125,10 +125,7 @@ class MyGroupsOverviewScreen extends StatelessWidget {
                           ),
                           child: Text(
                             '${group.unreadCount}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                            ),
+                            style: Theme.of(context).textTheme.labelSmall?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -147,8 +144,8 @@ class MyGroupsOverviewScreen extends StatelessWidget {
         onPressed: () {
           // TODO: Implement create new group functionality
         },
-        backgroundColor: Colors.blue,
-        child: const Icon(Icons.add, color: Colors.white),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        child: Icon(Icons.add, color: Theme.of(context).colorScheme.onPrimary),
       ),
     );
   }

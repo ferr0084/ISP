@@ -104,12 +104,12 @@ class GroupHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1C2128), // Dark background color
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1C2128),
-        elevation: 0,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        elevation: Theme.of(context).appBarTheme.elevation,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: Theme.of(context).appBarTheme.foregroundColor),
           onPressed: () {
             context.pop();
           },
@@ -117,19 +117,19 @@ class GroupHomeScreen extends StatelessWidget {
         title: Row(
           children: [
             CircleAvatar(
-              backgroundColor: Colors.orange[200], // Placeholder color
+              backgroundColor: Theme.of(context).colorScheme.secondaryContainer, // Placeholder color
               radius: 16,
             ),
             const SizedBox(width: 8),
-            const Text(
+            Text(
               'Design Team',
-              style: TextStyle(color: Colors.white, fontSize: 18),
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).appBarTheme.foregroundColor),
             ),
           ],
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.more_vert, color: Colors.white),
+            icon: Icon(Icons.more_vert, color: Theme.of(context).appBarTheme.foregroundColor),
             onPressed: () {
               // TODO: Implement group options
             },
@@ -165,19 +165,12 @@ class GroupHomeScreen extends StatelessWidget {
                     children: [
                       Text(
                         _announcement.title,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         _announcement.content,
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.8),
-                          fontSize: 14,
-                        ),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8)),
                       ),
                     ],
                   ),
@@ -189,39 +182,33 @@ class GroupHomeScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     'Idiot Game',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
                   ),
                   TextButton(
                     onPressed: () {
                       // TODO: Navigate to Idiot Game Dashboard
                     },
-                    child: const Text(
+                    child: Text(
                       'View Dashboard',
-                      style: TextStyle(color: Colors.blue, fontSize: 16),
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 16),
               Card(
-                color: const Color(0xFF2D333B),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                color: Theme.of(context).cardTheme.color,
+                shape: Theme.of(context).cardTheme.shape,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         'Current Idiot',
-                        style: TextStyle(color: Colors.grey, fontSize: 14),
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
                       ),
                       const SizedBox(height: 8),
                       Row(
@@ -233,7 +220,7 @@ class GroupHomeScreen extends StatelessWidget {
                           const SizedBox(width: 12),
                           Text(
                             _idiotGameInfo.currentIdiotName,
-                            style: const TextStyle(color: Colors.white, fontSize: 18),
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
                           ),
                           const Spacer(),
                           const Icon(Icons.sentiment_dissatisfied, color: Colors.red, size: 30),
@@ -247,15 +234,15 @@ class GroupHomeScreen extends StatelessWidget {
                             // TODO: Log New Game
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
+                            backgroundColor: Theme.of(context).colorScheme.primary,
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          child: const Text(
+                          child: Text(
                             'Log New Game',
-                            style: TextStyle(color: Colors.white, fontSize: 16),
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
                           ),
                         ),
                       ),
@@ -269,31 +256,25 @@ class GroupHomeScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     'Upcoming Events',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
                   ),
                   TextButton(
                     onPressed: () {
                       // TODO: Navigate to Events List
                     },
-                    child: const Text(
+                    child: Text(
                       'View All',
-                      style: TextStyle(color: Colors.blue, fontSize: 16),
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 16),
               Card(
-                color: const Color(0xFF2D333B),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                color: Theme.of(context).cardTheme.color,
+                shape: Theme.of(context).cardTheme.shape,
                 child: Column(
                   children: _upcomingEvents.map((event) {
                     return Padding(
@@ -303,10 +284,10 @@ class GroupHomeScreen extends StatelessWidget {
                           Container(
                             padding: const EdgeInsets.all(8.0),
                             decoration: BoxDecoration(
-                              color: Colors.grey[700],
+                              color: Theme.of(context).colorScheme.surface,
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: Icon(event.icon, color: Colors.white),
+                            child: Icon(event.icon, color: Theme.of(context).colorScheme.onSurface),
                           ),
                           const SizedBox(width: 16),
                           Expanded(
@@ -315,18 +296,18 @@ class GroupHomeScreen extends StatelessWidget {
                               children: [
                                 Text(
                                   event.title,
-                                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
                                 ),
                                 Text(
                                   event.subtitle,
-                                  style: TextStyle(color: Colors.grey[400], fontSize: 14),
+                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
                                 ),
                               ],
                             ),
                           ),
                           Text(
                             event.time,
-                            style: TextStyle(color: Colors.grey[400], fontSize: 14),
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
                           ),
                         ],
                       ),
@@ -340,50 +321,40 @@ class GroupHomeScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     'Shared Expenses',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
                   ),
                   TextButton(
                     onPressed: () {
                       // TODO: Navigate to Expense Details
                     },
-                    child: const Text(
+                    child: Text(
                       'View Details',
-                      style: TextStyle(color: Colors.blue, fontSize: 16),
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 16),
               Card(
-                color: const Color(0xFF2D333B),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                color: Theme.of(context).cardTheme.color,
+                shape: Theme.of(context).cardTheme.shape,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         'You are owed',
-                        style: TextStyle(color: Colors.grey, fontSize: 14),
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
                       ),
                       const SizedBox(height: 4),
                       Row(
                         children: [
                           Text(
                             '\$${_expenseSummary.amountOwed.toStringAsFixed(2)}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
                           ),
                           const Spacer(),
                           Container(
@@ -392,7 +363,7 @@ class GroupHomeScreen extends StatelessWidget {
                               color: Colors.green[700],
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(Icons.arrow_upward, color: Colors.white),
+                            child: Icon(Icons.arrow_upward, color: Theme.of(context).colorScheme.onPrimary),
                           ),
                         ],
                       ),
@@ -404,15 +375,15 @@ class GroupHomeScreen extends StatelessWidget {
                             // TODO: Settle Up
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
+                            backgroundColor: Theme.of(context).colorScheme.primary,
                             padding: const EdgeInsets.symmetric(vertical: 12),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          child: const Text(
+                          child: Text(
                             'Settle Up',
-                            style: TextStyle(color: Colors.white, fontSize: 16),
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
                           ),
                         ),
                       ),
@@ -426,31 +397,25 @@ class GroupHomeScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     'Latest Messages',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
                   ),
                   TextButton(
                     onPressed: () {
                       // TODO: Open Chat
                     },
-                    child: const Text(
+                    child: Text(
                       'Open Chat',
-                      style: TextStyle(color: Colors.blue, fontSize: 16),
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 16),
               Card(
-                color: const Color(0xFF2D333B),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                color: Theme.of(context).cardTheme.color,
+                shape: Theme.of(context).cardTheme.shape,
                 child: Column(
                   children: _latestMessages.map((message) {
                     return Padding(
@@ -469,12 +434,12 @@ class GroupHomeScreen extends StatelessWidget {
                               children: [
                                 Text(
                                   message.senderName,
-                                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
                                   message.content,
-                                  style: TextStyle(color: Colors.grey[400], fontSize: 14),
+                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -495,8 +460,8 @@ class GroupHomeScreen extends StatelessWidget {
         onPressed: () {
           // TODO: Implement new action for group
         },
-        backgroundColor: Colors.blue,
-        child: const Icon(Icons.add, color: Colors.white),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        child: Icon(Icons.add, color: Theme.of(context).colorScheme.onPrimary),
       ),
     );
   }

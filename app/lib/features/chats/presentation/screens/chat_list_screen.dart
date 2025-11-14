@@ -26,7 +26,7 @@ class ChatListScreen extends StatelessWidget {
     Chat(
       avatarAsset: 'assets/images/avatar_jessica.png',
       title: 'Laura',
-      lastMessage: 'Hey, what\'s up? Just checking in t...', // Corrected escaping for apostrophe
+      lastMessage: 'Hey, what\'s up? Just checking in t...',
       time: '10:45 AM',
       unreadCount: 2,
     ),
@@ -39,7 +39,7 @@ class ChatListScreen extends StatelessWidget {
     Chat(
       avatarAsset: 'assets/images/group_design_team.png', // Placeholder for group avatar
       title: 'Work Group',
-      lastMessage: 'John: Don\'t forget the meeting...', // Corrected escaping for apostrophe
+      lastMessage: 'John: Don\'t forget the meeting...',
       time: 'Yesterday',
       unreadCount: 5,
       isGroup: true,
@@ -67,23 +67,23 @@ class ChatListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1C2128), // Dark background color
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1C2128), // Dark background color
-        elevation: 0,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        elevation: Theme.of(context).appBarTheme.elevation,
         leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.white),
+          icon: Icon(Icons.menu, color: Theme.of(context).appBarTheme.foregroundColor),
           onPressed: () {
             // TODO: Implement drawer functionality
           },
         ),
-        title: const Text(
+        title: Text(
           'Chats',
-          style: TextStyle(color: Colors.white),
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).appBarTheme.foregroundColor),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.search, color: Colors.white),
+            icon: Icon(Icons.search, color: Theme.of(context).appBarTheme.foregroundColor),
             onPressed: () {
               // TODO: Implement search functionality
             },
@@ -102,18 +102,18 @@ class ChatListScreen extends StatelessWidget {
               children: [
                 Text(
                   chat.title,
-                  style: const TextStyle(color: Colors.white),
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
                 ),
                 if (chat.isGroup)
-                  const Padding(
-                    padding: EdgeInsets.only(left: 4.0),
-                    child: Icon(Icons.people, size: 16, color: Colors.grey),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 4.0),
+                    child: Icon(Icons.people, size: 16, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
                   ),
               ],
             ),
             subtitle: Text(
               chat.lastMessage,
-              style: TextStyle(color: Colors.grey[400]),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
             ),
             trailing: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -121,14 +121,14 @@ class ChatListScreen extends StatelessWidget {
               children: [
                 Text(
                   chat.time,
-                  style: TextStyle(color: Colors.grey[400], fontSize: 12),
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
                 ),
                 if (chat.unreadCount != null && chat.unreadCount! > 0)
                   Container(
                     margin: const EdgeInsets.only(top: 4.0),
                     padding: const EdgeInsets.all(5.0),
                     decoration: BoxDecoration(
-                      color: Colors.blue,
+                      color: Theme.of(context).colorScheme.primary,
                       borderRadius: BorderRadius.circular(12.0),
                     ),
                     constraints: const BoxConstraints(
@@ -137,10 +137,7 @@ class ChatListScreen extends StatelessWidget {
                     ),
                     child: Text(
                       '${chat.unreadCount}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                      ),
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -156,8 +153,8 @@ class ChatListScreen extends StatelessWidget {
         onPressed: () {
           // TODO: Implement new chat functionality
         },
-        backgroundColor: Colors.blue,
-        child: const Icon(Icons.edit, color: Colors.white),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        child: Icon(Icons.edit, color: Theme.of(context).colorScheme.onPrimary),
       ),
     );
   }

@@ -60,17 +60,27 @@ class IdiotGameDashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1C2128), // Dark background color
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1C2128),
-        elevation: 0,
-        title: const Text(
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        elevation: Theme.of(context).appBarTheme.elevation,
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: Icon(Icons.menu, color: Theme.of(context).appBarTheme.foregroundColor),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
+        ),
+        title: Text(
           'Idiot Tracker',
-          style: TextStyle(color: Colors.white),
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).appBarTheme.foregroundColor),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.bar_chart, color: Colors.white),
+            icon: Icon(Icons.bar_chart, color: Theme.of(context).appBarTheme.foregroundColor),
             onPressed: () {
               // TODO: Implement view stats functionality
             },
@@ -83,20 +93,14 @@ class IdiotGameDashboardScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 'Current Idiot',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
               ),
               const SizedBox(height: 16),
               Card(
-                color: const Color(0xFF2D333B),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                color: Theme.of(context).cardTheme.color,
+                shape: Theme.of(context).cardTheme.shape,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
@@ -121,16 +125,16 @@ class IdiotGameDashboardScreen extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         _currentIdiot.name,
-                        style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                        style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         'Is the Current Idiot',
-                        style: TextStyle(color: Colors.grey[400], fontSize: 16),
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
                       ),
                       Text(
                         'Lost on ${_currentIdiot.lastLostDate}',
-                        style: TextStyle(color: Colors.grey[400], fontSize: 16),
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
                       ),
                     ],
                   ),
@@ -144,15 +148,15 @@ class IdiotGameDashboardScreen extends StatelessWidget {
                     // TODO: View All Players
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Theme.of(context).colorScheme.primary,
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: const Text(
+                  child: Text(
                     'View All Players',
-                    style: TextStyle(color: Colors.white, fontSize: 16),
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onPrimary),
                   ),
                 ),
               ),
@@ -160,21 +164,17 @@ class IdiotGameDashboardScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     'Recent Games',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
                   ),
                   TextButton(
                     onPressed: () {
                       // TODO: View All Recent Games
                     },
-                    child: const Text(
+                    child: Text(
                       'View All',
-                      style: TextStyle(color: Colors.blue, fontSize: 16),
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
                     ),
                   ),
                 ],
@@ -182,10 +182,8 @@ class IdiotGameDashboardScreen extends StatelessWidget {
               const SizedBox(height: 16),
               ..._recentGames.map((game) {
                 return Card(
-                  color: const Color(0xFF2D333B),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  color: Theme.of(context).cardTheme.color,
+                  shape: Theme.of(context).cardTheme.shape,
                   margin: const EdgeInsets.only(bottom: 12),
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -199,12 +197,12 @@ class IdiotGameDashboardScreen extends StatelessWidget {
                         Expanded(
                           child: Text(
                             game.description,
-                            style: const TextStyle(color: Colors.white, fontSize: 16),
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
                           ),
                         ),
                         Text(
                           game.date,
-                          style: TextStyle(color: Colors.grey[400], fontSize: 14),
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7)),
                         ),
                       ],
                     ),
@@ -219,8 +217,8 @@ class IdiotGameDashboardScreen extends StatelessWidget {
         onPressed: () {
           // TODO: Implement log new game functionality
         },
-        backgroundColor: Colors.blue,
-        child: const Icon(Icons.add, color: Colors.white),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        child: Icon(Icons.add, color: Theme.of(context).colorScheme.onPrimary),
       ),
     );
   }

@@ -5,6 +5,8 @@ import 'core/router/app_router.dart';
 import 'core/supabase/supabase_initializer.dart';
 import 'core/utils/service_locator.dart';
 import 'features/auth/presentation/providers/user_provider.dart';
+import 'core/theme/theme_data.dart'; // Import AppTheme
+import 'core/theme/theme_provider.dart'; // Import ThemeProvider
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,7 +15,15 @@ Future<void> main() async {
 
   if (supabaseInitialized) {
     setupServiceLocator();
-    runApp(const MyApp());
+    runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => sl<UserProvider>()),
+          ChangeNotifierProvider(create: (_) => ThemeProvider()), // Provide ThemeProvider
+        ],
+        child: const MyApp(),
+      ),
+    );
   } else {
     runApp(
       const MaterialApp(
@@ -30,23 +40,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => sl<UserProvider>(),
-      child: Builder(
-        builder: (context) {
-          final userProvider = Provider.of<UserProvider>(
-            context,
-            listen: false,
-          );
-          final appRouter = AppRouter(userProvider);
+    final userProvider = Provider.of<UserProvider>(
+      context,
+      listen: false,
+    );
+    final appRouter = AppRouter(userProvider);
 
-          return MaterialApp.router(
-            title: 'ISP App',
-            theme: ThemeData(primarySwatch: Colors.blue),
-            routerConfig: appRouter.router,
-          );
-        },
-      ),
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return MaterialApp.router(
+          title: 'ISP App',
+          theme: AppTheme.lightTheme, // Use light theme
+          darkTheme: AppTheme.darkTheme, // Use dark theme
+          themeMode: themeProvider.themeMode, // Control theme mode
+          routerConfig: appRouter.router,
+        );
+      },
     );
   }
 }
