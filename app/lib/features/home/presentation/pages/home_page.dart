@@ -4,6 +4,7 @@ import 'package:app/features/home/domain/entities/event.dart';
 import 'package:app/features/home/domain/entities/expense.dart';
 import 'package:app/features/home/domain/entities/friend_status.dart';
 import 'package:app/features/home/domain/entities/group.dart';
+import 'package:app/core/widgets/main_drawer.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -44,10 +45,14 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.menu),
-          onPressed: () {
-            // Handle menu button press
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
           },
         ),
         title: const Text('Home'),
@@ -61,6 +66,7 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
+      drawer: const MainDrawer(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
