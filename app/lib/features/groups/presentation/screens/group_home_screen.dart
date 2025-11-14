@@ -56,9 +56,16 @@ class Message {
   });
 }
 
-class GroupHomeScreen extends StatelessWidget {
-  const GroupHomeScreen({super.key});
+class GroupHomeScreen extends StatefulWidget {
+  final String groupId;
 
+  const GroupHomeScreen({super.key, required this.groupId});
+
+  @override
+  _GroupHomeScreenState createState() => _GroupHomeScreenState();
+}
+
+class _GroupHomeScreenState extends State<GroupHomeScreen> {
   // Dummy Data
   static final Announcement _announcement = Announcement(
     title: 'Pinned Announcement',
@@ -102,36 +109,67 @@ class GroupHomeScreen extends StatelessWidget {
   ];
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF1C2128), // Dark background color
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF1C2128),
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            context.pop();
-          },
-        ),
-        title: Row(
-          children: [
-            CircleAvatar(
-              backgroundColor: Colors.orange[200], // Placeholder color
-              radius: 16,
+    return Consumer<GroupProvider>(
+      builder: (context, groupProvider, child) {
+        if (groupProvider.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (groupProvider.groups.isEmpty) {
+          return const Center(child: Text('No groups found'));
+        }
+
+        final group = groupProvider.groups
+            .firstWhere((group) => group.id == widget.groupId);
+
+        return Scaffold(
+          backgroundColor: const Color(0xFF1C2128), // Dark background color
+          appBar: AppBar(
+            backgroundColor: const Color(0xFF1C2128),
+            elevation: 0,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () {
+                context.pop();
+              },
             ),
-            const SizedBox(width: 8),
-            const Text(
-              'Design Team',
-              style: TextStyle(color: Colors.white, fontSize: 18),
+            title: Row(
+              children: [
+                CircleAvatar(
+                  backgroundImage: AssetImage(group.avatarUrl),
+                  radius: 16,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  group.name,
+                  style: const TextStyle(color: Colors.white, fontSize: 18),
+                ),
+              ],
             ),
-          ],
-        ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.more_vert, color: Colors.white),
-            onPressed: () {
-              // TODO: Implement group options
+          PopupMenuButton<String>(
+            onSelected: (value) {
+              if (value == 'Edit') {
+                context.push('/groups/edit', extra: group.id);
+              } else if (value == 'Delete') {
+                Provider.of<GroupProvider>(context, listen: false)
+                    .deleteGroup(group.id);
+                context.pop();
+              }
+            },
+            itemBuilder: (BuildContext context) {
+              return {'Edit', 'Delete'}.map((String choice) {
+                return PopupMenuItem<String>(
+                  value: choice,
+                  child: Text(choice),
+                );
+              }).toList();
             },
           ),
         ],
@@ -199,7 +237,7 @@ class GroupHomeScreen extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      // TODO: Navigate to Idiot Game Dashboard
+                      context.push('/idiot-game');
                     },
                     child: const Text(
                       'View Dashboard',
@@ -244,7 +282,7 @@ class GroupHomeScreen extends StatelessWidget {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            // TODO: Log New Game
+                            print('Log New Game');
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.blue,
@@ -279,7 +317,7 @@ class GroupHomeScreen extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      // TODO: Navigate to Events List
+                      context.push('/events');
                     },
                     child: const Text(
                       'View All',
@@ -350,7 +388,7 @@ class GroupHomeScreen extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      // TODO: Navigate to Expense Details
+                      context.push('/expenses');
                     },
                     child: const Text(
                       'View Details',
@@ -401,7 +439,7 @@ class GroupHomeScreen extends StatelessWidget {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            // TODO: Settle Up
+                            print('Settle Up');
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.blue,
@@ -436,7 +474,7 @@ class GroupHomeScreen extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () {
-                      // TODO: Open Chat
+                      context.push('/chats');
                     },
                     child: const Text(
                       'Open Chat',
@@ -498,6 +536,8 @@ class GroupHomeScreen extends StatelessWidget {
         backgroundColor: Colors.blue,
         child: const Icon(Icons.add, color: Colors.white),
       ),
+    );
+        },
     );
   }
 }
