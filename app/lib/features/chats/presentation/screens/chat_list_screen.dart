@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class Chat {
   final String avatarAsset;
@@ -73,11 +74,15 @@ class ChatListScreen extends StatelessWidget {
         elevation: Theme.of(context).appBarTheme.elevation,
         leading: IconButton(
           icon: Icon(
-            Icons.menu,
+            Icons.arrow_back,
             color: Theme.of(context).appBarTheme.foregroundColor,
           ),
           onPressed: () {
-            // TODO: Implement drawer functionality
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go('/home');
+            }
           },
         ),
         title: Text(

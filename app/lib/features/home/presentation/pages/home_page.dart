@@ -218,9 +218,7 @@ class HomePage extends StatelessWidget {
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16.0),
-                  onTap: () {
-                    context.go('/groups/detail', extra: group.name);
-                  },
+                  onTap: () {},
                 );
               },
             ),
