@@ -59,7 +59,11 @@ void setupServiceLocator() {
   );
 
   // Contact Notifier
-  sl.registerLazySingleton<ContactListNotifier>(
+  sl.registerFactory<ContactListNotifier>(
     () => ContactListNotifier(sl<ContactRepository>()),
+  );
+
+  sl.registerFactory<AddContactNotifier>(
+    () => AddContactNotifier(contactRepository: sl<ContactRepository>()),
   );
 }

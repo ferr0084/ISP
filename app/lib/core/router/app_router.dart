@@ -12,6 +12,7 @@ import '../../features/groups/presentation/screens/my_groups_overview_screen.dar
 import '../../features/events/presentation/screens/events_dashboard_screen.dart';
 import '../../features/expenses/presentation/screens/expenses_home_screen.dart'; // New import
 import '../../features/idiot_game/presentation/screens/idiot_game_dashboard_screen.dart'; // New import
+import '../../features/contacts/presentation/screens/add_contact_screen.dart';
 import '../../features/contacts/presentation/screens/contact_list_screen.dart';
 import '../../features/common/presentation/pages/settings_page.dart';
 import '../../features/profile/presentation/screens/profile_editing_screen.dart';
@@ -81,7 +82,13 @@ class AppRouter {
       ),
       GoRoute(
         path: '/contacts',
-        builder: (context, state) => ContactListScreen(),
+        builder: (context, state) => const ContactListScreen(),
+        routes: [
+          GoRoute(
+            path: 'add',
+            builder: (context, state) => const AddContactScreen(),
+          ),
+        ],
       ),
       GoRoute(path: '/settings', builder: (context, state) => SettingsPage()),
       GoRoute(
