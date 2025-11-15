@@ -78,7 +78,11 @@ class ChatListScreen extends StatelessWidget {
             color: Theme.of(context).appBarTheme.foregroundColor,
           ),
           onPressed: () {
-            context.pop();
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go('/home');
+            }
           },
         ),
         title: Text(

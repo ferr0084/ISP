@@ -169,7 +169,7 @@ class MainDrawer extends StatelessWidget {
       selected: isSelected,
       selectedTileColor: Theme.of(context).colorScheme.primary,
       onTap: () {
-        GoRouter.of(context).go(route);
+        GoRouter.of(context).push(route);
         Navigator.pop(context); // Close the drawer
       },
     );
