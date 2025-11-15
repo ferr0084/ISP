@@ -27,7 +27,7 @@ class ContactRepositoryImpl implements ContactRepository {
           final profiles = await supabaseClient
               .from('profiles')
               .select()
-              .in_('id', contactIds);
+              .filter('id', 'in', contactIds);
 
           return profiles
               .map((profile) => Contact.fromProfile(profile: profile))

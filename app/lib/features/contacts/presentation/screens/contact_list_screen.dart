@@ -87,12 +87,12 @@ class ContactListScreenState extends State<ContactListScreen> {
                       ),
                       decoration: InputDecoration(
                         hintText: 'Search by name',
-                        hintStyle:
-                        Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.onSurface.withAlpha(153),
-                        ),
+                        hintStyle: Theme.of(context).textTheme.bodyMedium
+                            ?.copyWith(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurface.withAlpha(153),
+                            ),
                         prefixIcon: Icon(
                           Icons.search,
                           color: Theme.of(
@@ -136,7 +136,7 @@ class ContactListScreenState extends State<ContactListScreen> {
                       itemBuilder: (context, index) {
                         final String letter = _alphabet[index];
                         final List<Contact> contacts =
-                        _groupedContacts[letter]!;
+                            _groupedContacts[letter]!;
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -147,52 +147,48 @@ class ContactListScreenState extends State<ContactListScreen> {
                               ),
                               child: Text(
                                 letter,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleLarge
+                                style: Theme.of(context).textTheme.titleLarge
                                     ?.copyWith(
-                                  color:
-                                  Theme.of(context).colorScheme.primary,
-                                ),
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
+                                    ),
                               ),
                             ),
                             ...contacts.map((contact) {
                               return ListTile(
                                 leading: CircleAvatar(
-                                  backgroundImage: NetworkImage(contact.avatarUrl),
+                                  backgroundImage: NetworkImage(
+                                    contact.avatarUrl,
+                                  ),
                                 ),
                                 title: Text(
                                   contact.name,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge
+                                  style: Theme.of(context).textTheme.bodyLarge
                                       ?.copyWith(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.onSurface,
-                                  ),
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onSurface,
+                                      ),
                                 ),
                                 subtitle: Text(
                                   contact.status,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
+                                  style: Theme.of(context).textTheme.bodyMedium
                                       ?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurface
-                                        .withAlpha(178),
-                                  ),
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onSurface.withAlpha(178),
+                                      ),
                                 ),
                                 trailing: contact.isOnline
                                     ? Container(
-                                  width: 10,
-                                  height: 10,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.green,
-                                    shape: BoxShape.circle,
-                                  ),
-                                )
+                                        width: 10,
+                                        height: 10,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.green,
+                                          shape: BoxShape.circle,
+                                        ),
+                                      )
                                     : null,
                                 onTap: () {
                                   // TODO: Implement contact detail view
@@ -227,12 +223,10 @@ class ContactListScreenState extends State<ContactListScreen> {
                           ),
                           child: Text(
                             letter,
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelSmall
+                            style: Theme.of(context).textTheme.labelSmall
                                 ?.copyWith(
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
                           ),
                         ),
                       );
