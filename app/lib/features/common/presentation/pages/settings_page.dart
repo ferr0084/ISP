@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart'; // Added import
 import '../../../../core/theme/theme_provider.dart'; // Import ThemeProvider
 
 class SettingsPage extends StatelessWidget {
@@ -12,17 +13,17 @@ class SettingsPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         foregroundColor: Theme.of(context).appBarTheme.foregroundColor,
-        leading: Builder(
-          builder: (context) {
-            return IconButton(
-              icon: Icon(
-                Icons.menu,
-                color: Theme.of(context).appBarTheme.foregroundColor,
-              ),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-            );
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Theme.of(context).appBarTheme.foregroundColor,
+          ),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go('/home');
+            }
           },
         ),
         title: Text(

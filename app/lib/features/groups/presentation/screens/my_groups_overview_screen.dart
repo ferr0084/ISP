@@ -54,11 +54,15 @@ class MyGroupsOverviewScreenState extends State<MyGroupsOverviewScreen> {
             elevation: 0,
             leading: IconButton(
               icon: Icon(
-                Icons.menu,
+                Icons.arrow_back,
                 color: Theme.of(context).colorScheme.onSurface,
               ),
               onPressed: () {
-                Scaffold.of(context).openDrawer();
+                if (context.canPop()) {
+                  context.pop();
+                } else {
+                  context.go('/home');
+                }
               },
             ),
             title: Text(
@@ -176,42 +180,6 @@ class MyGroupsOverviewScreenState extends State<MyGroupsOverviewScreen> {
             child: Icon(
               Icons.add,
               color: Theme.of(context).colorScheme.onPrimary,
-            ),
-          ),
-          drawer: Drawer(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: <Widget>[
-                DrawerHeader(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  child: Text(
-                    'Menu',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                  ),
-                ),
-                ListTile(
-                  title: const Text('Profile'),
-                  onTap: () {
-                    // TODO: Navigate to Profile Screen
-                  },
-                ),
-                ListTile(
-                  title: const Text('Settings'),
-                  onTap: () {
-                    // TODO: Navigate to Settings Screen
-                  },
-                ),
-                ListTile(
-                  title: const Text('Logout'),
-                  onTap: () {
-                    // TODO: Implement Logout
-                  },
-                ),
-              ],
             ),
           ),
         );

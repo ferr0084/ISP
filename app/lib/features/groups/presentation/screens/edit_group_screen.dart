@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart'; // Added import
 import '../providers/group_provider.dart';
 
 class EditGroupScreen extends StatefulWidget {
@@ -49,7 +50,15 @@ class EditGroupScreenState extends State<EditGroupScreen> {
         }
 
         return Scaffold(
-          appBar: AppBar(title: const Text('Edit Group')),
+          appBar: AppBar(
+            title: const Text('Edit Group'),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                context.pop();
+              },
+            ),
+          ),
           body: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Form(
