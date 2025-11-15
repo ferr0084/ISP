@@ -45,11 +45,17 @@ class MainDrawer extends StatelessWidget {
                         context,
                       ).textTheme.titleLarge?.copyWith(color: Colors.white),
                     ),
-                    Text(
-                      'View Profile',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodyMedium?.copyWith(color: Colors.white70),
+                    InkWell(
+                      onTap: () {
+                        context.push('/profile');
+                        Navigator.pop(context); // Close the drawer
+                      },
+                      child: Text(
+                        'View Profile',
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodyMedium?.copyWith(color: Colors.white70),
+                      ),
                     ),
                   ],
                 ),
