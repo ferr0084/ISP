@@ -41,22 +41,27 @@ class MainDrawer extends StatelessWidget {
                             ? NetworkImage(userAvatarUrl)
                             : const AssetImage('assets/images/avatar_james.png')
                                 as ImageProvider, // Default avatar
-                      ),
-                      const SizedBox(height: 8.0),
-                      Text(
-                        userName,
-                        style: Theme.of(
-                          context,
-                        ).textTheme.titleLarge?.copyWith(color: Colors.white),
-                      ),
-                      Text(
+                    ),
+                    const SizedBox(height: 8.0),
+                    Text(
+                      userName,
+                      style: Theme.of(
+                        context,
+                      ).textTheme.titleLarge?.copyWith(color: Colors.white),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        context.push('/profile');
+                        Navigator.pop(context); // Close the drawer
+                      },
+                      child: Text(
                         'View Profile',
                         style: Theme.of(
                           context,
                         ).textTheme.bodyMedium?.copyWith(color: Colors.white70),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               );
             },

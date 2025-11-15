@@ -17,6 +17,10 @@ class MyGroupsOverviewScreenState extends State<MyGroupsOverviewScreen> {
   @override
   void initState() {
     super.initState();
+    // Load groups when the screen initializes
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<GroupProvider>(context, listen: false).fetchGroups();
+    });
   }
 
   void _filterGroups(String query) {

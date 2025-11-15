@@ -395,6 +395,15 @@ class HomePage extends StatelessWidget {
                 );
               },
             ),
+            const SizedBox(height: 32.0),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  context.go('/profile');
+                },
+                child: const Text('View Profile'),
+              ),
+            ),
           ],
         ),
       ),
