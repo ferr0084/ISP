@@ -18,8 +18,9 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     super.initState();
     final user = Provider.of<UserProvider>(context, listen: false).user;
-    _nameController =
-        TextEditingController(text: user?.userMetadata?['name'] ?? '');
+    _nameController = TextEditingController(
+      text: user?.userMetadata?['name'] ?? '',
+    );
   }
 
   @override
@@ -65,7 +66,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   CircleAvatar(
                     radius: 50,
                     backgroundImage: NetworkImage(
-                        user.userMetadata?['avatar_url'] ?? ''),
+                      user.userMetadata?['avatar_url'] ?? '',
+                    ),
                   ),
                   const SizedBox(height: 16),
                   TextFormField(

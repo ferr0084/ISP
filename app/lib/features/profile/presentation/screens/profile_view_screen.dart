@@ -43,11 +43,16 @@ class ProfileViewScreen extends StatelessWidget {
                     ), // Placeholder image
                   ),
                   const SizedBox(height: 16.0),
-                  Text('John Doe', style: Theme.of(context).textTheme.headlineMedium),
+                  Text(
+                    'John Doe',
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
                   const SizedBox(height: 8.0),
                   Text(
                     '@johndoe',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.grey),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.titleMedium?.copyWith(color: Colors.grey),
                   ),
                   const SizedBox(height: 16.0),
                   const Text(

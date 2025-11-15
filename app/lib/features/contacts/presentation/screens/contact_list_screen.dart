@@ -56,15 +56,7 @@ class ContactListScreenState extends State<ContactListScreen> {
             color: Theme.of(context).appBarTheme.foregroundColor,
           ),
         ),
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.add,
-              color: Theme.of(context).appBarTheme.foregroundColor,
-            ),
-            onPressed: () => context.go('/contacts/add'),
-          ),
-        ],
+        actions: [],
       ),
       body: Consumer<ContactListNotifier>(
         builder: (context, notifier, child) {
@@ -157,9 +149,15 @@ class ContactListScreenState extends State<ContactListScreen> {
                             ...contacts.map((contact) {
                               return ListTile(
                                 leading: CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                                    contact.avatarUrl,
-                                  ),
+                                  radius: 50,
+                                  backgroundImage:
+                                      (contact.avatarUrl != null &&
+                                          contact.avatarUrl!.isNotEmpty)
+                                      ? NetworkImage(contact.avatarUrl!)
+                                      : const AssetImage(
+                                              'assets/images/avatar_s.png',
+                                            )
+                                            as ImageProvider,
                                 ),
                                 title: Text(
                                   contact.name,
@@ -190,7 +188,9 @@ class ContactListScreenState extends State<ContactListScreen> {
                                       )
                                     : null,
                                 onTap: () {
-                                  // TODO: Implement contact detail view
+                                  context.push(
+                                    '/contacts/detail/${contact.id}',
+                                  );
                                 },
                               );
                             }),

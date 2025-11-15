@@ -8,10 +8,12 @@ import '../../features/auth/domain/usecases/login_with_email_and_password.dart';
 import '../../features/auth/domain/usecases/logout.dart';
 import '../../features/auth/domain/usecases/sign_up.dart';
 import '../../features/auth/presentation/providers/user_provider.dart';
+import '../../features/contacts/presentation/notifiers/add_contact_notifier.dart';
 import '../../features/groups/data/repositories/group_repository_impl.dart';
 import '../../features/contacts/data/repositories/contact_repository_impl.dart';
 import '../../features/contacts/domain/repositories/contact_repository.dart';
 import '../../features/contacts/presentation/notifiers/contact_list_notifier.dart';
+import '../../features/contacts/presentation/notifiers/contact_detail_notifier.dart';
 import '../../features/groups/domain/repositories/group_repository.dart';
 import '../../features/groups/presentation/providers/group_provider.dart';
 
@@ -65,5 +67,9 @@ void setupServiceLocator() {
 
   sl.registerFactory<AddContactNotifier>(
     () => AddContactNotifier(contactRepository: sl<ContactRepository>()),
+  );
+
+  sl.registerFactory<ContactDetailNotifier>(
+    () => ContactDetailNotifier(sl<ContactRepository>()),
   );
 }
