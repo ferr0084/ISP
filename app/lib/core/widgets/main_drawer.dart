@@ -24,34 +24,39 @@ class MainDrawer extends StatelessWidget {
               final userAvatarUrl =
                   user?.userMetadata?['avatar_url'] as String?;
 
-              return DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundImage: userAvatarUrl != null
-                          ? NetworkImage(userAvatarUrl)
-                          : const AssetImage('assets/images/avatar_james.png')
+              return GestureDetector(
+                onTap: () {
+                  context.go('/profile');
+                },
+                child: DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CircleAvatar(
+                        radius: 30,
+                        backgroundImage: userAvatarUrl != null
+                            ? NetworkImage(userAvatarUrl)
+                            : const AssetImage('assets/images/avatar_james.png')
                                 as ImageProvider, // Default avatar
-                    ),
-                    const SizedBox(height: 8.0),
-                    Text(
-                      userName,
-                      style: Theme.of(
-                        context,
-                      ).textTheme.titleLarge?.copyWith(color: Colors.white),
-                    ),
-                    Text(
-                      'View Profile',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodyMedium?.copyWith(color: Colors.white70),
-                    ),
-                  ],
+                      ),
+                      const SizedBox(height: 8.0),
+                      Text(
+                        userName,
+                        style: Theme.of(
+                          context,
+                        ).textTheme.titleLarge?.copyWith(color: Colors.white),
+                      ),
+                      Text(
+                        'View Profile',
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodyMedium?.copyWith(color: Colors.white70),
+                      ),
+                    ],
+                  ),
                 ),
               );
             },

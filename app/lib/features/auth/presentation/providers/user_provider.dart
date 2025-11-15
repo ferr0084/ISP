@@ -36,4 +36,18 @@ class UserProvider extends ChangeNotifier {
     _user = null;
     notifyListeners();
   }
+
+  Future<void> updateUserProfile(String name) async {
+    if (_user == null) return;
+
+    final updates = {
+      'id': _user!.id,
+      'name': name,
+      'updated_at': DateTime.now().toIso8601String(),
+    };
+
+    await Supabase.instance.client.from('profiles').upsert(updates);
+    _user = Supabase.instance.client.auth.currentUser;
+    notifyListeners();
+  }
 }

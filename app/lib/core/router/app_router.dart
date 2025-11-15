@@ -14,6 +14,7 @@ import '../../features/expenses/presentation/screens/expenses_home_screen.dart';
 import '../../features/idiot_game/presentation/screens/idiot_game_dashboard_screen.dart'; // New import
 import '../../features/contacts/presentation/screens/contact_list_screen.dart';
 import '../../features/common/presentation/pages/settings_page.dart';
+import '../../features/profile/presentation/pages/profile_page.dart';
 
 class AppRouter {
   final UserProvider _userProvider;
@@ -82,6 +83,7 @@ class AppRouter {
         builder: (context, state) => ContactListScreen(),
       ),
       GoRoute(path: '/settings', builder: (context, state) => SettingsPage()),
+      GoRoute(path: '/profile', builder: (context, state) => ProfilePage()),
     ],
     redirect: (context, state) {
       final user = _userProvider.user;
