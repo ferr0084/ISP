@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:app/features/home/domain/entities/chat.dart';
 import 'package:app/features/home/domain/entities/event.dart';
 import 'package:app/features/home/domain/entities/expense.dart';
@@ -135,11 +136,11 @@ class HomePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildSectionHeader(context, 'Friend Statuses', () {
-              // Handle View All for Friend Statuses
+              context.go('/contacts');
             }),
             const SizedBox(height: 16.0),
             SizedBox(
-              height: 100, // Adjust height as needed
+              height: 100,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: friendStatuses.length,
@@ -189,7 +190,7 @@ class HomePage extends StatelessWidget {
             ),
             const SizedBox(height: 24.0),
             _buildSectionHeader(context, 'My Groups', () {
-              // Handle View All for My Groups
+              context.go('/groups');
             }),
             const SizedBox(height: 16.0),
             ListView.separated(
@@ -218,14 +219,14 @@ class HomePage extends StatelessWidget {
                   ),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16.0),
                   onTap: () {
-                    // Handle group tap
+                    context.go('/groups/detail', extra: group.name);
                   },
                 );
               },
             ),
             const SizedBox(height: 24.0),
             _buildSectionHeader(context, 'Recent Chats', () {
-              // Handle View All for Recent Chats
+              context.go('/chats');
             }),
             const SizedBox(height: 16.0),
             ListView.separated(
@@ -276,14 +277,14 @@ class HomePage extends StatelessWidget {
                     ],
                   ),
                   onTap: () {
-                    // Handle chat tap
+                    context.go('/chats');
                   },
                 );
               },
             ),
             const SizedBox(height: 24.0),
             _buildSectionHeader(context, 'Upcoming Events', () {
-              // Handle View All for Upcoming Events
+              context.go('/events');
             }),
             const SizedBox(height: 16.0),
             ListView.separated(
@@ -334,14 +335,14 @@ class HomePage extends StatelessWidget {
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   onTap: () {
-                    // Handle event tap
+                    context.go('/events');
                   },
                 );
               },
             ),
             const SizedBox(height: 24.0),
             _buildSectionHeader(context, 'Pending Expenses', () {
-              // Handle View All for Pending Expenses
+              context.go('/expenses');
             }),
             const SizedBox(height: 16.0),
             ListView.separated(
@@ -391,7 +392,7 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   onTap: () {
-                    // Handle expense tap
+                    context.go('/expenses');
                   },
                 );
               },
