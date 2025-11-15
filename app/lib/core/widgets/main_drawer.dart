@@ -24,18 +24,22 @@ class MainDrawer extends StatelessWidget {
               final userAvatarUrl =
                   user?.userMetadata?['avatar_url'] as String?;
 
-              return DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundImage: userAvatarUrl != null
-                          ? NetworkImage(userAvatarUrl)
-                          : const AssetImage('assets/images/avatar_james.png')
+              return GestureDetector(
+                onTap: () {
+                  context.go('/profile');
+                },
+                child: DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CircleAvatar(
+                        radius: 30,
+                        backgroundImage: userAvatarUrl != null
+                            ? NetworkImage(userAvatarUrl)
+                            : const AssetImage('assets/images/avatar_james.png')
                                 as ImageProvider, // Default avatar
                     ),
                     const SizedBox(height: 8.0),
