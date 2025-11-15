@@ -19,19 +19,44 @@ class ContactRepositoryImpl implements ContactRepository {
         .stream(primaryKey: ['id'])
         .eq('user_id', userId)
         .asyncMap((contacts) async {
-          if (contacts.isEmpty) {
-            return [];
-          }
+      if (contacts.isEmpty) {
+        return [];
+      }
 
-          final contactIds = contacts.map((c) => c['contact_id']).toList();
-          final profiles = await supabaseClient
-              .from('profiles')
-              .select()
-              .filter('id', 'in', contactIds);
+      final contactIds = contacts.map((c) => c['contact_id']).toList();
+      final profiles = await supabaseClient
+          .from('profiles')
+          .select()
+          .in_('id', contactIds);
 
-          return profiles
-              .map((profile) => Contact.fromProfile(profile: profile))
-              .toList();
-        });
+      return profiles
+          .map((profile) => Contact.fromProfile(profile: profile))
+          .toList();
+    });
+  }
+
+  @override
+  Future<void> addContact(String phoneNumber) async {
+    final userId = supabaseClient.auth.currentUser?.id;
+    if (userId == null) {
+      throw Exception('User not logged in');
+    }
+
+    final response = await supabaseClient
+        .from('profiles')
+        .select('id')
+        .eq('phone_number', phoneNumber)
+        .single();
+
+    final contactId = response['id'];
+
+    if (contactId == null) {
+      throw Exception('User with phone number $phoneNumber not found');
+    }
+
+    await supabaseClient.from('contacts').insert({
+      'user_id': userId,
+      'contact_id': contactId,
+    });
   }
 }

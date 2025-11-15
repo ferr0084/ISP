@@ -62,9 +62,7 @@ class ContactListScreenState extends State<ContactListScreen> {
               Icons.add,
               color: Theme.of(context).appBarTheme.foregroundColor,
             ),
-            onPressed: () {
-              // TODO: Implement add contact functionality
-            },
+            onPressed: () => context.go('/contacts/add'),
           ),
         ],
       ),
