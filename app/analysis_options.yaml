@@ -21,7 +21,22 @@ linter:
   # `// ignore_for_file: name_of_lint` syntax on the line or in the file
   # producing the lint.
   rules:
-    # avoid_print: false  # Uncomment to disable the `avoid_print` rule
+    avoid_print: true
+    prefer_const_constructors: true
+    prefer_const_declarations: true
+    unnecessary_const: true
+    sort_child_properties_last: true
+    use_key_in_widget_constructors: true
+    prefer_final_fields: true
+    avoid_unused_constructor_parameters: true
+    prefer_single_quotes: true
+    always_declare_return_types: true
+    avoid_types_as_parameter_names: true
+    camel_case_types: true
+    constant_identifier_names: true
+    non_constant_identifier_names: true
+    directives_ordering: true
+    lines_longer_than_80_chars: false  # Allow longer lines for readability
     # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
 
 # Additional information about this file can be found at

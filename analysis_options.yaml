@@ -1,0 +1,33 @@
+# Root analysis options for the entire project
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    avoid_print: true
+    prefer_const_constructors: true
+    prefer_const_declarations: true
+    unnecessary_const: true
+    sort_child_properties_last: true
+    use_key_in_widget_constructors: true
+    prefer_final_fields: true
+    avoid_unused_constructor_parameters: true
+    prefer_single_quotes: true
+    always_declare_return_types: true
+    avoid_types_as_parameter_names: true
+    camel_case_types: true
+    constant_identifier_names: true
+    non_constant_identifier_names: true
+    directives_ordering: true
+    lines_longer_than_80_chars: false
+
+analyzer:
+  exclude:
+    - supabase/functions/**/*.ts
+    - android/**
+    - ios/**
+    - linux/**
+    - macos/**
+    - web/**
+    - windows/**
+    - .dart_tool/**
+    - build/**
