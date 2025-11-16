@@ -3,12 +3,13 @@ import 'package:provider/provider.dart';
 
 import 'core/router/app_router.dart';
 import 'core/supabase/supabase_initializer.dart';
-import 'core/utils/service_locator.dart';
+import 'core/di/service_locator.dart';
 import 'features/auth/presentation/providers/user_provider.dart';
 import 'features/contacts/presentation/notifiers/contact_list_notifier.dart';
 import 'features/groups/presentation/providers/group_provider.dart';
 import 'features/contacts/presentation/notifiers/add_contact_notifier.dart';
-import 'features/contacts/presentation/notifiers/contact_detail_notifier.dart'; // Added import // Added import
+import 'features/contacts/presentation/notifiers/contact_detail_notifier.dart';
+import 'features/contacts/presentation/notifiers/invite_friends_notifier.dart'; // Added missing import // Added import // Added import
 import 'core/theme/theme_data.dart'; // Import AppTheme
 import 'core/theme/theme_provider.dart'; // Import ThemeProvider
 
@@ -30,6 +31,7 @@ Future<void> main() async {
           ChangeNotifierProvider(create: (_) => sl<ContactListNotifier>()),
           ChangeNotifierProvider(create: (_) => sl<AddContactNotifier>()),
           ChangeNotifierProvider(create: (_) => sl<ContactDetailNotifier>()),
+          ChangeNotifierProvider(create: (_) => sl<InviteFriendsNotifier>()),
         ],
         child: const MyApp(),
       ),

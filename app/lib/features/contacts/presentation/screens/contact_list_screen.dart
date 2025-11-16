@@ -118,7 +118,7 @@ class ContactListScreenState extends State<ContactListScreen> {
                       ),
                     ),
                     onTap: () {
-                      // TODO: Implement invite friends functionality
+                      context.push('/contacts/invite');
                     },
                   ),
                   Expanded(

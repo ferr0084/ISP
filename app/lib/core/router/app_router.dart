@@ -15,9 +15,11 @@ import '../../features/idiot_game/presentation/screens/idiot_game_dashboard_scre
 
 import '../../features/contacts/presentation/screens/contact_list_screen.dart';
 import '../../features/contacts/presentation/screens/contact_detail_screen.dart'; // Added import
+import '../../features/contacts/presentation/screens/invite_friends_screen.dart'; // New import
 import '../../features/common/presentation/pages/settings_page.dart';
 import '../../features/profile/presentation/screens/profile_editing_screen.dart';
 import '../../features/profile/presentation/screens/profile_view_screen.dart';
+import '../../features/contacts/presentation/screens/invite_accept_screen.dart'; // Added import
 
 class AppRouter {
   final UserProvider _userProvider;
@@ -92,9 +94,20 @@ class AppRouter {
               return ContactDetailScreen(contactId: contactId);
             },
           ),
+          GoRoute(
+            path: 'invite',
+            builder: (context, state) => const InviteFriendsScreen(),
+          ),
         ],
       ),
       GoRoute(path: '/settings', builder: (context, state) => SettingsPage()),
+      GoRoute(
+        path: '/invite-accept',
+        builder: (context, state) {
+          final token = state.uri.queryParameters['token'];
+          return InviteAcceptScreen(token: token);
+        },
+      ),
       GoRoute(
         path: '/profile',
         builder: (context, state) => const ProfileViewScreen(),
