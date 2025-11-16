@@ -31,4 +31,15 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   User? get currentUser => _supabaseClient.auth.currentUser;
+
+  @override
+  Future<void> updateProfile(String name) async {
+    final updates = {
+      'id': currentUser!.id,
+      'name': name,
+      'updated_at': DateTime.now().toIso8601String(),
+    };
+
+    await _supabaseClient.from('profiles').upsert(updates);
+  }
 }
