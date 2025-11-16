@@ -122,32 +122,6 @@ class MainDrawer extends StatelessWidget {
             route: '/settings',
             currentRoute: currentRoute,
           ),
-          const Divider(),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.dark_mode,
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-                const SizedBox(width: 16.0),
-                Text(
-                  'Dark Mode',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                ),
-                const Spacer(),
-                Switch(
-                  value: Theme.of(context).brightness == Brightness.dark,
-                  onChanged: (value) {
-                    // TODO: Implement theme switching logic
-                  },
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );
