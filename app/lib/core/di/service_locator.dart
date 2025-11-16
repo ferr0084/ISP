@@ -11,6 +11,7 @@ import '../../features/auth/data/repositories/auth_repository_impl.dart';
 import '../../features/auth/domain/usecases/sign_up.dart';
 import '../../features/auth/domain/usecases/login_with_email_and_password.dart';
 import '../../features/auth/domain/usecases/logout.dart';
+import '../../features/auth/domain/usecases/update_profile.dart';
 import '../../features/contacts/domain/repositories/contact_repository.dart';
 import '../../features/contacts/data/repositories/contact_repository_impl.dart';
 import '../../features/groups/domain/repositories/group_repository.dart';
@@ -43,9 +44,10 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<LoginWithEmailAndPassword>(() => LoginWithEmailAndPassword(sl()));
   sl.registerLazySingleton<Logout>(() => Logout(sl()));
   sl.registerLazySingleton<GetUser>(() => GetUser(sl())); // Added GetUser registration
+  sl.registerLazySingleton<UpdateProfile>(() => UpdateProfile(sl()));
 
   // Notifiers
-  sl.registerFactory<UserProvider>(() => UserProvider(sl(), sl(), sl()));
+  sl.registerFactory<UserProvider>(() => UserProvider(sl(), sl(), sl(), sl()));
   sl.registerFactory<GroupProvider>(() => GroupProvider(sl()));
   sl.registerFactory<ContactListNotifier>(() => ContactListNotifier(sl()));
   sl.registerFactory<AddContactNotifier>(() => AddContactNotifier(contactRepository: sl()));
