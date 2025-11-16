@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:app/core/widgets/main_drawer.dart';
 import 'package:app/features/home/domain/entities/chat.dart';
 import 'package:app/features/home/domain/entities/event.dart';
 import 'package:app/features/home/domain/entities/expense.dart';
 import 'package:app/features/home/domain/entities/friend_status.dart';
 import 'package:app/features/home/domain/entities/group.dart';
-import 'package:app/core/widgets/main_drawer.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});

@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:app/features/contacts/domain/entities/contact.dart';
 import 'package:app/features/contacts/presentation/notifiers/contact_detail_notifier.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ContactDetailScreen extends StatefulWidget {
   final String contactId;
@@ -101,19 +101,13 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
                           : _avatarUrlController.text,
                     );
                     await notifier.updateContact(updatedContact);
-                    showSnackBar(String message) {
-                      if (!mounted) return;
-                      ScaffoldMessenger.of(
-                        context,
-                      ).showSnackBar(SnackBar(content: Text(message)));
-                    }
 
                     if (notifier.hasError) {
-                      showSnackBar(
+                      _showSnackBar(
                         'Error updating contact: ${notifier.errorMessage}',
                       );
                     } else {
-                      showSnackBar('Contact updated successfully!');
+                      _showSnackBar('Contact updated successfully!');
                       setState(() {
                         _isEditing = false;
                       });
@@ -171,5 +165,12 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
         );
       },
     );
+  }
+
+  void _showSnackBar(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 }

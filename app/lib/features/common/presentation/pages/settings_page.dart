@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart'; // Added import
+import 'package:provider/provider.dart';
+
 import '../../../../core/theme/theme_provider.dart'; // Import ThemeProvider
 
 class SettingsPage extends StatelessWidget {

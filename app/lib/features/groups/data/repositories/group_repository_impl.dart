@@ -1,7 +1,9 @@
-import 'package:uuid/uuid.dart';
 import 'dart:async';
+
 import 'package:dartz/dartz.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
+
 import '../../domain/entities/group.dart';
 import '../../domain/failures/group_failure.dart';
 import '../../domain/repositories/group_repository.dart';

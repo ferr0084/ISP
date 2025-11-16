@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:app/features/contacts/domain/entities/contact.dart';
 import 'package:app/features/contacts/domain/repositories/contact_repository.dart';
+import 'package:flutter/material.dart';
 
 class ContactDetailNotifier extends ChangeNotifier {
   final ContactRepository _contactRepository;

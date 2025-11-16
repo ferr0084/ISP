@@ -50,8 +50,10 @@ class _InviteAcceptScreenState extends State<InviteAcceptScreen> {
     }
 
     try {
-      final invitationRepository =
-          Provider.of<InvitationRepository>(context, listen: false);
+      final invitationRepository = Provider.of<InvitationRepository>(
+        context,
+        listen: false,
+      );
       await invitationRepository.acceptInvite(widget.token!, currentUserId);
       setState(() {
         _statusMessage = 'Invitation accepted successfully!';
@@ -78,9 +80,7 @@ class _InviteAcceptScreenState extends State<InviteAcceptScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Accept Invitation'),
-      ),
+      appBar: AppBar(title: const Text('Accept Invitation')),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),

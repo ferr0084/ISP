@@ -1,25 +1,25 @@
 import 'package:go_router/go_router.dart';
+
 import '../../features/auth/presentation/providers/user_provider.dart';
 import '../../features/auth/presentation/screens/login_callback_screen.dart';
 import '../../features/auth/presentation/screens/login_or_create_account_screen.dart';
 import '../../features/auth/presentation/screens/welcome_screen.dart';
-import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/chats/presentation/screens/chat_list_screen.dart';
-import '../../features/groups/presentation/screens/group_home_screen.dart';
-import '../../features/groups/presentation/screens/create_group_screen.dart';
-import '../../features/groups/presentation/screens/edit_group_screen.dart';
-import '../../features/groups/presentation/screens/my_groups_overview_screen.dart'; // New import
+import '../../features/common/presentation/pages/settings_page.dart';
+import '../../features/contacts/presentation/screens/contact_detail_screen.dart'; // Added import
+import '../../features/contacts/presentation/screens/contact_list_screen.dart';
+import '../../features/contacts/presentation/screens/invite_accept_screen.dart'; // Added import
+import '../../features/contacts/presentation/screens/invite_friends_screen.dart'; // New import
 import '../../features/events/presentation/screens/events_dashboard_screen.dart';
 import '../../features/expenses/presentation/screens/expenses_home_screen.dart'; // New import
+import '../../features/groups/presentation/screens/create_group_screen.dart';
+import '../../features/groups/presentation/screens/edit_group_screen.dart';
+import '../../features/groups/presentation/screens/group_home_screen.dart';
+import '../../features/groups/presentation/screens/my_groups_overview_screen.dart'; // New import
+import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/idiot_game/presentation/screens/idiot_game_dashboard_screen.dart'; // New import
-
-import '../../features/contacts/presentation/screens/contact_list_screen.dart';
-import '../../features/contacts/presentation/screens/contact_detail_screen.dart'; // Added import
-import '../../features/contacts/presentation/screens/invite_friends_screen.dart'; // New import
-import '../../features/common/presentation/pages/settings_page.dart';
 import '../../features/profile/presentation/screens/profile_editing_screen.dart';
 import '../../features/profile/presentation/screens/profile_view_screen.dart';
-import '../../features/contacts/presentation/screens/invite_accept_screen.dart'; // Added import
 
 class AppRouter {
   final UserProvider _userProvider;
@@ -32,28 +32,31 @@ class AppRouter {
     routes: [
       GoRoute(
         path: '/',
-        builder: (context, state) => WelcomeScreen(),
+        builder: (context, state) => const WelcomeScreen(),
         routes: [
           GoRoute(
             path: 'login-or-create-account',
-            builder: (context, state) => LoginOrCreateAccountScreen(),
+            builder: (context, state) => const LoginOrCreateAccountScreen(),
           ),
           GoRoute(
             path: 'login-callback',
-            builder: (context, state) => LoginCallbackScreen(),
+            builder: (context, state) => const LoginCallbackScreen(),
           ),
         ],
       ),
-      GoRoute(path: '/home', builder: (context, state) => HomePage()),
-      GoRoute(path: '/chats', builder: (context, state) => ChatListScreen()),
+      GoRoute(path: '/home', builder: (context, state) => const HomePage()),
+      GoRoute(
+        path: '/chats',
+        builder: (context, state) => const ChatListScreen(),
+      ),
       GoRoute(
         path: '/groups',
         builder: (context, state) =>
-            MyGroupsOverviewScreen(), // Changed to MyGroupsOverviewScreen
+            const MyGroupsOverviewScreen(), // Changed to MyGroupsOverviewScreen
         routes: [
           GoRoute(
             path: 'create',
-            builder: (context, state) => CreateGroupScreen(),
+            builder: (context, state) => const CreateGroupScreen(),
           ),
           GoRoute(
             path: 'edit',
@@ -73,15 +76,15 @@ class AppRouter {
       ),
       GoRoute(
         path: '/events',
-        builder: (context, state) => EventsDashboardScreen(),
+        builder: (context, state) => const EventsDashboardScreen(),
       ),
       GoRoute(
         path: '/expenses',
-        builder: (context, state) => ExpensesHomeScreen(),
+        builder: (context, state) => const ExpensesHomeScreen(),
       ),
       GoRoute(
         path: '/idiot-game',
-        builder: (context, state) => IdiotGameDashboardScreen(),
+        builder: (context, state) => const IdiotGameDashboardScreen(),
       ),
       GoRoute(
         path: '/contacts',
@@ -100,7 +103,10 @@ class AppRouter {
           ),
         ],
       ),
-      GoRoute(path: '/settings', builder: (context, state) => SettingsPage()),
+      GoRoute(
+        path: '/settings',
+        builder: (context, state) => const SettingsPage(),
+      ),
       GoRoute(
         path: '/invite-accept',
         builder: (context, state) {

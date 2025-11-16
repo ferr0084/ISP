@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:go_router/go_router.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:flutter_contacts/flutter_contacts.dart' as fc;
-import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 
-import 'qr_scanner_screen.dart';
 import '../../domain/entities/contact.dart'; // Corrected import for Contact entity
 import '../notifiers/contact_list_notifier.dart';
 import '../notifiers/invite_friends_notifier.dart';
+import 'qr_scanner_screen.dart';
 
 class InviteFriendsScreen extends StatefulWidget {
   const InviteFriendsScreen({super.key});
@@ -29,7 +28,10 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
     super.initState();
     _searchController.addListener(_filterContacts);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final contactListNotifier = Provider.of<ContactListNotifier>(context, listen: false);
+      final contactListNotifier = Provider.of<ContactListNotifier>(
+        context,
+        listen: false,
+      );
       if (mounted) {
         _filteredContacts = contactListNotifier.contacts;
         _groupAndBuildList();
@@ -67,10 +69,14 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
 
   void _filterContacts() {
     final query = _searchController.text.toLowerCase();
-    final allContacts = Provider.of<ContactListNotifier>(context, listen: false).contacts;
+    final allContacts = Provider.of<ContactListNotifier>(
+      context,
+      listen: false,
+    ).contacts;
     setState(() {
       _filteredContacts = allContacts.where((contact) {
-        return contact.name.toLowerCase().contains(query) || (contact.email?.toLowerCase().contains(query) ?? false);
+        return contact.name.toLowerCase().contains(query) ||
+            (contact.email?.toLowerCase().contains(query) ?? false);
       }).toList();
       _groupAndBuildList();
     });
@@ -79,33 +85,52 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
   Future<void> _sendInvites() async {
     if (_selectedContacts.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select at least one friend to invite.')),
+        const SnackBar(
+          content: Text('Please select at least one friend to invite.'),
+        ),
       );
       return;
     }
 
-    final inviteFriendsNotifier = Provider.of<InviteFriendsNotifier>(context, listen: false);
-    final inviteeEmails = _selectedContacts.map((contact) => contact.email).whereType<String>().toList();
+    final inviteFriendsNotifier = Provider.of<InviteFriendsNotifier>(
+      context,
+      listen: false,
+    );
+    final inviteeEmails = _selectedContacts
+        .map((contact) => contact.email)
+        .whereType<String>()
+        .toList();
 
     await inviteFriendsNotifier.sendInvites(inviteeEmails);
 
-    if (mounted) {
-      if (inviteFriendsNotifier.errorMessage != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error sending invites: ${inviteFriendsNotifier.errorMessage}')),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Invites sent to ${inviteeEmails.length} friends!')),
-        );
-        context.pop();
-      }
+    if (!mounted) return;
+    if (inviteFriendsNotifier.errorMessage != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Error sending invites: ${inviteFriendsNotifier.errorMessage}',
+          ),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Invites sent to ${inviteeEmails.length} friends!'),
+        ),
+      );
+      context.pop();
     }
   }
 
   void _shareInviteLink() {
     // TODO: Replace with actual dynamic link generation
-    Share.share('Join me on Idiot Social Platform! https://example.com/invite/some_code');
+    SharePlus.instance.share(
+      ShareParams(
+        subject: 'Join me on Idiot Social Platform!',
+        text:
+            'Join me on Idiot Social Platform! https://example.com/invite/some_code',
+      ),
+    );
   }
 
   Future<void> _addFromAddressBook() async {
@@ -114,33 +139,30 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
       List<fc.Contact> contacts = await fc.FlutterContacts.getContacts();
 
       // TODO: Do something with the contacts, e.g., filter and add to selection
-      if(mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Fetched ${contacts.length} contacts.')),
-        );
-      }
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Fetched ${contacts.length} contacts.')),
+      );
     } else {
-      if(mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Permission denied to access contacts.')),
-        );
-      }
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Permission denied to access contacts.')),
+      );
     }
   }
 
   void _scanQrCode() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const QRScannerScreen(),
-      ),
-    ).then((value) {
-      if (value is String && value.isNotEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Scanned QR Code: $value')),
-        );
-        // TODO: Handle the scanned code
-      }
-    });
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => const QRScannerScreen()))
+        .then((value) {
+          if (value is String && value.isNotEmpty) {
+            if (!mounted) return;
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text('Scanned QR Code: $value')));
+            // TODO: Handle the scanned code
+          }
+        });
   }
 
   @override
@@ -176,7 +198,9 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
               child: Text(
                 'Selected',
-                style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           if (_selectedContacts.isNotEmpty)
@@ -198,7 +222,8 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
                           children: [
                             CircleAvatar(
                               radius: 30,
-                              backgroundImage: (contact.avatarUrl != null &&
+                              backgroundImage:
+                                  (contact.avatarUrl != null &&
                                       contact.avatarUrl!.isNotEmpty)
                                   ? NetworkImage(contact.avatarUrl!)
                                   : const AssetImage(
@@ -251,19 +276,26 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
               decoration: InputDecoration(
                 hintText: 'Search by name or email',
                 hintStyle: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurface.withOpacity(0.6),
+                  color: theme.colorScheme.onSurface.withAlpha(
+                    (255 * 0.6).round(),
+                  ),
                 ),
                 prefixIcon: Icon(
                   Icons.search,
-                  color: theme.colorScheme.onSurface.withOpacity(0.6),
+                  color: theme.colorScheme.onSurface.withAlpha(
+                    (255 * 0.6).round(),
+                  ),
                 ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30.0),
                   borderSide: BorderSide.none,
                 ),
                 filled: true,
-                fillColor: theme.colorScheme.surfaceVariant,
-                contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                fillColor: theme.colorScheme.surfaceContainerHighest,
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 0,
+                  horizontal: 20,
+                ),
               ),
             ),
           ),
@@ -274,9 +306,10 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                if (_filteredContacts.isEmpty && _searchController.text.isEmpty) {
-                   _filteredContacts = notifier.contacts;
-                   _groupAndBuildList();
+                if (_filteredContacts.isEmpty &&
+                    _searchController.text.isEmpty) {
+                  _filteredContacts = notifier.contacts;
+                  _groupAndBuildList();
                 }
 
                 if (_listItems.isEmpty) {
@@ -290,10 +323,15 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
                     final item = _listItems[index];
                     if (item is String) {
                       return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 8.0,
+                        ),
                         child: Text(
                           item,
-                          style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       );
                     } else if (item is Contact) {
@@ -302,12 +340,11 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
                       return ListTile(
                         leading: CircleAvatar(
                           radius: 24,
-                          backgroundImage: (contact.avatarUrl != null &&
+                          backgroundImage:
+                              (contact.avatarUrl != null &&
                                   contact.avatarUrl!.isNotEmpty)
                               ? NetworkImage(contact.avatarUrl!)
-                              : const AssetImage(
-                                      'assets/images/avatar_s.png',
-                                    )
+                              : const AssetImage('assets/images/avatar_s.png')
                                     as ImageProvider,
                         ),
                         title: Text(
@@ -364,7 +401,9 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
               child: FilledButton(
                 onPressed: _selectedContacts.isNotEmpty ? _sendInvites : null,
                 style: FilledButton.styleFrom(
-                  backgroundColor: _selectedContacts.isNotEmpty ? theme.colorScheme.primary : Colors.grey,
+                  backgroundColor: _selectedContacts.isNotEmpty
+                      ? theme.colorScheme.primary
+                      : Colors.grey,
                   foregroundColor: theme.colorScheme.onPrimary,
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   shape: RoundedRectangleBorder(
@@ -386,7 +425,12 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
             child: Column(
               children: [
                 const SizedBox(height: 16),
-                Text("OR CONNECT WITH", style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey)),
+                Text(
+                  'OR CONNECT WITH',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: Colors.grey,
+                  ),
+                ),
                 const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -408,7 +452,7 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
                       icon: Icons.qr_code_scanner,
                       label: 'Scan QR\nCode',
                       onTap: _scanQrCode,
-    ),
+                    ),
                   ],
                 ),
               ],
@@ -419,7 +463,12 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
     );
   }
 
-  Widget _buildConnectMethod(BuildContext context, {required IconData icon, required String label, required VoidCallback onTap}) {
+  Widget _buildConnectMethod(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
     final theme = Theme.of(context);
     return InkWell(
       onTap: onTap,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart'; // Added import
+import 'package:provider/provider.dart';
 
 import '../../domain/entities/contact.dart';
 import '../notifiers/contact_list_notifier.dart';

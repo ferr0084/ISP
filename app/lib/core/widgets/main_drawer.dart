@@ -1,7 +1,7 @@
+import 'package:app/features/auth/presentation/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:app/features/auth/presentation/providers/user_provider.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({super.key});
@@ -19,8 +19,8 @@ class MainDrawer extends StatelessWidget {
           Consumer<UserProvider>(
             builder: (context, userProvider, child) {
               final user = userProvider.user;
-              final userName =
-                  user?.email ?? 'Guest'; // Fallback to email or 'Guest'
+              final profile = userProvider.profile;
+              final userName = profile?.fullName ?? user?.email ?? 'Guest';
               final userAvatarUrl =
                   user?.userMetadata?['avatar_url'] as String?;
 

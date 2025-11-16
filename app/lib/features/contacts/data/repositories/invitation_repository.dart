@@ -9,10 +9,7 @@ class InvitationRepository {
     try {
       final response = await _supabaseClient.functions.invoke(
         'send-invite',
-        body: {
-          'inviter_id': inviterId,
-          'invitee_email': inviteeEmail,
-        },
+        body: {'inviter_id': inviterId, 'invitee_email': inviteeEmail},
       );
       if (response.status != 200) {
         throw Exception(response.data['error'] ?? 'Failed to send invitation');
@@ -26,14 +23,12 @@ class InvitationRepository {
     try {
       final response = await _supabaseClient.functions.invoke(
         'accept-invite',
-        body: {
-          'token': token,
-          'user_id': userId,
-        },
+        body: {'token': token, 'user_id': userId},
       );
       if (response.status != 200) {
         throw Exception(
-            response.data['error'] ?? 'Failed to accept invitation');
+          response.data['error'] ?? 'Failed to accept invitation',
+        );
       }
     } catch (e) {
       throw Exception('Error accepting invitation: $e');

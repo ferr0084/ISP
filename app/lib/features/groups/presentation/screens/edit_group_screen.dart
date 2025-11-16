@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart'; // Added import
+import 'package:provider/provider.dart';
+
 import '../providers/group_provider.dart';
 
 class EditGroupScreen extends StatefulWidget {

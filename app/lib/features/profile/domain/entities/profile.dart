@@ -3,17 +3,9 @@ class Profile {
   final String fullName;
   final String? phoneNumber;
 
-  const Profile({
-    required this.id,
-    required this.fullName,
-    this.phoneNumber,
-  });
+  const Profile({required this.id, required this.fullName, this.phoneNumber});
 
-  Profile copyWith({
-    String? id,
-    String? fullName,
-    String? phoneNumber,
-  }) {
+  Profile copyWith({String? id, String? fullName, String? phoneNumber}) {
     return Profile(
       id: id ?? this.id,
       fullName: fullName ?? this.fullName,
@@ -22,11 +14,7 @@ class Profile {
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'full_name': fullName,
-      'phone_number': phoneNumber,
-    };
+    return {'id': id, 'full_name': fullName, 'phone_number': phoneNumber};
   }
 
   factory Profile.fromMap(Map<String, dynamic> map) {

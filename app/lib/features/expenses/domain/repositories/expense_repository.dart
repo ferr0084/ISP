@@ -1,6 +1,6 @@
-import 'package:dartz/dartz.dart';
 import 'package:app/core/error/failures.dart';
 import 'package:app/features/expenses/domain/entities/expense.dart';
+import 'package:dartz/dartz.dart';
 
 abstract class ExpenseRepository {
   Future<Either<Failure, List<Expense>>> getExpenses();

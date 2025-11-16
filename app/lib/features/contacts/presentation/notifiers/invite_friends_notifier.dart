@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:app/features/contacts/data/repositories/invitation_repository.dart';
+import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class InviteFriendsNotifier extends ChangeNotifier {

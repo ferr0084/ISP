@@ -1,8 +1,8 @@
-import 'package:dartz/dartz.dart';
 import 'package:app/core/error/failures.dart';
 import 'package:app/features/chats/domain/entities/chat.dart';
-import 'package:app/features/chats/domain/entities/message.dart';
 import 'package:app/features/chats/domain/entities/chat_member.dart';
+import 'package:app/features/chats/domain/entities/message.dart';
+import 'package:dartz/dartz.dart';
 
 abstract class ChatRepository {
   Stream<Either<Failure, List<Chat>>> getChats();

@@ -53,14 +53,14 @@ class WelcomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              Text.rich(
+              const Text.rich(
                 TextSpan(
                   text: 'By continuing, you agree to our ',
-                  style: const TextStyle(color: Colors.grey, fontSize: 12),
+                  style: TextStyle(color: Colors.grey, fontSize: 12),
                   children: [
                     TextSpan(
                       text: 'Terms of Service',
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.blue,
                         decoration: TextDecoration.underline,
                       ),
