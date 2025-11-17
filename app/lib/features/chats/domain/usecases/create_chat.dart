@@ -17,10 +17,10 @@ class CreateChat implements UseCase<Chat, CreateChatParams> {
 }
 
 class CreateChatParams extends Equatable {
-  final String name;
+  final String? name;
   final List<String> memberIds;
 
-  const CreateChatParams({required this.name, required this.memberIds});
+  const CreateChatParams({this.name, required this.memberIds});
 
   @override
   List<Object?> get props => [name, memberIds];
