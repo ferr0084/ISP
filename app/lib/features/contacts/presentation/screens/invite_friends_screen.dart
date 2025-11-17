@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart' as fc;
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:share_plus/share_plus.dart' as share_plus;
 
 import '../../domain/entities/contact.dart'; // Corrected import for Contact entity
 import '../notifiers/contact_list_notifier.dart';
 import '../notifiers/invite_friends_notifier.dart';
+import '../notifiers/user_search_notifier.dart';
 import 'qr_scanner_screen.dart';
 
 class InviteFriendsScreen extends StatefulWidget {
@@ -22,12 +23,14 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
   final Set<Contact> _selectedContacts = {};
   Map<String, List<Contact>> _groupedContacts = {};
   List<dynamic> _listItems = [];
+  late UserSearchNotifier _userSearchNotifier;
 
   @override
   void initState() {
     super.initState();
-    _searchController.addListener(_filterContacts);
+    _searchController.addListener(_onSearchChanged);
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      _userSearchNotifier = Provider.of<UserSearchNotifier>(context, listen: false);
       final contactListNotifier = Provider.of<ContactListNotifier>(
         context,
         listen: false,
@@ -42,7 +45,7 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
 
   @override
   void dispose() {
-    _searchController.removeListener(_filterContacts);
+    _searchController.removeListener(_onSearchChanged);
     _searchController.dispose();
     super.dispose();
   }
@@ -67,19 +70,24 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
     }
   }
 
-  void _filterContacts() {
-    final query = _searchController.text.toLowerCase();
+  void _onSearchChanged() {
+    final query = _searchController.text.trim();
     final allContacts = Provider.of<ContactListNotifier>(
       context,
       listen: false,
     ).contacts;
-    setState(() {
-      _filteredContacts = allContacts.where((contact) {
-        return contact.name.toLowerCase().contains(query) ||
-            (contact.email?.toLowerCase().contains(query) ?? false);
-      }).toList();
-      _groupAndBuildList();
-    });
+
+    if (query.isEmpty) {
+      // Show existing contacts when no search query
+      setState(() {
+        _filteredContacts = allContacts;
+        _groupAndBuildList();
+      });
+      _userSearchNotifier.clearSearch();
+    } else {
+      // Search for users in the system
+      _userSearchNotifier.searchUsers(query, allContacts);
+    }
   }
 
   Future<void> _sendInvites() async {
@@ -122,31 +130,175 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
     }
   }
 
-  void _shareInviteLink() {
-    // TODO: Replace with actual dynamic link generation
-    SharePlus.instance.share(
-      ShareParams(
+  void _shareInviteLink() async {
+    // Generate a dynamic invite link
+    // For now, we'll create a link that can be shared via messaging apps
+    // In production, this could be a Firebase Dynamic Link or similar service
+
+    const String baseUrl = 'yourapp://invite'; // App deep link
+    const String fallbackUrl = 'https://yourapp.com/invite'; // Web fallback
+
+    final String inviteMessage = '''
+Join me on Idiot Social Platform!
+
+Download the app and use this link to connect with me:
+$baseUrl
+
+Or visit: $fallbackUrl
+''';
+
+    try {
+      await share_plus.Share.share(
+        inviteMessage,
         subject: 'Join me on Idiot Social Platform!',
-        text:
-            'Join me on Idiot Social Platform! https://example.com/invite/some_code',
-      ),
-    );
+      );
+    } catch (e) {
+      // Fallback to basic share if advanced sharing fails
+      share_plus.Share.share(inviteMessage);
+    }
   }
 
   Future<void> _addFromAddressBook() async {
     if (await fc.FlutterContacts.requestPermission()) {
-      // Get all contacts (lightly fetched)
-      List<fc.Contact> contacts = await fc.FlutterContacts.getContacts();
-
-      // TODO: Do something with the contacts, e.g., filter and add to selection
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Fetched ${contacts.length} contacts.')),
+      // Get all contacts with email addresses
+      List<fc.Contact> allContacts = await fc.FlutterContacts.getContacts(
+        withProperties: true,
+        withPhoto: true,
       );
+
+      // Filter contacts that have email addresses
+      List<fc.Contact> contactsWithEmails = allContacts
+          .where((contact) => contact.emails.isNotEmpty)
+          .toList();
+
+      if (!mounted) return;
+
+      if (contactsWithEmails.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No contacts with email addresses found.')),
+        );
+        return;
+      }
+
+      // Show dialog to select contacts
+      await _showContactSelectionDialog(contactsWithEmails);
     } else {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Permission denied to access contacts.')),
+      );
+    }
+  }
+
+  Future<void> _showContactSelectionDialog(List<fc.Contact> contacts) async {
+    final selectedContacts = <fc.Contact>{};
+
+    await showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: const Text('Select Contacts'),
+          content: SizedBox(
+            width: double.maxFinite,
+            height: 400,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: Text(
+                    '${contacts.length} contacts with email addresses found',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: contacts.length,
+                    itemBuilder: (context, index) {
+                      final contact = contacts[index];
+                      final isSelected = selectedContacts.contains(contact);
+                      final email = contact.emails.isNotEmpty ? contact.emails.first.address : '';
+
+                      return CheckboxListTile(
+                        value: isSelected,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            if (value == true) {
+                              selectedContacts.add(contact);
+                            } else {
+                              selectedContacts.remove(contact);
+                            }
+                          });
+                        },
+                        title: Text(contact.displayName),
+                        subtitle: Text(email),
+                        secondary: CircleAvatar(
+                          backgroundImage: contact.photo != null
+                              ? MemoryImage(contact.photo!)
+                              : null,
+                          child: contact.photo == null
+                              ? Text(contact.displayName.substring(0, 1).toUpperCase())
+                              : null,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: selectedContacts.isEmpty
+                  ? null
+                  : () {
+                      _addContactsToSelection(selectedContacts);
+                      Navigator.of(context).pop();
+                    },
+              child: Text('Add ${selectedContacts.length} Contacts'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _addContactsToSelection(Set<fc.Contact> selectedDeviceContacts) {
+    // Convert device contacts to our Contact model
+    for (final deviceContact in selectedDeviceContacts) {
+      final email = deviceContact.emails.isNotEmpty ? deviceContact.emails.first.address : '';
+      if (email.isNotEmpty) {
+        // Check if we already have this contact in our selected list
+        final existingContact = _selectedContacts.firstWhere(
+          (contact) => contact.email == email,
+          orElse: () => Contact(
+            id: '', // We'll use email as temporary ID for now
+            name: deviceContact.displayName,
+            email: email,
+            phoneNumber: deviceContact.phones.isNotEmpty ? deviceContact.phones.first.number : null,
+          ),
+        );
+
+        if (existingContact.id.isEmpty) {
+          // This is a new contact, add it
+          _selectedContacts.add(Contact(
+            id: email, // Use email as ID for device contacts
+            name: deviceContact.displayName,
+            email: email,
+            phoneNumber: deviceContact.phones.isNotEmpty ? deviceContact.phones.first.number : null,
+          ));
+        }
+      }
+    }
+
+    setState(() {}); // Trigger UI update
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Added ${selectedDeviceContacts.length} contacts from address book')),
       );
     }
   }
@@ -157,12 +309,40 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
         .then((value) {
           if (value is String && value.isNotEmpty) {
             if (!mounted) return;
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text('Scanned QR Code: $value')));
-            // TODO: Handle the scanned code
+            _handleScannedCode(value);
           }
         });
+  }
+
+  void _handleScannedCode(String scannedCode) {
+    try {
+      // Try to extract token from different possible formats
+      String? token;
+
+      // Format 1: Full URL like "yourapp://invite?token=abc123"
+      if (scannedCode.contains('token=')) {
+        final uri = Uri.parse(scannedCode);
+        token = uri.queryParameters['token'];
+      }
+      // Format 2: Direct token string
+      else if (scannedCode.length > 10 && !scannedCode.contains(' ')) {
+        // Assume it's a direct token if it's a long string without spaces
+        token = scannedCode;
+      }
+
+      if (token != null && token.isNotEmpty) {
+        // Navigate to invite acceptance screen
+        context.push('/invite-accept?token=$token');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Invalid QR code format. Please scan a valid invitation code.')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error processing QR code: $e')),
+      );
+    }
   }
 
   @override
@@ -274,7 +454,7 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
                 color: theme.colorScheme.onSurface,
               ),
               decoration: InputDecoration(
-                hintText: 'Search by name or email',
+                hintText: 'Search users by name, phone, email, or nickname',
                 hintStyle: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurface.withAlpha(
                     (255 * 0.6).round(),
@@ -300,15 +480,97 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
             ),
           ),
           Expanded(
-            child: Consumer<ContactListNotifier>(
-              builder: (context, notifier, child) {
-                if (notifier.isLoading && _filteredContacts.isEmpty) {
+            child: Consumer2<ContactListNotifier, UserSearchNotifier>(
+              builder: (context, contactNotifier, searchNotifier, child) {
+                final hasSearchQuery = _searchController.text.trim().isNotEmpty;
+
+                // Show search results if there's a query
+                if (hasSearchQuery) {
+                  if (searchNotifier.isSearching) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (searchNotifier.errorMessage != null) {
+                    return Center(
+                      child: Text(
+                        searchNotifier.errorMessage!,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.error,
+                        ),
+                      ),
+                    );
+                  }
+
+                  if (searchNotifier.searchResults.isEmpty) {
+                    return const Center(child: Text('No users found.'));
+                  }
+
+                  return ListView.builder(
+                    padding: const EdgeInsets.only(top: 8),
+                    itemCount: searchNotifier.searchResults.length,
+                    itemBuilder: (context, index) {
+                      final user = searchNotifier.searchResults[index];
+                      final isSelected = _selectedContacts.contains(user);
+                      return ListTile(
+                        leading: CircleAvatar(
+                          radius: 24,
+                          backgroundImage: (user.avatarUrl != null &&
+                                  user.avatarUrl!.isNotEmpty)
+                              ? NetworkImage(user.avatarUrl!)
+                              : const AssetImage('assets/images/avatar_s.png')
+                                    as ImageProvider,
+                        ),
+                        title: Text(
+                          user.name,
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            color: theme.colorScheme.onSurface,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        subtitle: Text(
+                          user.email ?? user.phoneNumber ?? 'No contact info',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.onSurface.withAlpha(178),
+                          ),
+                        ),
+                        trailing: Checkbox(
+                          value: isSelected,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              if (value == true) {
+                                _selectedContacts.add(user);
+                              } else {
+                                _selectedContacts.remove(user);
+                              }
+                            });
+                          },
+                          activeColor: theme.colorScheme.primary,
+                          checkColor: theme.colorScheme.onPrimary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                        onTap: () {
+                          setState(() {
+                            if (isSelected) {
+                              _selectedContacts.remove(user);
+                            } else {
+                              _selectedContacts.add(user);
+                            }
+                          });
+                        },
+                      );
+                    },
+                  );
+                }
+
+                // Show existing contacts when no search query
+                if (contactNotifier.isLoading && _filteredContacts.isEmpty) {
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                if (_filteredContacts.isEmpty &&
-                    _searchController.text.isEmpty) {
-                  _filteredContacts = notifier.contacts;
+                if (_filteredContacts.isEmpty && _searchController.text.isEmpty) {
+                  _filteredContacts = contactNotifier.contacts;
                   _groupAndBuildList();
                 }
 
@@ -340,8 +602,7 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
                       return ListTile(
                         leading: CircleAvatar(
                           radius: 24,
-                          backgroundImage:
-                              (contact.avatarUrl != null &&
+                          backgroundImage: (contact.avatarUrl != null &&
                                   contact.avatarUrl!.isNotEmpty)
                               ? NetworkImage(contact.avatarUrl!)
                               : const AssetImage('assets/images/avatar_s.png')

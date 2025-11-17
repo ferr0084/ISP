@@ -51,11 +51,35 @@ serve(async (req) => {
       throw error;
     }
 
-    // Construct the invite URL (replace with your actual app deep link)
+    // Send email using Supabase's built-in invite system
+    // Note: This creates a user account, but redirects to our custom acceptance flow
+    try {
+      const { error: inviteError } = await supabaseClient.auth.admin.inviteUserByEmail(
+        invitee_email,
+        {
+          redirectTo: `${Deno.env.get("SITE_URL") || "yourapp://"}invite-accept?token=${token}`,
+          data: {
+            invitation_token: token,
+            inviter_id: inviter_id,
+            invite_type: "friend_invite"
+          }
+        }
+      );
+
+      if (inviteError) {
+        console.error("Built-in invite email failed:", inviteError.message);
+        // Fallback: invitation is still created, user can share link manually
+        console.log(`Invite created but email failed. Share this link: yourapp://invite?token=${token}`);
+      } else {
+        console.log(`Invite email sent to ${invitee_email} using Supabase built-in system`);
+      }
+    } catch (error) {
+      console.error("Email sending error:", error);
+      console.log(`Invite created. Manual sharing token: ${token}`);
+    }
+
     const inviteUrl = `yourapp://invite?token=${token}`;
-    console.log(`Sending invite to ${invitee_email} with link: ${inviteUrl}`);
-    // In a real scenario, you would integrate with an email service here
-    // e.g., SendGrid, Resend, or Supabase's built-in email capabilities
+    console.log(`Invite processed for ${invitee_email}. Token: ${token}`);
 
     return new Response(JSON.stringify({ message: "Invitation sent", data }), {
       headers: { "Content-Type": "application/json" },

@@ -10,4 +10,5 @@ abstract class ContactRepository {
   });
   Future<List<Contact>> searchUsers(String query);
   Future<void> updateContact(Contact contact); // Added
+  String? getCurrentUserId();
 }

@@ -92,12 +92,17 @@ class ContactRepositoryImpl implements ContactRepository {
         .from('profiles')
         .select()
         .or(
-          'full_name.ilike.%$query%,email.ilike.%$query%,phone_number.ilike.%$query%',
+          'full_name.ilike.%$query%,phone_number.ilike.%$query%,email.ilike.%$query%,nickname.ilike.%$query%',
         )
-        .limit(10); // Limit search results
+        .limit(20); // Increased limit for better search results
 
     return response
         .map((profile) => Contact.fromProfile(profile: profile))
         .toList();
+  }
+
+  @override
+  String? getCurrentUserId() {
+    return supabaseClient.auth.currentUser?.id;
   }
 }
