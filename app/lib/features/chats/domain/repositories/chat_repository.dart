@@ -7,7 +7,7 @@ import 'package:dartz/dartz.dart';
 abstract class ChatRepository {
   Stream<Either<Failure, List<Chat>>> getChats();
   Future<Either<Failure, Chat>> getChat(String id);
-  Future<Either<Failure, Chat>> createChat(String name, List<String> memberIds);
+  Future<Either<Failure, Chat>> createChat(String? name, List<String> memberIds);
   Future<Either<Failure, Unit>> updateChat(Chat chat);
   Future<Either<Failure, Unit>> deleteChat(String id);
 

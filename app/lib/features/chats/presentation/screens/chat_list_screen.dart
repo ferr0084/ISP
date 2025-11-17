@@ -1,192 +1,147 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
-class Chat {
-  final String avatarAsset;
-  final String title;
-  final String lastMessage;
-  final String time;
-  final int? unreadCount;
-  final bool isGroup;
-
-  Chat({
-    required this.avatarAsset,
-    required this.title,
-    required this.lastMessage,
-    required this.time,
-    this.unreadCount,
-    this.isGroup = false,
-  });
-}
+import 'package:app/core/di/service_locator.dart';
+import '../providers/chat_provider.dart';
+import 'chat_creation_screen.dart';
+import 'chat_detail_screen.dart';
 
 class ChatListScreen extends StatelessWidget {
   const ChatListScreen({super.key});
 
-  static final List<Chat> _chats = [
-    Chat(
-      avatarAsset: 'assets/images/avatar_jessica.png',
-      title: 'Laura',
-      lastMessage: 'Hey, what\'s up? Just checking in t...',
-      time: '10:45 AM',
-      unreadCount: 2,
-    ),
-    Chat(
-      avatarAsset: 'assets/images/avatar_maria.png',
-      title: 'Mom',
-      lastMessage: 'See you soon!',
-      time: '10:42 AM',
-    ),
-    Chat(
-      avatarAsset:
-          'assets/images/group_design_team.png', // Placeholder for group avatar
-      title: 'Work Group',
-      lastMessage: 'John: Don\'t forget the meeting...',
-      time: 'Yesterday',
-      unreadCount: 5,
-      isGroup: true,
-    ),
-    Chat(
-      avatarAsset: 'assets/images/avatar_chris.png',
-      title: 'Alex',
-      lastMessage: '📷 Photo',
-      time: 'Yesterday',
-    ),
-    Chat(
-      avatarAsset: 'assets/images/avatar_david.png',
-      title: 'Sarah',
-      lastMessage: 'Sounds good, talk to you later!',
-      time: '2d ago',
-    ),
-    Chat(
-      avatarAsset: 'assets/images/avatar_james.png',
-      title: 'Mike',
-      lastMessage: 'Happy Birthday!! 🎉',
-      time: '2d ago',
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-        elevation: Theme.of(context).appBarTheme.elevation,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Theme.of(context).appBarTheme.foregroundColor,
-          ),
-          onPressed: () {
-            if (context.canPop()) {
-              context.pop();
-            } else {
-              context.go('/home');
-            }
-          },
-        ),
-        title: Text(
-          'Chats',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            color: Theme.of(context).appBarTheme.foregroundColor,
-          ),
-        ),
-        actions: [
-          IconButton(
+    return ChangeNotifierProvider<ChatProvider>(
+      create: (_) => sl<ChatProvider>(),
+      child: Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+          elevation: Theme.of(context).appBarTheme.elevation,
+          leading: IconButton(
             icon: Icon(
-              Icons.search,
+              Icons.arrow_back,
               color: Theme.of(context).appBarTheme.foregroundColor,
             ),
             onPressed: () {
-              // TODO: Implement search functionality
+              if (context.canPop()) {
+                context.pop();
+              } else {
+                context.go('/home');
+              }
             },
           ),
-        ],
-      ),
-      body: ListView.builder(
-        itemCount: _chats.length,
-        itemBuilder: (context, index) {
-          final chat = _chats[index];
-          return ListTile(
-            leading: CircleAvatar(
-              backgroundImage: AssetImage(chat.avatarAsset),
+          title: Text(
+            'Chats',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              color: Theme.of(context).appBarTheme.foregroundColor,
             ),
-            title: Row(
-              children: [
-                Text(
-                  chat.title,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                ),
-                if (chat.isGroup)
-                  Padding(
-                    padding: const EdgeInsets.only(left: 4.0),
-                    child: Icon(
-                      Icons.people,
-                      size: 16,
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withAlpha(153), // 0.6 * 255 = 153
-                    ),
-                  ),
-              ],
-            ),
-            subtitle: Text(
-              chat.lastMessage,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(
-                  context,
-                ).colorScheme.onSurface.withAlpha(178), // 0.7 * 255 = 178.5
+          ),
+          actions: [
+            IconButton(
+              icon: Icon(
+                Icons.search,
+                color: Theme.of(context).appBarTheme.foregroundColor,
               ),
+              onPressed: () {
+                // TODO: Implement search functionality
+              },
             ),
-            trailing: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  chat.time,
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.onSurface.withAlpha(178), // 0.7 * 255 = 178.5
+          ],
+        ),
+        body: Consumer<ChatProvider>(
+          builder: (context, provider, child) {
+            if (provider.isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (provider.error != null) {
+              return Center(
+                child: Text('Error: ${provider.error}'),
+              );
+            }
+
+            final chats = provider.chats;
+
+            if (chats.isEmpty) {
+              return const Center(
+                child: Text('No chats yet. Start a conversation!'),
+              );
+            }
+
+            return ListView.builder(
+              itemCount: chats.length,
+              itemBuilder: (context, index) {
+                final chat = chats[index];
+                return ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    child: Icon(
+                      Icons.person,
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
                   ),
-                ),
-                if (chat.unreadCount != null && chat.unreadCount! > 0)
-                  Container(
-                    margin: const EdgeInsets.only(top: 4.0),
-                    padding: const EdgeInsets.all(5.0),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary,
-                      borderRadius: BorderRadius.circular(12.0),
+                  title: Text(
+                    chat.name ?? 'Unnamed Chat',
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
-                    constraints: const BoxConstraints(
-                      minWidth: 24,
-                      minHeight: 24,
+                  ),
+                  subtitle: Text(
+                    'Tap to open chat', // TODO: Show last message
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                     ),
-                    child: Text(
-                      '${chat.unreadCount}',
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                  trailing: Text(
+                    _formatTime(chat.updatedAt),
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => ChatDetailScreen(
+                          chatId: chat.id,
+                          chatName: chat.name ?? 'Chat',
+                        ),
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-              ],
-            ),
-            onTap: () {
-              // TODO: Navigate to chat detail screen
-            },
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // TODO: Implement new chat functionality
-        },
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        child: Icon(Icons.edit, color: Theme.of(context).colorScheme.onPrimary),
+                    );
+                  },
+                );
+              },
+            );
+          },
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => const ChatCreationScreen(),
+              ),
+            );
+          },
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          child: Icon(Icons.add, color: Theme.of(context).colorScheme.onPrimary),
+        ),
       ),
     );
+  }
+
+  String _formatTime(DateTime time) {
+    final now = DateTime.now();
+    final difference = now.difference(time);
+
+    if (difference.inDays == 0) {
+      return '${time.hour}:${time.minute.toString().padLeft(2, '0')}';
+    } else if (difference.inDays == 1) {
+      return 'Yesterday';
+    } else if (difference.inDays < 7) {
+      return '${difference.inDays}d ago';
+    } else {
+      return '${time.day}/${time.month}';
+    }
   }
 }
