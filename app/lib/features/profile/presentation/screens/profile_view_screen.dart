@@ -2,6 +2,7 @@ import 'package:app/features/auth/presentation/providers/user_provider.dart';
 import 'package:app/features/profile/presentation/screens/profile_editing_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfileViewScreen extends StatelessWidget {
   const ProfileViewScreen({super.key});
@@ -13,7 +14,7 @@ class ProfileViewScreen extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.of(context).pop();
+            context.pop();
           },
         ),
         title: const Text('Profile'),
@@ -22,11 +23,7 @@ class ProfileViewScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.edit),
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const ProfileEditingScreen(),
-                ),
-              );
+              context.push('/profile/edit');
             },
           ),
         ],

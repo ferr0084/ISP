@@ -26,7 +26,7 @@ class MainDrawer extends StatelessWidget {
 
               return GestureDetector(
                 onTap: () {
-                  context.go('/profile');
+                  context.push('/profile');
                 },
                 child: DrawerHeader(
                   decoration: BoxDecoration(
