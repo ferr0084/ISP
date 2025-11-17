@@ -16,6 +16,7 @@ import '../../features/contacts/presentation/notifiers/add_contact_notifier.dart
 import '../../features/contacts/presentation/notifiers/contact_detail_notifier.dart';
 import '../../features/contacts/presentation/notifiers/contact_list_notifier.dart';
 import '../../features/contacts/presentation/notifiers/invite_friends_notifier.dart';
+import '../../features/contacts/presentation/notifiers/user_search_notifier.dart';
 import '../../features/groups/data/repositories/group_repository_impl.dart';
 import '../../features/groups/domain/repositories/group_repository.dart';
 import '../../features/groups/presentation/providers/group_provider.dart';
@@ -66,5 +67,8 @@ Future<void> setupServiceLocator() async {
   sl.registerFactory<ContactDetailNotifier>(() => ContactDetailNotifier(sl()));
   sl.registerFactory<InviteFriendsNotifier>(
     () => InviteFriendsNotifier(sl(), sl()),
+  );
+  sl.registerFactory<UserSearchNotifier>(
+    () => UserSearchNotifier(sl()),
   );
 }

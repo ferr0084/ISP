@@ -49,11 +49,11 @@ class Contact {
   }) {
     return Contact(
       id: profile['id'],
-      name: profile['full_name'],
+      name: profile['full_name'] ?? 'Unknown User',
       avatarUrl: profile['avatar_url'],
-      phoneNumber: profile['phone_number'], // Added
-      email: profile['email'], // Added
-      nickname: profile['nickname'], // Added
+      phoneNumber: profile['phone_number'],
+      email: profile['email'],
+      nickname: profile['nickname'],
       status: status,
       isOnline: isOnline,
     );

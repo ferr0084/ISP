@@ -44,3 +44,6 @@ next-env.d.ts
 .idea
 **/*.log
 tmp
+supabase/.temp
+.gemini/
+gha-creds-*.json

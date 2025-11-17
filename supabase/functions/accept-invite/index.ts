@@ -76,11 +76,39 @@ serve(async (req) => {
       throw updateError;
     }
 
-    // TODO: Implement logic to add inviter_id to user_id's contacts and vice-versa
-    // This would typically involve inserting into a 'contacts' or 'friendships' table.
-    console.log(
-      `Invitation ${invitation.id} accepted by user ${user_id}. Inviter: ${invitation.inviter_id}`,
-    );
+    // Add bidirectional contact relationship
+    try {
+      // Add inviter to invitee's contacts
+      const { error: contactError1 } = await supabaseClient
+        .from('contacts')
+        .insert({
+          user_id: user_id, // invitee adds inviter as contact
+          contact_id: invitation.inviter_id,
+        });
+
+      if (contactError1 && !contactError1.message.includes('duplicate key')) {
+        console.error('Error adding contact relationship:', contactError1);
+      }
+
+      // Add invitee to inviter's contacts
+      const { error: contactError2 } = await supabaseClient
+        .from('contacts')
+        .insert({
+          user_id: invitation.inviter_id, // inviter adds invitee as contact
+          contact_id: user_id,
+        });
+
+      if (contactError2 && !contactError2.message.includes('duplicate key')) {
+        console.error('Error adding reverse contact relationship:', contactError2);
+      }
+
+      console.log(
+        `Invitation ${invitation.id} accepted. Contacts added between ${invitation.inviter_id} and ${user_id}`,
+      );
+    } catch (error) {
+      console.error('Error creating contact relationships:', error);
+      // Don't fail the entire operation if contact creation fails
+    }
 
     return new Response(
       JSON.stringify({ message: "Invitation accepted", updatedInvitation }),
