@@ -84,6 +84,7 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerFactory<UserSearchNotifier>(
     () => UserSearchNotifier(sl()),
+  );
   sl.registerFactoryParam<MessageProvider, String, void>(
     (chatId, _) => MessageProvider(sl(), sl(), chatId),
   );
