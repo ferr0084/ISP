@@ -1,8 +1,10 @@
+import 'package:app/core/di/service_locator.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'dart:async';
 
+import 'package:app/core/error/failures.dart';
 import 'package:flutter/material.dart';
 
-import 'package:app/core/error/failures.dart';
 import '../../domain/entities/message.dart';
 import '../../domain/usecases/get_messages.dart';
 import '../../domain/usecases/send_message.dart';
@@ -30,48 +32,73 @@ class MessageProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    _messagesSubscription = _getMessages(GetMessagesParams(chatId: chatId)).listen(
-      (result) {
-        result.fold(
-          (failure) {
-            // Ignore failures, show empty list
-            _messages = [];
-            _error = null;
-            _isLoading = false;
-            notifyListeners();
+    _messagesSubscription = _getMessages(GetMessagesParams(chatId: chatId))
+        .listen(
+          (result) {
+            result.fold(
+              (failure) {
+                // Propagate failures to the UI
+                _messages = [];
+                _error = failure;
+                _isLoading = false;
+                notifyListeners();
+              },
+              (messages) {
+                _messages = messages;
+                _error = null;
+                _isLoading = false;
+                notifyListeners();
+              },
+            );
           },
-          (messages) {
-            _messages = messages;
-            _error = null;
+          onError: (error) {
+            // Propagate stream errors to the UI
+            _messages = [];
+            _error = ServerFailure(); // Changed to instantiate without arguments
             _isLoading = false;
             notifyListeners();
           },
         );
-      },
-      onError: (error) {
-        // Ignore stream errors, show empty list
-        _messages = [];
-        _error = null;
-        _isLoading = false;
-        notifyListeners();
-      },
-    );
   }
 
   Future<bool> sendMessage(String content) async {
     if (content.trim().isEmpty) return false;
 
-    final result = await _sendMessage(SendMessageParams(chatId: chatId, content: content));
+    final senderId = sl<SupabaseClient>().auth.currentUser?.id;
+    if (senderId == null) {
+      _error = ServerFailure(); // Or some other appropriate failure
+      notifyListeners();
+      return false;
+    }
+
+    // Optimistic update
+    final optimisticMessage = Message(
+      id: DateTime.now().toIso8601String(), // Temporary ID
+      chatId: chatId,
+      senderId: senderId,
+      content: content.trim(),
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
+    _messages.add(optimisticMessage);
+    notifyListeners();
+
+    final result = await _sendMessage(
+      SendMessageParams(chatId: chatId, content: content.trim()),
+    );
+
     return result.fold(
       (failure) {
+        // Revert optimistic update on failure
+        _messages.removeWhere((msg) => msg.id == optimisticMessage.id);
         _error = failure;
         notifyListeners();
         return false;
       },
       (_) {
-        // The stream will update the list
+        // The stream will eventually replace the optimistic message with the real one
         _error = null;
-        notifyListeners();
+        // No need to call notifyListeners() here, as the stream will do it.
         return true;
       },
     );

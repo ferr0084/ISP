@@ -1,8 +1,8 @@
 import 'dart:async';
 
+import 'package:app/core/error/failures.dart';
 import 'package:flutter/material.dart';
 
-import 'package:app/core/error/failures.dart';
 import '../../domain/entities/chat.dart';
 import '../../domain/usecases/create_chat.dart';
 import '../../domain/usecases/get_chats.dart';
@@ -61,7 +61,9 @@ class ChatProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    final result = await _createChat(CreateChatParams(name: name, memberIds: memberIds));
+    final result = await _createChat(
+      CreateChatParams(name: name, memberIds: memberIds),
+    );
     result.fold(
       (failure) {
         _error = failure;

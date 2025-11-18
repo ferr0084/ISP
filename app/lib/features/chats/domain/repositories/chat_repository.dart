@@ -2,16 +2,23 @@ import 'package:app/core/error/failures.dart';
 import 'package:app/features/chats/domain/entities/chat.dart';
 import 'package:app/features/chats/domain/entities/chat_member.dart';
 import 'package:app/features/chats/domain/entities/message.dart';
+import 'package:app/features/chats/domain/entities/message_with_sender.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class ChatRepository {
   Stream<Either<Failure, List<Chat>>> getChats();
   Future<Either<Failure, Chat>> getChat(String id);
-  Future<Either<Failure, Chat>> createChat(String? name, List<String> memberIds);
+  Future<Either<Failure, Chat>> createChat(
+    String? name,
+    List<String> memberIds,
+  );
   Future<Either<Failure, Unit>> updateChat(Chat chat);
   Future<Either<Failure, Unit>> deleteChat(String id);
 
   Stream<Either<Failure, List<Message>>> getMessages(String chatId);
+  Future<Either<Failure, List<MessageWithSender>>> getLatestMessages(
+    String chatId,
+  );
   Future<Either<Failure, Unit>> sendMessage(String chatId, String content);
 
   Future<Either<Failure, List<ChatMember>>> getChatMembers(String chatId);

@@ -8,6 +8,7 @@ class Group extends Equatable {
   final String lastMessage;
   final DateTime time; // Changed from String to DateTime
   final int? unreadCount;
+  final String? chatId;
 
   const Group({
     required this.id,
@@ -17,6 +18,7 @@ class Group extends Equatable {
     required this.lastMessage,
     required this.time,
     this.unreadCount,
+    this.chatId,
   });
 
   // copyWith method
@@ -28,6 +30,7 @@ class Group extends Equatable {
     String? lastMessage,
     DateTime? time,
     int? unreadCount,
+    String? chatId,
   }) {
     return Group(
       id: id ?? this.id,
@@ -37,6 +40,7 @@ class Group extends Equatable {
       lastMessage: lastMessage ?? this.lastMessage,
       time: time ?? this.time,
       unreadCount: unreadCount ?? this.unreadCount,
+      chatId: chatId ?? this.chatId,
     );
   }
 
@@ -49,5 +53,6 @@ class Group extends Equatable {
     lastMessage,
     time,
     unreadCount,
+    chatId,
   ];
 }

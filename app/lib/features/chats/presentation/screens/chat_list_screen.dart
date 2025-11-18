@@ -1,8 +1,8 @@
+import 'package:app/core/di/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import 'package:app/core/di/service_locator.dart';
 import '../providers/chat_provider.dart';
 import 'chat_creation_screen.dart';
 import 'chat_detail_screen.dart';
@@ -57,9 +57,7 @@ class ChatListScreen extends StatelessWidget {
             }
 
             if (provider.error != null) {
-              return Center(
-                child: Text('Error: ${provider.error}'),
-              );
+              return Center(child: Text('Error: ${provider.error}'));
             }
 
             final chats = provider.chats;
@@ -91,13 +89,17 @@ class ChatListScreen extends StatelessWidget {
                   subtitle: Text(
                     'Tap to open chat', // TODO: Show last message
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withValues(alpha: 0.7),
                     ),
                   ),
                   trailing: Text(
                     _formatTime(chat.updatedAt),
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withValues(alpha: 0.7),
                     ),
                   ),
                   onTap: () {
@@ -118,13 +120,14 @@ class ChatListScreen extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => const ChatCreationScreen(),
-              ),
+              MaterialPageRoute(builder: (_) => const ChatCreationScreen()),
             );
           },
           backgroundColor: Theme.of(context).colorScheme.primary,
-          child: Icon(Icons.add, color: Theme.of(context).colorScheme.onPrimary),
+          child: Icon(
+            Icons.add,
+            color: Theme.of(context).colorScheme.onPrimary,
+          ),
         ),
       ),
     );
