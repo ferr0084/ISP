@@ -1,9 +1,9 @@
 CREATE TABLE public.invitations (
-    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     inviter_id uuid REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
     invitee_email text NOT NULL,
     status text DEFAULT 'pending' NOT NULL,
-    token uuid UNIQUE DEFAULT uuid_generate_v4() NOT NULL,
+    token uuid UNIQUE DEFAULT gen_random_uuid() NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     expires_at timestamp with time zone,
 

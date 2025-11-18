@@ -28,11 +28,7 @@ serve(async (req) => {
     );
 
     // Generate a unique token for the invitation
-    const { data: tokenData, error: tokenError } = await supabaseClient.rpc(
-      "uuid_generate_v4",
-    );
-    if (tokenError) throw tokenError;
-    const token = tokenData;
+    const token = crypto.randomUUID();
 
     // Insert invitation into the 'invitations' table
     const { data, error } = await supabaseClient

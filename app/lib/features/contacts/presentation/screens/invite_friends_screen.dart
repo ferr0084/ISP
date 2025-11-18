@@ -109,8 +109,27 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
     );
     final inviteeEmails = _selectedContacts
         .map((contact) => contact.email)
-        .whereType<String>()
+        .where((email) => email != null && email.isNotEmpty)
+        .cast<String>()
         .toList();
+
+    if (inviteeEmails.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('None of the selected contacts have an email address.'),
+        ),
+      );
+      return;
+    }
+
+    if (inviteeEmails.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('None of the selected contacts have valid email addresses. Please select contacts with emails.'),
+        ),
+      );
+      return;
+    }
 
     await inviteFriendsNotifier.sendInvites(inviteeEmails);
 
@@ -557,37 +576,37 @@ Or visit: $fallbackUrl
                           ),
                         ),
                         subtitle: Text(
-                          user.email ?? user.phoneNumber ?? 'No contact info',
+                          user.email ?? 'No email found',
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: theme.colorScheme.onSurface.withAlpha(178),
                           ),
                         ),
-                        trailing: Checkbox(
-                          value: isSelected,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              if (value == true) {
-                                _selectedContacts.add(user);
-                              } else {
-                                _selectedContacts.remove(user);
-                              }
-                            });
-                          },
-                          activeColor: theme.colorScheme.primary,
-                          checkColor: theme.colorScheme.onPrimary,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                        ),
-                        onTap: () {
-                          setState(() {
-                            if (isSelected) {
-                              _selectedContacts.remove(user);
-                            } else {
-                              _selectedContacts.add(user);
-                            }
-                          });
-                        },
+                         trailing: Checkbox(
+                           value: isSelected,
+                           onChanged: user.email != null ? (bool? value) {
+                             setState(() {
+                               if (value == true) {
+                                 _selectedContacts.add(user);
+                               } else {
+                                 _selectedContacts.remove(user);
+                               }
+                             });
+                           } : null,
+                           activeColor: theme.colorScheme.primary,
+                           checkColor: theme.colorScheme.onPrimary,
+                           shape: RoundedRectangleBorder(
+                             borderRadius: BorderRadius.circular(4),
+                           ),
+                         ),
+                         onTap: user.email != null ? () {
+                           setState(() {
+                             if (isSelected) {
+                               _selectedContacts.remove(user);
+                             } else {
+                               _selectedContacts.add(user);
+                             }
+                           });
+                         } : null,
                       );
                     },
                   );
@@ -652,32 +671,32 @@ Or visit: $fallbackUrl
                             color: theme.colorScheme.onSurface.withAlpha(178),
                           ),
                         ),
-                        trailing: Checkbox(
-                          value: isSelected,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              if (value == true) {
-                                _selectedContacts.add(contact);
-                              } else {
-                                _selectedContacts.remove(contact);
-                              }
-                            });
-                          },
-                          activeColor: theme.colorScheme.primary,
-                          checkColor: theme.colorScheme.onPrimary,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                        ),
-                        onTap: () {
-                          setState(() {
-                            if (isSelected) {
-                              _selectedContacts.remove(contact);
-                            } else {
-                              _selectedContacts.add(contact);
-                            }
-                          });
-                        },
+                         trailing: Checkbox(
+                           value: isSelected,
+                           onChanged: contact.email != null ? (bool? value) {
+                             setState(() {
+                               if (value == true) {
+                                 _selectedContacts.add(contact);
+                               } else {
+                                 _selectedContacts.remove(contact);
+                               }
+                             });
+                           } : null,
+                           activeColor: theme.colorScheme.primary,
+                           checkColor: theme.colorScheme.onPrimary,
+                           shape: RoundedRectangleBorder(
+                             borderRadius: BorderRadius.circular(4),
+                           ),
+                         ),
+                         onTap: contact.email != null ? () {
+                           setState(() {
+                             if (isSelected) {
+                               _selectedContacts.remove(contact);
+                             } else {
+                               _selectedContacts.add(contact);
+                             }
+                           });
+                         } : null,
                       );
                     }
                     return const SizedBox.shrink();
