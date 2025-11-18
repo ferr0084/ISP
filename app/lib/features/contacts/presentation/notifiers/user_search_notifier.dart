@@ -32,12 +32,16 @@ class UserSearchNotifier extends ChangeNotifier {
 
       // Filter out users who are already contacts
       final existingContactIds = existingContacts.map((c) => c.id).toSet();
-      _searchResults = allResults.where((user) => !existingContactIds.contains(user.id)).toList();
+      _searchResults = allResults
+          .where((user) => !existingContactIds.contains(user.id))
+          .toList();
 
       // Also filter out the current user if they're in the results
       final currentUserId = _contactRepository.getCurrentUserId();
       if (currentUserId != null) {
-        _searchResults = _searchResults.where((user) => user.id != currentUserId).toList();
+        _searchResults = _searchResults
+            .where((user) => user.id != currentUserId)
+            .toList();
       }
     } catch (e) {
       _errorMessage = 'Error searching users: $e';

@@ -1,8 +1,8 @@
+import 'package:app/core/di/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'package:app/core/di/service_locator.dart';
 import '../../domain/entities/message.dart';
 import '../providers/message_provider.dart';
 
@@ -73,10 +73,9 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
 
                   return ListView.builder(
                     controller: _scrollController,
-                    reverse: true, // Newest messages at bottom
                     itemCount: messages.length,
                     itemBuilder: (context, index) {
-                      final message = messages[messages.length - 1 - index]; // Reverse for display
+                      final message = messages[index];
                       final isMe = message.senderId == sl<SupabaseClient>().auth.currentUser?.id;
 
                       return MessageBubble(
@@ -88,14 +87,18 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                 },
               ),
             ),
-            _buildMessageInput(),
+            Consumer<MessageProvider>(
+              builder: (context, provider, child) {
+                return _buildMessageInput(provider);
+              },
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildMessageInput() {
+  Widget _buildMessageInput(MessageProvider provider) {
     return Container(
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
@@ -110,27 +113,26 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
             child: TextField(
               controller: _messageController,
               decoration: const InputDecoration(
-                hintText: 'Type a message...',
+                hintText: 'Type a message...', 
                 border: InputBorder.none,
               ),
               maxLines: null,
               textInputAction: TextInputAction.send,
-              onSubmitted: _sendMessage,
+              onSubmitted: (text) => _sendMessage(provider, text),
             ),
           ),
           IconButton(
             icon: const Icon(Icons.send),
-            onPressed: () => _sendMessage(_messageController.text),
+            onPressed: () => _sendMessage(provider, _messageController.text),
           ),
         ],
       ),
     );
   }
 
-  void _sendMessage(String text) async {
+  void _sendMessage(MessageProvider provider, String text) async {
     if (text.trim().isEmpty) return;
 
-    final provider = context.read<MessageProvider>();
     final success = await provider.sendMessage(text.trim());
     if (success) {
       _messageController.clear();
@@ -148,11 +150,7 @@ class MessageBubble extends StatelessWidget {
   final Message message;
   final bool isMe;
 
-  const MessageBubble({
-    super.key,
-    required this.message,
-    required this.isMe,
-  });
+  const MessageBubble({super.key, required this.message, required this.isMe});
 
   @override
   Widget build(BuildContext context) {
@@ -186,10 +184,11 @@ class MessageBubble extends StatelessWidget {
               _formatTime(message.createdAt),
               style: TextStyle(
                 fontSize: 12,
-                color: (isMe
-                        ? Theme.of(context).colorScheme.onPrimary
-                        : Theme.of(context).colorScheme.onSurface)
-                    .withValues(alpha: 0.7),
+                color:
+                    (isMe
+                            ? Theme.of(context).colorScheme.onPrimary
+                            : Theme.of(context).colorScheme.onSurface)
+                        .withValues(alpha: 0.7),
               ),
             ),
           ],
@@ -211,7 +210,15 @@ class MessageBubble extends StatelessWidget {
     } else if (difference.inDays == 1) {
       return 'Yesterday ${time.hour}:${time.minute.toString().padLeft(2, '0')}';
     } else if (difference.inDays < 7) {
-      final weekday = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][time.weekday - 1];
+      final weekday = [
+        'Mon',
+        'Tue',
+        'Wed',
+        'Thu',
+        'Fri',
+        'Sat',
+        'Sun',
+      ][time.weekday - 1];
       return '$weekday ${time.hour}:${time.minute.toString().padLeft(2, '0')}';
     } else {
       return '${time.day}/${time.month}/${time.year}';

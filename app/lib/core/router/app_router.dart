@@ -4,6 +4,7 @@ import '../../features/auth/presentation/providers/user_provider.dart';
 import '../../features/auth/presentation/screens/login_callback_screen.dart';
 import '../../features/auth/presentation/screens/login_or_create_account_screen.dart';
 import '../../features/auth/presentation/screens/welcome_screen.dart';
+import '../../features/chats/presentation/screens/chat_detail_screen.dart';
 import '../../features/chats/presentation/screens/chat_list_screen.dart';
 import '../../features/common/presentation/pages/settings_page.dart';
 import '../../features/contacts/presentation/screens/contact_detail_screen.dart'; // Added import
@@ -48,6 +49,20 @@ class AppRouter {
       GoRoute(
         path: '/chats',
         builder: (context, state) => const ChatListScreen(),
+        routes: [
+          GoRoute(
+            path: ':chatId', // New sub-route for chat detail
+            builder: (context, state) {
+              final chatId = state.pathParameters['chatId']!;
+              final chatName =
+                  state.extra as String?; // Retrieve chatName from extra
+              return ChatDetailScreen(
+                chatId: chatId,
+                chatName: chatName ?? 'Group Chat',
+              ); // Provide a fallback
+            },
+          ),
+        ],
       ),
       GoRoute(
         path: '/groups',

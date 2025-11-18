@@ -28,6 +28,8 @@ import '../../features/contacts/presentation/notifiers/user_search_notifier.dart
 import '../../features/groups/data/repositories/group_repository_impl.dart';
 import '../../features/groups/domain/repositories/group_repository.dart';
 import '../../features/groups/presentation/providers/group_provider.dart';
+import '../../features/chats/domain/usecases/get_latest_messages.dart';
+import '../../features/groups/presentation/providers/group_detail_provider.dart';
 import '../../features/profile/data/repositories/profile_repository_impl.dart';
 import '../../features/profile/domain/repositories/profile_repository.dart';
 import '../../features/profile/domain/usecases/get_profile.dart';
@@ -67,6 +69,7 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<CreateChat>(() => CreateChat(sl()));
   sl.registerLazySingleton<GetMessages>(() => GetMessages(sl()));
   sl.registerLazySingleton<SendMessage>(() => SendMessage(sl()));
+  sl.registerLazySingleton<GetLatestMessages>(() => GetLatestMessages(sl()));
 
   // Notifiers
   sl.registerFactory<UserProvider>(
@@ -82,10 +85,11 @@ Future<void> setupServiceLocator() async {
   sl.registerFactory<InviteFriendsNotifier>(
     () => InviteFriendsNotifier(sl(), sl()),
   );
-  sl.registerFactory<UserSearchNotifier>(
-    () => UserSearchNotifier(sl()),
-  );
+  sl.registerFactory<UserSearchNotifier>(() => UserSearchNotifier(sl()));
   sl.registerFactoryParam<MessageProvider, String, void>(
     (chatId, _) => MessageProvider(sl(), sl(), chatId),
+  );
+  sl.registerFactoryParam<GroupDetailProvider, String, void>(
+    (groupId, _) => GroupDetailProvider(sl(), sl(), groupId),
   );
 }

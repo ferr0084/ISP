@@ -1,8 +1,7 @@
+import 'package:app/core/di/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:app/core/di/service_locator.dart';
-import '../../../contacts/domain/entities/contact.dart';
 import '../../../contacts/presentation/notifiers/contact_list_notifier.dart';
 import '../providers/chat_provider.dart';
 
@@ -30,9 +29,7 @@ class _ChatCreationScreenState extends State<ChatCreationScreen> {
         ChangeNotifierProvider<ContactListNotifier>(
           create: (_) => sl<ContactListNotifier>(),
         ),
-        ChangeNotifierProvider<ChatProvider>(
-          create: (_) => sl<ChatProvider>(),
-        ),
+        ChangeNotifierProvider<ChatProvider>(create: (_) => sl<ChatProvider>()),
       ],
       child: Scaffold(
         appBar: AppBar(
@@ -40,7 +37,8 @@ class _ChatCreationScreenState extends State<ChatCreationScreen> {
           actions: [
             Consumer2<ChatProvider, ContactListNotifier>(
               builder: (context, chatProvider, contactProvider, child) {
-                final isLoading = chatProvider.isLoading || contactProvider.isLoading;
+                final isLoading =
+                    chatProvider.isLoading || contactProvider.isLoading;
                 final canCreate = _selectedContactIds.isNotEmpty && !isLoading;
 
                 return TextButton(
@@ -83,16 +81,16 @@ class _ChatCreationScreenState extends State<ChatCreationScreen> {
                   final contacts = notifier.contacts;
 
                   if (contacts.isEmpty) {
-                    return const Center(
-                      child: Text('No contacts available'),
-                    );
+                    return const Center(child: Text('No contacts available'));
                   }
 
                   return ListView.builder(
                     itemCount: contacts.length,
                     itemBuilder: (context, index) {
                       final contact = contacts[index];
-                      final isSelected = _selectedContactIds.contains(contact.id);
+                      final isSelected = _selectedContactIds.contains(
+                        contact.id,
+                      );
 
                       return CheckboxListTile(
                         value: isSelected,
@@ -108,7 +106,9 @@ class _ChatCreationScreenState extends State<ChatCreationScreen> {
                         title: Text(contact.name),
                         subtitle: Text(contact.phoneNumber ?? ''),
                         secondary: CircleAvatar(
-                          backgroundColor: Theme.of(context).colorScheme.primary,
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.primary,
                           child: Text(
                             contact.name[0].toUpperCase(),
                             style: TextStyle(
@@ -139,9 +139,9 @@ class _ChatCreationScreenState extends State<ChatCreationScreen> {
 
     if (mounted) {
       if (chatProvider.error != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: ${chatProvider.error}')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: ${chatProvider.error}')));
       } else {
         Navigator.of(context).pop(); // Go back to chat list
       }

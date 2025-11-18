@@ -28,6 +28,7 @@ class GroupRepositoryImpl implements GroupRepository {
               lastMessage: json['last_message'],
               time: DateTime.parse(json['time']),
               unreadCount: json['unread_count'],
+              chatId: json['chat_id'],
             ),
           )
           .toList();
@@ -48,6 +49,7 @@ class GroupRepositoryImpl implements GroupRepository {
               lastMessage: json['last_message'],
               time: DateTime.parse(json['time']),
               unreadCount: json['unread_count'],
+              chatId: json['chat_id'],
             ),
           )
           .toList();
@@ -75,6 +77,7 @@ class GroupRepositoryImpl implements GroupRepository {
         lastMessage: response['last_message'],
         time: DateTime.parse(response['time']),
         unreadCount: response['unread_count'],
+        chatId: response['chat_id'],
       );
       return Right(group);
     } on PostgrestException catch (e) {

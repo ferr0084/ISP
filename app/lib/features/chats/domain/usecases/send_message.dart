@@ -1,8 +1,8 @@
-import 'package:dartz/dartz.dart';
-import 'package:equatable/equatable.dart';
 import 'package:app/core/error/failures.dart';
 import 'package:app/core/usecase/usecase.dart';
 import 'package:app/features/chats/domain/repositories/chat_repository.dart';
+import 'package:dartz/dartz.dart';
+import 'package:equatable/equatable.dart';
 
 class SendMessage implements UseCase<Unit, SendMessageParams> {
   final ChatRepository repository;

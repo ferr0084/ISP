@@ -30,7 +30,10 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
     super.initState();
     _searchController.addListener(_onSearchChanged);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _userSearchNotifier = Provider.of<UserSearchNotifier>(context, listen: false);
+      _userSearchNotifier = Provider.of<UserSearchNotifier>(
+        context,
+        listen: false,
+      );
       final contactListNotifier = Provider.of<ContactListNotifier>(
         context,
         listen: false,
@@ -138,7 +141,8 @@ class _InviteFriendsScreenState extends State<InviteFriendsScreen> {
     const String baseUrl = 'yourapp://invite'; // App deep link
     const String fallbackUrl = 'https://yourapp.com/invite'; // Web fallback
 
-    final String inviteMessage = '''
+    const String inviteMessage =
+        '''
 Join me on Idiot Social Platform!
 
 Download the app and use this link to connect with me:
@@ -175,7 +179,9 @@ Or visit: $fallbackUrl
 
       if (contactsWithEmails.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('No contacts with email addresses found.')),
+          const SnackBar(
+            content: Text('No contacts with email addresses found.'),
+          ),
         );
         return;
       }
@@ -216,7 +222,9 @@ Or visit: $fallbackUrl
                     itemBuilder: (context, index) {
                       final contact = contacts[index];
                       final isSelected = selectedContacts.contains(contact);
-                      final email = contact.emails.isNotEmpty ? contact.emails.first.address : '';
+                      final email = contact.emails.isNotEmpty
+                          ? contact.emails.first.address
+                          : '';
 
                       return CheckboxListTile(
                         value: isSelected,
@@ -236,7 +244,11 @@ Or visit: $fallbackUrl
                               ? MemoryImage(contact.photo!)
                               : null,
                           child: contact.photo == null
-                              ? Text(contact.displayName.substring(0, 1).toUpperCase())
+                              ? Text(
+                                  contact.displayName
+                                      .substring(0, 1)
+                                      .toUpperCase(),
+                                )
                               : null,
                         ),
                       );
@@ -269,7 +281,9 @@ Or visit: $fallbackUrl
   void _addContactsToSelection(Set<fc.Contact> selectedDeviceContacts) {
     // Convert device contacts to our Contact model
     for (final deviceContact in selectedDeviceContacts) {
-      final email = deviceContact.emails.isNotEmpty ? deviceContact.emails.first.address : '';
+      final email = deviceContact.emails.isNotEmpty
+          ? deviceContact.emails.first.address
+          : '';
       if (email.isNotEmpty) {
         // Check if we already have this contact in our selected list
         final existingContact = _selectedContacts.firstWhere(
@@ -278,18 +292,24 @@ Or visit: $fallbackUrl
             id: '', // We'll use email as temporary ID for now
             name: deviceContact.displayName,
             email: email,
-            phoneNumber: deviceContact.phones.isNotEmpty ? deviceContact.phones.first.number : null,
+            phoneNumber: deviceContact.phones.isNotEmpty
+                ? deviceContact.phones.first.number
+                : null,
           ),
         );
 
         if (existingContact.id.isEmpty) {
           // This is a new contact, add it
-          _selectedContacts.add(Contact(
-            id: email, // Use email as ID for device contacts
-            name: deviceContact.displayName,
-            email: email,
-            phoneNumber: deviceContact.phones.isNotEmpty ? deviceContact.phones.first.number : null,
-          ));
+          _selectedContacts.add(
+            Contact(
+              id: email, // Use email as ID for device contacts
+              name: deviceContact.displayName,
+              email: email,
+              phoneNumber: deviceContact.phones.isNotEmpty
+                  ? deviceContact.phones.first.number
+                  : null,
+            ),
+          );
         }
       }
     }
@@ -298,7 +318,11 @@ Or visit: $fallbackUrl
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Added ${selectedDeviceContacts.length} contacts from address book')),
+        SnackBar(
+          content: Text(
+            'Added ${selectedDeviceContacts.length} contacts from address book',
+          ),
+        ),
       );
     }
   }
@@ -335,13 +359,17 @@ Or visit: $fallbackUrl
         context.push('/invite-accept?token=$token');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Invalid QR code format. Please scan a valid invitation code.')),
+          const SnackBar(
+            content: Text(
+              'Invalid QR code format. Please scan a valid invitation code.',
+            ),
+          ),
         );
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error processing QR code: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error processing QR code: $e')));
     }
   }
 
@@ -514,7 +542,8 @@ Or visit: $fallbackUrl
                       return ListTile(
                         leading: CircleAvatar(
                           radius: 24,
-                          backgroundImage: (user.avatarUrl != null &&
+                          backgroundImage:
+                              (user.avatarUrl != null &&
                                   user.avatarUrl!.isNotEmpty)
                               ? NetworkImage(user.avatarUrl!)
                               : const AssetImage('assets/images/avatar_s.png')
@@ -569,7 +598,8 @@ Or visit: $fallbackUrl
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                if (_filteredContacts.isEmpty && _searchController.text.isEmpty) {
+                if (_filteredContacts.isEmpty &&
+                    _searchController.text.isEmpty) {
                   _filteredContacts = contactNotifier.contacts;
                   _groupAndBuildList();
                 }
@@ -602,7 +632,8 @@ Or visit: $fallbackUrl
                       return ListTile(
                         leading: CircleAvatar(
                           radius: 24,
-                          backgroundImage: (contact.avatarUrl != null &&
+                          backgroundImage:
+                              (contact.avatarUrl != null &&
                                   contact.avatarUrl!.isNotEmpty)
                               ? NetworkImage(contact.avatarUrl!)
                               : const AssetImage('assets/images/avatar_s.png')
