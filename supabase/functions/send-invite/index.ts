@@ -66,12 +66,32 @@ serve(async (req) => {
         console.error("Built-in invite email failed:", inviteError.message);
         // Fallback: invitation is still created, user can share link manually
         console.log(`Invite created but email failed. Share this link: yourapp://invite?token=${token}`);
+
+        return new Response(JSON.stringify({
+          message: "Invitation created but email failed",
+          data,
+          email_error: inviteError.message,
+          invite_link: `yourapp://invite?token=${token}`
+        }), {
+          headers: { "Content-Type": "application/json" },
+          status: 200,
+        });
       } else {
         console.log(`Invite email sent to ${invitee_email} using Supabase built-in system`);
       }
     } catch (error) {
       console.error("Email sending error:", error);
       console.log(`Invite created. Manual sharing token: ${token}`);
+
+      return new Response(JSON.stringify({
+        message: "Invitation created but email failed",
+        data,
+        email_error: error.message || String(error),
+        invite_link: `yourapp://invite?token=${token}`
+      }), {
+        headers: { "Content-Type": "application/json" },
+        status: 200,
+      });
     }
 
     const inviteUrl = `yourapp://invite?token=${token}`;

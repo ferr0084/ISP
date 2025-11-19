@@ -14,6 +14,14 @@ class InvitationRepository {
       if (response.status != 200) {
         throw Exception(response.data['error'] ?? 'Failed to send invitation');
       }
+
+      final data = response.data;
+      if (data['email_error'] != null) {
+        throw Exception(
+          'Invitation created, but email failed: ${data['email_error']}. \n'
+          'Share this link manually: ${data['invite_link']}',
+        );
+      }
     } catch (e) {
       throw Exception('Error sending invitation: $e');
     }

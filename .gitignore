@@ -47,3 +47,4 @@ tmp
 supabase/.temp
 .gemini/
 gha-creds-*.json
+.vscode
