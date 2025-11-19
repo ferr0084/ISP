@@ -1,18 +1,23 @@
 import 'dart:async';
 import 'package:app/features/chats/domain/entities/message_with_sender.dart';
 import 'package:app/features/chats/domain/usecases/get_latest_messages.dart';
+import 'package:app/core/error/failures.dart'; // Import failures
 import 'package:flutter/material.dart';
 import 'package:app/features/groups/domain/entities/group.dart';
 import 'package:app/features/groups/domain/repositories/group_repository.dart';
+import 'package:app/features/groups/domain/usecases/get_group_members.dart';
+import 'package:app/features/groups/domain/entities/group_member.dart';
 
 class GroupDetailProvider with ChangeNotifier {
   final GroupRepository _groupRepository;
   final GetLatestMessages _getLatestMessages;
+  final GetGroupMembers _getGroupMembers;
   final String groupId;
 
   GroupDetailProvider(
     this._groupRepository,
     this._getLatestMessages,
+    this._getGroupMembers,
     this.groupId,
   );
 
@@ -21,6 +26,9 @@ class GroupDetailProvider with ChangeNotifier {
 
   List<MessageWithSender> _latestMessages = [];
   List<MessageWithSender> get latestMessages => _latestMessages;
+
+  List<GroupMember> _members = [];
+  List<GroupMember> get members => _members;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -41,7 +49,13 @@ class GroupDetailProvider with ChangeNotifier {
     failureOrGroup.fold(
       (failure) {
         _hasError = true;
-        _errorMessage = failure.message;
+        if (failure is ServerFailure) {
+          _errorMessage = failure.message;
+        } else if (failure is GroupNotFoundFailure) {
+          _errorMessage = failure.message;
+        } else {
+          _errorMessage = 'An unexpected error occurred.';
+        }
         _isLoading = false;
         notifyListeners();
       },
@@ -55,6 +69,7 @@ class GroupDetailProvider with ChangeNotifier {
         if (group.chatId != null) {
           _fetchLatestMessages(group.chatId!);
         }
+        _fetchGroupMembers();
       },
     );
   }
@@ -65,10 +80,31 @@ class GroupDetailProvider with ChangeNotifier {
     );
     failureOrMessages.fold(
       (failure) {
-        // Ignore failures for latest messages
+        // Ignore failures for latest messages for now
       },
       (messages) {
         _latestMessages = messages;
+        notifyListeners();
+      },
+    );
+  }
+
+  void _fetchGroupMembers() async {
+    final failureOrMembers = await _getGroupMembers(
+      GetGroupMembersParams(groupId: groupId),
+    );
+    failureOrMembers.fold(
+      (failure) {
+        _hasError = true;
+        if (failure is ServerFailure) {
+          _errorMessage = failure.message;
+        } else {
+          _errorMessage = 'Failed to fetch group members.';
+        }
+        notifyListeners();
+      },
+      (members) {
+        _members = members;
         notifyListeners();
       },
     );

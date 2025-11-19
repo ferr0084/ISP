@@ -1,4 +1,3 @@
-import 'package:app/features/chats/domain/entities/message_with_sender.dart';
 import 'package:app/core/di/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -66,7 +65,7 @@ class GroupHomeScreenState extends State<GroupHomeScreen> {
           if (groupDetailProvider.hasError) {
             return Scaffold(
               appBar: AppBar(title: const Text('Error')),
-              body: Center(child: Text('Error: ${groupDetailProvider.errorMessage}')),
+              body: Center(child: Text('Error: ${groupDetailProvider.errorMessage!}')),
             );
           }
 
@@ -501,7 +500,7 @@ class GroupHomeScreenState extends State<GroupHomeScreen> {
                                   ),
                                 ),
                                 child: Text(
-                                  'Settle Up',
+                                  'Log New Game',
                                   style: Theme.of(context).textTheme.labelLarge
                                       ?.copyWith(
                                         color: Theme.of(
@@ -620,13 +619,109 @@ class GroupHomeScreenState extends State<GroupHomeScreen> {
                         }).toList(),
                       ),
                     ),
+                    const SizedBox(height: 24),
+
+                    // Members Section
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Members',
+                          style: Theme.of(context).textTheme.headlineSmall
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            context.push(
+                              '/groups/detail/${widget.groupId}/members',
+                              extra: context.read<GroupDetailProvider>(),
+                            );
+                          },
+                          child: Text(
+                            'View All',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Card(
+                      color: Theme.of(context).colorScheme.surface,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Group Members',
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: Theme.of(context).colorScheme.onSurface
+                                        .withAlpha(178), // 0.7 * 255 = 178.5
+                                  ),
+                            ),
+                            const SizedBox(height: 8),
+                            // Placeholder for member avatars
+                            Row(
+                              children: [
+                                ...groupDetailProvider.members
+                                    .take(3)
+                                    .map(
+                                      (member) => Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 8.0),
+                                        child: CircleAvatar(
+                                          backgroundImage: member.avatarUrl !=
+                                                  null
+                                              ? NetworkImage(member.avatarUrl!)
+                                              : null,
+                                          child: member.avatarUrl == null
+                                              ? Text(member.name[0])
+                                              : null,
+                                          radius: 20,
+                                        ),
+                                      ),
+                                    )
+                                    .toList(),
+                                if (groupDetailProvider.members.length > 3)
+                                  CircleAvatar(
+                                    backgroundColor: Theme.of(context)
+                                        .colorScheme
+                                        .primary,
+                                    child: Text(
+                                      '+${groupDetailProvider.members.length - 3}',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onPrimary,
+                                          ),
+                                    ),
+                                    radius: 20,
+                                  ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
             ),
             floatingActionButton: FloatingActionButton(
               onPressed: () {
-                // TODO: Implement new action for group
+                context.push('/groups/detail/${widget.groupId}/invite');
               },
               backgroundColor: Theme.of(context).colorScheme.primary,
               child: Icon(

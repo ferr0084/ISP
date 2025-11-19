@@ -1,3 +1,4 @@
+import 'package:app/features/profile/domain/entities/user_profile.dart';
 import 'dart:async';
 
 import 'package:dartz/dartz.dart';
@@ -143,5 +144,27 @@ class GroupRepositoryImpl implements GroupRepository {
     } catch (e) {
       return Left(ServerFailure(e.toString()));
     }
+  }
+
+  @override
+  Future<List<UserProfile>> searchUsersNotInGroup(
+      String query, String groupId) async {
+    final response = await _supabaseClient.rpc('search_users_not_in_group',
+        params: {'p_group_id': groupId, 'p_search_term': query});
+
+    if (response == null) {
+      return [];
+    }
+
+    return (response as List)
+        .map(
+          (json) => UserProfile(
+            id: json['id'],
+            fullName: json['full_name'],
+            avatarUrl: json['avatar_url'],
+            email: json['email'],
+          ),
+        )
+        .toList();
   }
 }

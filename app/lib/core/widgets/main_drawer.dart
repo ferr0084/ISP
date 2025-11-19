@@ -108,13 +108,7 @@ class MainDrawer extends StatelessWidget {
             route: '/idiot-game',
             currentRoute: currentRoute,
           ),
-          _buildDrawerItem(
-            context,
-            icon: Icons.contacts,
-            title: 'Contacts',
-            route: '/contacts',
-            currentRoute: currentRoute,
-          ),
+
           _buildDrawerItem(
             context,
             icon: Icons.settings,

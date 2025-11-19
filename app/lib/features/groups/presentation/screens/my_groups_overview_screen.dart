@@ -169,7 +169,7 @@ class MyGroupsOverviewScreenState extends State<MyGroupsOverviewScreen> {
                         ],
                       ),
                       onTap: () {
-                        context.push('/groups/detail', extra: group.id);
+                        context.push('/groups/detail/${group.id}');
                       },
                     );
                   },

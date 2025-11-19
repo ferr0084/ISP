@@ -4,14 +4,10 @@ import 'package:provider/provider.dart';
 import 'core/di/service_locator.dart';
 import 'core/router/app_router.dart';
 import 'core/supabase/supabase_initializer.dart';
-import 'core/theme/theme_data.dart'; // Import AppTheme
-import 'core/theme/theme_provider.dart'; // Import ThemeProvider
+import 'core/theme/theme_data.dart';
+import 'core/theme/theme_provider.dart';
 import 'features/auth/presentation/providers/user_provider.dart';
-import 'features/contacts/presentation/notifiers/add_contact_notifier.dart';
-import 'features/contacts/presentation/notifiers/contact_detail_notifier.dart';
-import 'features/contacts/presentation/notifiers/contact_list_notifier.dart';
-import 'features/contacts/presentation/notifiers/invite_friends_notifier.dart'; // Added missing import // Added import // Added import
-import 'features/contacts/presentation/notifiers/user_search_notifier.dart';
+import 'features/groups/presentation/notifiers/group_invite_notifier.dart';
 import 'features/groups/presentation/providers/group_provider.dart';
 
 Future<void> main() async {
@@ -27,13 +23,9 @@ Future<void> main() async {
           ChangeNotifierProvider(create: (_) => sl<UserProvider>()),
           ChangeNotifierProvider(
             create: (_) => ThemeProvider(),
-          ), // Provide ThemeProvider
+          ),
           ChangeNotifierProvider(create: (_) => sl<GroupProvider>()),
-          ChangeNotifierProvider(create: (_) => sl<ContactListNotifier>()),
-          ChangeNotifierProvider(create: (_) => sl<AddContactNotifier>()),
-          ChangeNotifierProvider(create: (_) => sl<ContactDetailNotifier>()),
-          ChangeNotifierProvider(create: (_) => sl<InviteFriendsNotifier>()),
-          ChangeNotifierProvider(create: (_) => sl<UserSearchNotifier>()),
+          ChangeNotifierProvider(create: (_) => sl<GroupInviteNotifier>()),
         ],
         child: const MyApp(),
       ),
@@ -61,9 +53,9 @@ class MyApp extends StatelessWidget {
       builder: (context, themeProvider, child) {
         return MaterialApp.router(
           title: 'ISP App',
-          theme: AppTheme.lightTheme, // Use light theme
-          darkTheme: AppTheme.darkTheme, // Use dark theme
-          themeMode: themeProvider.themeMode, // Control theme mode
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: themeProvider.themeMode,
           routerConfig: appRouter.router,
         );
       },

@@ -41,7 +41,7 @@ class ChatRepositoryImpl implements ChatRepository {
             return Right(chats);
           } catch (e) {
             // Return empty list on parsing errors to avoid crashes
-            return const Right([]);
+            return Left(ServerFailure(e.toString()));
           }
         });
   }
@@ -63,7 +63,7 @@ class ChatRepositoryImpl implements ChatRepository {
       );
       return Right(chat);
     } catch (e) {
-      return Left(ServerFailure());
+      return Left(ServerFailure(e.toString()));
     }
   }
 
@@ -76,7 +76,7 @@ class ChatRepositoryImpl implements ChatRepository {
       final userId = _supabaseClient.auth.currentUser?.id;
       if (userId == null) {
         return Left(
-          ServerFailure(),
+          const ServerFailure('User not authenticated'),
         ); // User must be authenticated to create chat
       }
 
@@ -105,7 +105,7 @@ class ChatRepositoryImpl implements ChatRepository {
       );
       return Right(chat);
     } catch (e) {
-      return Left(ServerFailure());
+      return Left(ServerFailure(e.toString()));
     }
   }
 
@@ -118,7 +118,7 @@ class ChatRepositoryImpl implements ChatRepository {
           .eq('id', chat.id);
       return const Right(unit);
     } catch (e) {
-      return Left(ServerFailure());
+      return Left(ServerFailure(e.toString()));
     }
   }
 
@@ -128,7 +128,7 @@ class ChatRepositoryImpl implements ChatRepository {
       await _supabaseClient.from('chats').delete().eq('id', id);
       return const Right(unit);
     } catch (e) {
-      return Left(ServerFailure());
+      return Left(ServerFailure(e.toString()));
     }
   }
 
@@ -157,7 +157,7 @@ class ChatRepositoryImpl implements ChatRepository {
                     .toList();
             return Right(messages);
           } catch (e) {
-            return Left(ServerFailure());
+            return Left(ServerFailure(e.toString()));
           }
         });
   }
@@ -190,7 +190,7 @@ class ChatRepositoryImpl implements ChatRepository {
           .toList();
       return Right(messages);
     } catch (e) {
-      return Left(ServerFailure());
+      return Left(ServerFailure(e.toString()));
     }
   }
 
@@ -203,7 +203,7 @@ class ChatRepositoryImpl implements ChatRepository {
       final userId = _supabaseClient.auth.currentUser?.id;
       if (userId == null) {
         return Left(
-          ServerFailure(),
+          const ServerFailure('User not authenticated'),
         ); // User must be authenticated to send message
       }
 
@@ -214,7 +214,7 @@ class ChatRepositoryImpl implements ChatRepository {
       });
       return const Right(unit);
     } catch (e) {
-      return Left(ServerFailure());
+      return Left(ServerFailure(e.toString()));
     }
   }
 
@@ -241,7 +241,7 @@ class ChatRepositoryImpl implements ChatRepository {
           .toList();
       return Right(members);
     } catch (e) {
-      return Left(ServerFailure());
+      return Left(ServerFailure(e.toString()));
     }
   }
 
@@ -257,7 +257,7 @@ class ChatRepositoryImpl implements ChatRepository {
       });
       return const Right(unit);
     } catch (e) {
-      return Left(ServerFailure());
+      return Left(ServerFailure(e.toString()));
     }
   }
 
@@ -274,7 +274,7 @@ class ChatRepositoryImpl implements ChatRepository {
           .eq('user_id', userId);
       return const Right(unit);
     } catch (e) {
-      return Left(ServerFailure());
+      return Left(ServerFailure(e.toString()));
     }
   }
 }

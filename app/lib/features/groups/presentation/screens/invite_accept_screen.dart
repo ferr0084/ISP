@@ -3,12 +3,13 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../data/repositories/invitation_repository.dart'; // Assuming InvitationRepository is needed
+import '../../domain/repositories/invitation_repository.dart';
 
 class InviteAcceptScreen extends StatefulWidget {
   final String? token;
+  final String? groupId; // New parameter to handle group invitations
 
-  const InviteAcceptScreen({super.key, required this.token});
+  const InviteAcceptScreen({super.key, required this.token, this.groupId});
 
   @override
   State<InviteAcceptScreen> createState() => _InviteAcceptScreenState();
@@ -68,10 +69,14 @@ class _InviteAcceptScreenState extends State<InviteAcceptScreen> {
       setState(() {
         _isLoading = false;
       });
-      // After a short delay, navigate to home or contacts
+      // After a short delay, navigate to home
       Future.delayed(const Duration(seconds: 3), () {
         if (mounted) {
-          context.go('/contacts'); // Or '/home'
+          if (widget.groupId != null) {
+            context.go('/groups/detail/${widget.groupId}');
+          } else {
+            context.go('/home');
+          }
         }
       });
     }

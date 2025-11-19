@@ -54,7 +54,7 @@ class MessageProvider extends ChangeNotifier {
           onError: (error) {
             // Propagate stream errors to the UI
             _messages = [];
-            _error = ServerFailure(); // Changed to instantiate without arguments
+            _error = const ServerFailure('Failed to fetch messages'); // Changed to instantiate with arguments
             _isLoading = false;
             notifyListeners();
           },
@@ -66,7 +66,7 @@ class MessageProvider extends ChangeNotifier {
 
     final senderId = sl<SupabaseClient>().auth.currentUser?.id;
     if (senderId == null) {
-      _error = ServerFailure(); // Or some other appropriate failure
+      _error = const ServerFailure('User not authenticated'); // Or some other appropriate failure
       notifyListeners();
       return false;
     }

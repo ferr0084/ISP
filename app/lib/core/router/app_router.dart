@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import '../../features/auth/presentation/providers/user_provider.dart';
 import '../../features/auth/presentation/screens/login_callback_screen.dart';
@@ -7,20 +8,20 @@ import '../../features/auth/presentation/screens/welcome_screen.dart';
 import '../../features/chats/presentation/screens/chat_detail_screen.dart';
 import '../../features/chats/presentation/screens/chat_list_screen.dart';
 import '../../features/common/presentation/pages/settings_page.dart';
-import '../../features/contacts/presentation/screens/contact_detail_screen.dart'; // Added import
-import '../../features/contacts/presentation/screens/contact_list_screen.dart';
-import '../../features/contacts/presentation/screens/invite_accept_screen.dart'; // Added import
-import '../../features/contacts/presentation/screens/invite_friends_screen.dart'; // New import
 import '../../features/events/presentation/screens/events_dashboard_screen.dart';
-import '../../features/expenses/presentation/screens/expenses_home_screen.dart'; // New import
+import '../../features/expenses/presentation/screens/expenses_home_screen.dart';
+import '../../features/groups/presentation/providers/group_detail_provider.dart';
 import '../../features/groups/presentation/screens/create_group_screen.dart';
 import '../../features/groups/presentation/screens/edit_group_screen.dart';
 import '../../features/groups/presentation/screens/group_home_screen.dart';
-import '../../features/groups/presentation/screens/my_groups_overview_screen.dart'; // New import
+import '../../features/groups/presentation/screens/group_invite_screen.dart';
+import '../../features/groups/presentation/screens/group_members_screen.dart';
+import '../../features/groups/presentation/screens/my_groups_overview_screen.dart';
 import '../../features/home/presentation/pages/home_page.dart';
-import '../../features/idiot_game/presentation/screens/idiot_game_dashboard_screen.dart'; // New import
+import '../../features/idiot_game/presentation/screens/idiot_game_dashboard_screen.dart';
 import '../../features/profile/presentation/screens/profile_editing_screen.dart';
 import '../../features/profile/presentation/screens/profile_view_screen.dart';
+import '../../features/groups/presentation/screens/invite_accept_screen.dart';
 
 class AppRouter {
   final UserProvider _userProvider;
@@ -51,15 +52,14 @@ class AppRouter {
         builder: (context, state) => const ChatListScreen(),
         routes: [
           GoRoute(
-            path: ':chatId', // New sub-route for chat detail
+            path: ':chatId',
             builder: (context, state) {
               final chatId = state.pathParameters['chatId']!;
-              final chatName =
-                  state.extra as String?; // Retrieve chatName from extra
+              final chatName = state.extra as String?;
               return ChatDetailScreen(
                 chatId: chatId,
                 chatName: chatName ?? 'Group Chat',
-              ); // Provide a fallback
+              );
             },
           ),
         ],
@@ -67,7 +67,7 @@ class AppRouter {
       GoRoute(
         path: '/groups',
         builder: (context, state) =>
-            const MyGroupsOverviewScreen(), // Changed to MyGroupsOverviewScreen
+            const MyGroupsOverviewScreen(),
         routes: [
           GoRoute(
             path: 'create',
@@ -81,11 +81,31 @@ class AppRouter {
             },
           ),
           GoRoute(
-            path: 'detail', // Sub-route for GroupHomeScreen
+            path: 'detail/:groupId',
             builder: (context, state) {
-              final groupId = state.extra as String;
+              final groupId = state.pathParameters['groupId']!;
               return GroupHomeScreen(groupId: groupId);
             },
+            routes: [
+              GoRoute(
+                path: 'members',
+                builder: (context, state) {
+                  final groupId = state.pathParameters['groupId']!;
+                  final groupDetailProvider = state.extra as GroupDetailProvider;
+                  return ChangeNotifierProvider.value(
+                    value: groupDetailProvider,
+                    child: GroupMembersScreen(groupId: groupId),
+                  );
+                },
+              ),
+              GoRoute(
+                path: 'invite',
+                builder: (context, state) {
+                  final groupId = state.pathParameters['groupId']!;
+                  return GroupInviteScreen(groupId: groupId);
+                },
+              ),
+            ],
           ),
         ],
       ),
@@ -101,23 +121,7 @@ class AppRouter {
         path: '/idiot-game',
         builder: (context, state) => const IdiotGameDashboardScreen(),
       ),
-      GoRoute(
-        path: '/contacts',
-        builder: (context, state) => const ContactListScreen(),
-        routes: [
-          GoRoute(
-            path: 'detail/:id',
-            builder: (context, state) {
-              final contactId = state.pathParameters['id']!;
-              return ContactDetailScreen(contactId: contactId);
-            },
-          ),
-          GoRoute(
-            path: 'invite',
-            builder: (context, state) => const InviteFriendsScreen(),
-          ),
-        ],
-      ),
+
       GoRoute(
         path: '/settings',
         builder: (context, state) => const SettingsPage(),
@@ -126,7 +130,8 @@ class AppRouter {
         path: '/invite-accept',
         builder: (context, state) {
           final token = state.uri.queryParameters['token'];
-          return InviteAcceptScreen(token: token);
+          final groupId = state.uri.queryParameters['groupId'];
+          return InviteAcceptScreen(token: token, groupId: groupId);
         },
       ),
       GoRoute(

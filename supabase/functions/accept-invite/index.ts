@@ -76,38 +76,26 @@ serve(async (req) => {
       throw updateError;
     }
 
-    // Add bidirectional contact relationship
-    try {
-      // Add inviter to invitee's contacts
-      const { error: contactError1 } = await supabaseClient
-        .from('contacts')
-        .insert({
-          user_id: user_id, // invitee adds inviter as contact
-          contact_id: invitation.inviter_id,
-        });
+    // If group_id is present, add the user to the group_members table
+    if (invitation.group_id) {
+      const { error: groupMemberError } = await supabaseClient
+        .from("group_members")
+        .insert([
+          {
+            group_id: invitation.group_id,
+            user_id: user_id,
+            role: "member", // Default role
+          },
+        ]);
 
-      if (contactError1 && !contactError1.message.includes('duplicate key')) {
-        console.error('Error adding contact relationship:', contactError1);
+      if (groupMemberError) {
+        console.error("Error adding user to group_members:", groupMemberError);
+        // Don't fail the entire operation if adding to group fails
+      } else {
+        console.log(
+          `User ${user_id} added to group ${invitation.group_id} as member`,
+        );
       }
-
-      // Add invitee to inviter's contacts
-      const { error: contactError2 } = await supabaseClient
-        .from('contacts')
-        .insert({
-          user_id: invitation.inviter_id, // inviter adds invitee as contact
-          contact_id: user_id,
-        });
-
-      if (contactError2 && !contactError2.message.includes('duplicate key')) {
-        console.error('Error adding reverse contact relationship:', contactError2);
-      }
-
-      console.log(
-        `Invitation ${invitation.id} accepted. Contacts added between ${invitation.inviter_id} and ${user_id}`,
-      );
-    } catch (error) {
-      console.error('Error creating contact relationships:', error);
-      // Don't fail the entire operation if contact creation fails
     }
 
     return new Response(

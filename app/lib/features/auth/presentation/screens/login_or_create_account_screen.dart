@@ -71,7 +71,9 @@ class _LoginOrCreateAccountScreenState
                         borderSide: BorderSide.none,
                       ),
                     ),
+                    style: const TextStyle(color: Colors.black),
                   ),
+
                 if (!_isLogin) const SizedBox(height: 16),
                 TextField(
                   controller: _emailController,
@@ -85,6 +87,7 @@ class _LoginOrCreateAccountScreenState
                     ),
                   ),
                   keyboardType: TextInputType.emailAddress,
+                  style: const TextStyle(color: Colors.black),
                 ),
                 const SizedBox(height: 16),
                 TextField(
@@ -99,6 +102,7 @@ class _LoginOrCreateAccountScreenState
                       borderSide: BorderSide.none,
                     ),
                   ),
+                  style: const TextStyle(color: Colors.black),
                 ),
                 const SizedBox(height: 32),
                 ElevatedButton(

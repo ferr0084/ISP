@@ -3,7 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../features/auth/data/repositories/auth_repository_impl.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
-import '../../features/auth/domain/usecases/get_user.dart'; // Added missing import
+import '../../features/auth/domain/usecases/get_user.dart';
 import '../../features/auth/domain/usecases/login_with_email_and_password.dart';
 import '../../features/auth/domain/usecases/logout.dart';
 import '../../features/auth/domain/usecases/sign_up.dart';
@@ -17,14 +17,6 @@ import '../../features/chats/domain/usecases/get_messages.dart';
 import '../../features/chats/domain/usecases/send_message.dart';
 import '../../features/chats/presentation/providers/chat_provider.dart';
 import '../../features/chats/presentation/providers/message_provider.dart';
-import '../../features/contacts/data/repositories/contact_repository_impl.dart';
-import '../../features/contacts/data/repositories/invitation_repository.dart';
-import '../../features/contacts/domain/repositories/contact_repository.dart';
-import '../../features/contacts/presentation/notifiers/add_contact_notifier.dart';
-import '../../features/contacts/presentation/notifiers/contact_detail_notifier.dart';
-import '../../features/contacts/presentation/notifiers/contact_list_notifier.dart';
-import '../../features/contacts/presentation/notifiers/invite_friends_notifier.dart';
-import '../../features/contacts/presentation/notifiers/user_search_notifier.dart';
 import '../../features/groups/data/repositories/group_repository_impl.dart';
 import '../../features/groups/domain/repositories/group_repository.dart';
 import '../../features/groups/presentation/providers/group_provider.dart';
@@ -34,6 +26,17 @@ import '../../features/profile/data/repositories/profile_repository_impl.dart';
 import '../../features/profile/domain/repositories/profile_repository.dart';
 import '../../features/profile/domain/usecases/get_profile.dart';
 
+import '../../features/groups/data/datasources/group_members_remote_data_source.dart';
+import '../../features/groups/data/datasources/group_members_remote_data_source_impl.dart';
+import '../../features/groups/data/repositories/group_members_repository_impl.dart';
+import '../../features/groups/domain/repositories/group_members_repository.dart';
+import '../../features/groups/domain/repositories/invitation_repository.dart';
+import '../../features/groups/data/repositories/invitation_repository_impl.dart';
+import '../../features/groups/domain/usecases/get_group_members.dart';
+import '../../features/groups/domain/usecases/send_group_invite.dart';
+import '../../features/groups/domain/usecases/search_users_not_in_group.dart';
+import '../../features/groups/presentation/notifiers/group_invite_notifier.dart';
+
 final GetIt sl = GetIt.instance;
 
 Future<void> setupServiceLocator() async {
@@ -42,17 +45,18 @@ Future<void> setupServiceLocator() async {
 
   // Repositories
   sl.registerLazySingleton<InvitationRepository>(
-    () => InvitationRepository(sl()),
+    () => InvitationRepositoryImpl(sl()),
   );
   sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl()));
   sl.registerLazySingleton<ChatRepository>(() => ChatRepositoryImpl(sl()));
-  sl.registerLazySingleton<ContactRepository>(
-    () => ContactRepositoryImpl(supabaseClient: sl()),
-  );
   sl.registerLazySingleton<GroupRepository>(() => GroupRepositoryImpl(sl()));
   sl.registerLazySingleton<ProfileRepository>(
     () => ProfileRepositoryImpl(sl()),
   );
+  sl.registerLazySingleton<GroupMembersRemoteDataSource>(
+      () => GroupMembersRemoteDataSourceImpl());
+  sl.registerLazySingleton<GroupMembersRepository>(
+      () => GroupMembersRepositoryImpl(sl()));
 
   // Use Cases
   sl.registerLazySingleton<SignUp>(() => SignUp(sl()));
@@ -62,7 +66,7 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<Logout>(() => Logout(sl()));
   sl.registerLazySingleton<GetUser>(
     () => GetUser(sl()),
-  ); // Added GetUser registration
+  );
   sl.registerLazySingleton<UpdateProfile>(() => UpdateProfile(sl()));
   sl.registerLazySingleton<GetProfile>(() => GetProfile(sl()));
   sl.registerLazySingleton<GetChats>(() => GetChats(sl()));
@@ -70,6 +74,10 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<GetMessages>(() => GetMessages(sl()));
   sl.registerLazySingleton<SendMessage>(() => SendMessage(sl()));
   sl.registerLazySingleton<GetLatestMessages>(() => GetLatestMessages(sl()));
+  sl.registerLazySingleton<GetGroupMembers>(() => GetGroupMembers(sl()));
+  sl.registerLazySingleton<SendGroupInvite>(() => SendGroupInvite(sl()));
+  sl.registerLazySingleton<SearchUsersNotInGroup>(
+      () => SearchUsersNotInGroup(sl()));
 
   // Notifiers
   sl.registerFactory<UserProvider>(
@@ -77,19 +85,13 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerFactory<ChatProvider>(() => ChatProvider(sl(), sl()));
   sl.registerFactory<GroupProvider>(() => GroupProvider(sl()));
-  sl.registerFactory<ContactListNotifier>(() => ContactListNotifier(sl()));
-  sl.registerFactory<AddContactNotifier>(
-    () => AddContactNotifier(contactRepository: sl()),
-  );
-  sl.registerFactory<ContactDetailNotifier>(() => ContactDetailNotifier(sl()));
-  sl.registerFactory<InviteFriendsNotifier>(
-    () => InviteFriendsNotifier(sl(), sl()),
-  );
-  sl.registerFactory<UserSearchNotifier>(() => UserSearchNotifier(sl()));
   sl.registerFactoryParam<MessageProvider, String, void>(
     (chatId, _) => MessageProvider(sl(), sl(), chatId),
   );
   sl.registerFactoryParam<GroupDetailProvider, String, void>(
-    (groupId, _) => GroupDetailProvider(sl(), sl(), groupId),
+    (groupId, _) => GroupDetailProvider(sl(), sl(), sl(), groupId),
+  );
+  sl.registerFactory<GroupInviteNotifier>(
+    () => GroupInviteNotifier(sl(), sl()),
   );
 }
