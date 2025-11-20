@@ -59,6 +59,7 @@ class _GroupInviteScreenState extends State<GroupInviteScreen> {
     final inviteeEmails = _selectedUsers
         .map((user) => user.email)
         .where((email) => email != null && email.isNotEmpty)
+        .cast<String>()
         .toList();
 
     if (inviteeEmails.isEmpty) {
@@ -70,7 +71,7 @@ class _GroupInviteScreenState extends State<GroupInviteScreen> {
       return;
     }
 
-    await _groupInviteNotifier.sendGroupInvites(inviteeEmails as List<String>, widget.groupId); // Use sendGroupInvites
+    await _groupInviteNotifier.sendGroupInvites(inviteeEmails, widget.groupId); // Use sendGroupInvites
 
     if (!mounted) return;
     if (_groupInviteNotifier.errorMessage != null) {
