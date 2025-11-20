@@ -106,9 +106,11 @@ serve(async (req) => {
         headers: { "Content-Type": "application/json" },
         status: 200,
       });
+    } else {
+      console.log(`Invitee profile not found for ${invitee_email}. Proceeding to send email invitation.`);
     }
 
-    // User does not exist, send email
+    // User does not exist in profiles, or in-app notification sent, proceed to send email.
     const inviteType = group_id ? "group_invite" : "friend_invite";
     let redirectToUrl = `${Deno.env.get("SITE_URL") || "com.idiotsocialplatform.app://"}invite-accept?token=${token}`;
     if (group_id) {
