@@ -38,6 +38,47 @@ serve(async (req) => {
       },
     );
 
+    // Check if user already exists
+    const { data: existingUsers, error: existingUsersError } = await supabaseClient.auth.admin.listUsers({
+        email: invitee_email,
+    });
+
+    if (existingUsersError) {
+        throw existingUsersError;
+    }
+
+    if (existingUsers?.users.length > 0) {
+        // User exists, send in-app notification
+        const existingUser = existingUsers.users[0];
+        const notificationMessage = `You have been invited to a group.`; // inviter's name will be fetched client side
+        const notificationData = {
+            group_id: group_id,
+            inviter_id: inviter_id,
+        };
+
+        const { error: notificationError } = await supabaseClient
+            .from("notifications") // Assuming a 'notifications' table exists
+            .insert({
+                user_id: existingUser.id,
+                type: "group_invite",
+                title: "Group Invitation",
+                message: notificationMessage,
+                data: notificationData,
+            });
+
+        if (notificationError) {
+            throw notificationError;
+        }
+
+        return new Response(JSON.stringify({
+            message: "User already exists, in-app notification sent.",
+            user_id: existingUser.id,
+        }), {
+            headers: { "Content-Type": "application/json" },
+            status: 200,
+        });
+    }
+
     // Generate a unique token for the invitation
     const token = crypto.randomUUID();
 
@@ -60,7 +101,7 @@ serve(async (req) => {
     }
 
     const inviteType = group_id ? "group_invite" : "friend_invite";
-    let redirectToUrl = `${Deno.env.get("SITE_URL") || "yourapp://"}invite-accept?token=${token}`;
+    let redirectToUrl = `${Deno.env.get("SITE_URL") || "com.idiotsocialplatform.app://"}invite-accept?token=${token}`;
     if (group_id) {
       redirectToUrl += `&group_id=${group_id}`;
     }
@@ -81,13 +122,13 @@ serve(async (req) => {
 
       if (inviteError) {
         console.error("Built-in invite email failed:", inviteError.message);
-        console.log(`Invite created but email failed. Share this link: yourapp://invite?token=${token}${group_id ? `&group_id=${group_id}` : ''}`);
+        console.log(`Invite created but email failed. Share this link: com.idiotsocialplatform.app://invite?token=${token}${group_id ? `&group_id=${group_id}` : ''}`);
 
         return new Response(JSON.stringify({
           message: "Invitation created but email failed",
           data,
           email_error: inviteError.message,
-          invite_link: `yourapp://invite?token=${token}${group_id ? `&group_id=${group_id}` : ''}`
+          invite_link: `com.idiotsocialplatform.app://invite?token=${token}${group_id ? `&group_id=${group_id}` : ''}`
         }), {
           headers: { "Content-Type": "application/json" },
           status: 200,
@@ -103,14 +144,14 @@ serve(async (req) => {
         message: "Invitation created but email failed",
         data,
         email_error: error.message || String(error),
-        invite_link: `yourapp://invite?token=${token}${group_id ? `&group_id=${group_id}` : ''}`
+        invite_link: `com.idiotsocialplatform.app://invite?token=${token}${group_id ? `&group_id=${group_id}` : ''}`
       }), {
         headers: { "Content-Type": "application/json" },
         status: 200,
       });
     }
 
-    const inviteUrl = `yourapp://invite?token=${token}${group_id ? `&group_id=${group_id}` : ''}`;
+    const inviteUrl = `com.idiotsocialplatform.app://invite?token=${token}${group_id ? `&group_id=${group_id}` : ''}`;
     console.log(`Invite processed for ${invitee_email}. Token: ${token}`);
 
     return new Response(JSON.stringify({ message: "Invitation sent", data }), {

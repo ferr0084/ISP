@@ -25,7 +25,8 @@ class GroupRepositoryImpl implements GroupRepository {
               id: json['id'],
               name: json['name'],
               avatarUrl: json['avatar_url'],
-              memberIds: List<String>.from(json['member_ids']),
+              memberIds:
+                  [], // member_ids column removed, use group_members table
               lastMessage: json['last_message'],
               time: DateTime.parse(json['time']),
               unreadCount: json['unread_count'],
@@ -46,7 +47,8 @@ class GroupRepositoryImpl implements GroupRepository {
               id: json['id'],
               name: json['name'],
               avatarUrl: json['avatar_url'],
-              memberIds: List<String>.from(json['member_ids']),
+              memberIds:
+                  [], // member_ids column removed, use group_members table
               lastMessage: json['last_message'],
               time: DateTime.parse(json['time']),
               unreadCount: json['unread_count'],
@@ -74,7 +76,7 @@ class GroupRepositoryImpl implements GroupRepository {
         id: response['id'],
         name: response['name'],
         avatarUrl: response['avatar_url'],
-        memberIds: List<String>.from(response['member_ids']),
+        memberIds: [], // member_ids column removed, use group_members table
         lastMessage: response['last_message'],
         time: DateTime.parse(response['time']),
         unreadCount: response['unread_count'],
@@ -99,7 +101,6 @@ class GroupRepositoryImpl implements GroupRepository {
         'id': newId, // Use generated ID
         'name': group.name,
         'avatar_url': group.avatarUrl,
-        'member_ids': group.memberIds,
         'last_message': group.lastMessage,
         'time': group.time.toIso8601String(),
         'unread_count': group.unreadCount,
@@ -120,7 +121,6 @@ class GroupRepositoryImpl implements GroupRepository {
           .update({
             'name': group.name,
             'avatar_url': group.avatarUrl,
-            'member_ids': group.memberIds,
             'last_message': group.lastMessage,
             'time': group.time.toIso8601String(),
             'unread_count': group.unreadCount,
