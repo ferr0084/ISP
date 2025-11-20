@@ -6,9 +6,34 @@ import 'package:app/features/home/domain/entities/friend_status.dart';
 import 'package:app/features/home/domain/entities/group.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../../notifications/presentation/providers/notification_provider.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final userId = Provider.of<SupabaseClient>(
+        context,
+        listen: false,
+      ).auth.currentUser?.id;
+      if (userId != null) {
+        Provider.of<NotificationProvider>(
+          context,
+          listen: false,
+        ).fetchNotifications(userId);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -125,6 +150,44 @@ class HomePage extends StatelessWidget {
             icon: const Icon(Icons.search),
             onPressed: () {
               // Handle search button press
+            },
+          ),
+          Consumer<NotificationProvider>(
+            builder: (context, provider, child) {
+              return Stack(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.notifications),
+                    onPressed: () {
+                      context.push('/notifications');
+                    },
+                  ),
+                  if (provider.unreadCount > 0)
+                    Positioned(
+                      right: 8,
+                      top: 8,
+                      child: Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        constraints: const BoxConstraints(
+                          minWidth: 14,
+                          minHeight: 14,
+                        ),
+                        child: Text(
+                          '${provider.unreadCount}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 8,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                ],
+              );
             },
           ),
         ],

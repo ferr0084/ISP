@@ -22,6 +22,7 @@ import '../../features/idiot_game/presentation/screens/idiot_game_dashboard_scre
 import '../../features/profile/presentation/screens/profile_editing_screen.dart';
 import '../../features/profile/presentation/screens/profile_stats_screen.dart';
 import '../../features/profile/presentation/screens/profile_view_screen.dart';
+import '../../features/notifications/presentation/screens/notifications_screen.dart';
 
 class AppRouter {
   final UserProvider _userProvider;
@@ -141,6 +142,10 @@ class AppRouter {
             builder: (context, state) => const ProfileStatsScreen(),
           ),
         ],
+      ),
+      GoRoute(
+        path: '/notifications',
+        builder: (context, state) => const NotificationsScreen(),
       ),
     ],
     redirect: (context, state) {

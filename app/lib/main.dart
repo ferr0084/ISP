@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/di/service_locator.dart';
 import 'core/router/app_router.dart';
@@ -7,8 +8,10 @@ import 'core/supabase/supabase_initializer.dart';
 import 'core/theme/theme_data.dart';
 import 'core/theme/theme_provider.dart';
 import 'features/auth/presentation/providers/user_provider.dart';
+import 'features/groups/domain/repositories/invitation_repository.dart';
 import 'features/groups/presentation/notifiers/group_invite_notifier.dart';
 import 'features/groups/presentation/providers/group_provider.dart';
+import 'features/notifications/presentation/providers/notification_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +27,11 @@ Future<void> main() async {
           ChangeNotifierProvider(create: (_) => ThemeProvider()),
           ChangeNotifierProvider(create: (_) => sl<GroupProvider>()),
           ChangeNotifierProvider(create: (_) => sl<GroupInviteNotifier>()),
+          ChangeNotifierProvider(create: (_) => sl<NotificationProvider>()),
+          Provider<SupabaseClient>(create: (_) => sl<SupabaseClient>()),
+          Provider<InvitationRepository>(
+            create: (_) => sl<InvitationRepository>(),
+          ),
         ],
         child: const MyApp(),
       ),

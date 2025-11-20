@@ -38,68 +38,80 @@ serve(async (req) => {
       },
     );
 
-    // Check if user already exists
-    const { data: existingUsers, error: existingUsersError } = await supabaseClient.auth.admin.listUsers({
-        email: invitee_email,
-    });
-
-    if (existingUsersError) {
-        throw existingUsersError;
-    }
-
-    if (existingUsers?.users.length > 0) {
-        // User exists, send in-app notification
-        const existingUser = existingUsers.users[0];
-        const notificationMessage = `You have been invited to a group.`; // inviter's name will be fetched client side
-        const notificationData = {
-            group_id: group_id,
-            inviter_id: inviter_id,
-        };
-
-        const { error: notificationError } = await supabaseClient
-            .from("notifications") // Assuming a 'notifications' table exists
-            .insert({
-                user_id: existingUser.id,
-                type: "group_invite",
-                title: "Group Invitation",
-                message: notificationMessage,
-                data: notificationData,
-            });
-
-        if (notificationError) {
-            throw notificationError;
-        }
-
-        return new Response(JSON.stringify({
-            message: "User already exists, in-app notification sent.",
-            user_id: existingUser.id,
-        }), {
-            headers: { "Content-Type": "application/json" },
-            status: 200,
-        });
-    }
-
     // Generate a unique token for the invitation
     const token = crypto.randomUUID();
 
+    // Create invitation record ALWAYS
     const invitationData = {
       inviter_id: inviter_id,
       invitee_email: invitee_email,
       token: token,
       status: "pending",
-      group_id: group_id || null, // Add group_id if present
+      group_id: group_id || null,
     };
 
-    // Insert invitation into the 'invitations' table
-    const { data, error } = await supabaseClient
+    const { data: invitationRecord, error: invitationError } = await supabaseClient
       .from("invitations")
       .insert([invitationData])
       .select();
 
-    if (error) {
-      throw error;
+    if (invitationError) {
+      throw invitationError;
     }
 
+    // Check if user already exists
+    console.log(`Looking up user by email: ${invitee_email}`);
+    const { data: existingUsers, error: existingUsersError } = await supabaseClient.auth.admin.listUsers({
+      email: invitee_email,
+    });
+
+    if (existingUsersError) {
+      console.error('Error looking up users:', existingUsersError);
+      throw existingUsersError;
+    }
+
+    console.log(`Found ${existingUsers?.users.length || 0} users with email ${invitee_email}`);
+    if (existingUsers?.users.length > 0) {
+      console.log(`Existing user details:`, existingUsers.users[0]);
+    }
+
+    if (existingUsers?.users.length > 0) {
+      // User exists, send in-app notification
+      const existingUser = existingUsers.users[0];
+      console.log(`Sending notification to user_id: ${existingUser.id}, email: ${existingUser.email}`);
+      const notificationMessage = `You have been invited to a group.`;
+      const notificationData = {
+        group_id: group_id,
+        inviter_id: inviter_id,
+        token: token, // INCLUDE TOKEN
+      };
+
+      const { error: notificationError } = await supabaseClient
+        .from("notifications")
+        .insert({
+          user_id: existingUser.id,
+          type: "group_invite",
+          title: "Group Invitation",
+          message: notificationMessage,
+          data: notificationData,
+        });
+
+      if (notificationError) {
+        console.error('Error creating notification:', notificationError);
+        throw notificationError;
+      }
+
+      console.log(`Notification created successfully for user ${existingUser.id}`);
+      return new Response(JSON.stringify({
+        message: "User already exists, in-app notification sent.",
+        user_id: existingUser.id,
+      }), {
+        headers: { "Content-Type": "application/json" },
+        status: 200,
+      });
+    }
+
+    // User does not exist, send email
     const inviteType = group_id ? "group_invite" : "friend_invite";
     let redirectToUrl = `${Deno.env.get("SITE_URL") || "com.idiotsocialplatform.app://"}invite-accept?token=${token}`;
     if (group_id) {
@@ -115,7 +127,7 @@ serve(async (req) => {
             invitation_token: token,
             inviter_id: inviter_id,
             invite_type: inviteType,
-            group_id: group_id || null, // Pass group_id to email data
+            group_id: group_id || null,
           }
         }
       );
@@ -126,7 +138,7 @@ serve(async (req) => {
 
         return new Response(JSON.stringify({
           message: "Invitation created but email failed",
-          data,
+          data: invitationRecord,
           email_error: inviteError.message,
           invite_link: `com.idiotsocialplatform.app://invite?token=${token}${group_id ? `&group_id=${group_id}` : ''}`
         }), {
@@ -142,7 +154,7 @@ serve(async (req) => {
 
       return new Response(JSON.stringify({
         message: "Invitation created but email failed",
-        data,
+        data: invitationRecord,
         email_error: error.message || String(error),
         invite_link: `com.idiotsocialplatform.app://invite?token=${token}${group_id ? `&group_id=${group_id}` : ''}`
       }), {
@@ -151,10 +163,7 @@ serve(async (req) => {
       });
     }
 
-    const inviteUrl = `com.idiotsocialplatform.app://invite?token=${token}${group_id ? `&group_id=${group_id}` : ''}`;
-    console.log(`Invite processed for ${invitee_email}. Token: ${token}`);
-
-    return new Response(JSON.stringify({ message: "Invitation sent", data }), {
+    return new Response(JSON.stringify({ message: "Invitation sent", data: invitationRecord }), {
       headers: { "Content-Type": "application/json" },
       status: 200,
     });

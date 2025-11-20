@@ -35,6 +35,10 @@ import '../../features/groups/presentation/providers/group_provider.dart';
 import '../../features/profile/data/repositories/profile_repository_impl.dart';
 import '../../features/profile/domain/repositories/profile_repository.dart';
 import '../../features/profile/domain/usecases/get_profile.dart';
+import '../../features/notifications/data/datasources/notification_remote_data_source.dart';
+import '../../features/notifications/data/repositories/notification_repository_impl.dart';
+import '../../features/notifications/domain/repositories/notification_repository.dart';
+import '../../features/notifications/presentation/providers/notification_provider.dart';
 
 final GetIt sl = GetIt.instance;
 
@@ -57,6 +61,12 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerLazySingleton<GroupMembersRepository>(
     () => GroupMembersRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton<NotificationRemoteDataSource>(
+    () => NotificationRemoteDataSourceImpl(sl()),
+  );
+  sl.registerLazySingleton<NotificationRepository>(
+    () => NotificationRepositoryImpl(sl()),
   );
 
   // Use Cases
@@ -94,4 +104,5 @@ Future<void> setupServiceLocator() async {
   sl.registerFactory<GroupInviteNotifier>(
     () => GroupInviteNotifier(sl(), sl()),
   );
+  sl.registerFactory<NotificationProvider>(() => NotificationProvider(sl()));
 }
