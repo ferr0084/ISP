@@ -1,4 +1,5 @@
 import 'package:app/features/auth/presentation/providers/user_provider.dart';
+import 'package:app/features/profile/domain/entities/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -44,17 +45,19 @@ class _ProfilePageState extends State<ProfilePage> {
           },
         ),
         actions: [
-          IconButton(
-            icon: Icon(_isEditing ? Icons.check : Icons.edit),
-            onPressed: () async {
-              if (_isEditing) {
-                await userProvider.updateUserProfile(_nameController.text);
-              }
-              setState(() {
-                _isEditing = !_isEditing;
-              });
-            },
-          ),
+           IconButton(
+             icon: Icon(_isEditing ? Icons.check : Icons.edit),
+             onPressed: () async {
+               if (_isEditing) {
+                 final updatedProfile = userProvider.profile?.copyWith(fullName: _nameController.text) ??
+                     Profile(id: userProvider.user!.id, fullName: _nameController.text);
+                 await userProvider.updateUserProfile(updatedProfile);
+               }
+               setState(() {
+                 _isEditing = !_isEditing;
+               });
+             },
+           ),
         ],
       ),
       body: user == null

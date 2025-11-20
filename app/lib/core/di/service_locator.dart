@@ -7,7 +7,7 @@ import '../../features/auth/domain/usecases/get_user.dart';
 import '../../features/auth/domain/usecases/login_with_email_and_password.dart';
 import '../../features/auth/domain/usecases/logout.dart';
 import '../../features/auth/domain/usecases/sign_up.dart';
-import '../../features/auth/domain/usecases/update_profile.dart';
+import '../../features/profile/domain/usecases/update_profile.dart';
 import '../../features/auth/presentation/providers/user_provider.dart';
 import '../../features/chats/data/repositories/chat_repository_impl.dart';
 import '../../features/chats/domain/repositories/chat_repository.dart';

@@ -1,12 +1,12 @@
 import 'package:app/features/profile/domain/entities/profile.dart';
 import 'package:app/features/profile/domain/usecases/get_profile.dart';
+import 'package:app/features/profile/domain/usecases/update_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../domain/usecases/login_with_email_and_password.dart';
 import '../../domain/usecases/logout.dart';
 import '../../domain/usecases/sign_up.dart';
-import '../../domain/usecases/update_profile.dart';
 
 class UserProvider extends ChangeNotifier {
   final SignUp _signUp;
@@ -62,10 +62,10 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateUserProfile(String name) async {
+  Future<void> updateUserProfile(Profile updatedProfile) async {
     if (_user == null) return;
 
-    await _updateProfile(name);
+    await _updateProfile(updatedProfile);
     _user = Supabase.instance.client.auth.currentUser;
     if (_user != null) {
       _profile = await _getProfile(_user!.id);

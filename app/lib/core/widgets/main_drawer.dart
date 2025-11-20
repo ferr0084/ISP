@@ -20,7 +20,11 @@ class MainDrawer extends StatelessWidget {
             builder: (context, userProvider, child) {
               final user = userProvider.user;
               final profile = userProvider.profile;
-              final userName = profile?.fullName ?? user?.email ?? 'Guest';
+              final userName =
+                  profile?.nickname ??
+                  profile?.fullName ??
+                  user?.email ??
+                  'Guest';
               final userAvatarUrl =
                   user?.userMetadata?['avatar_url'] as String?;
 

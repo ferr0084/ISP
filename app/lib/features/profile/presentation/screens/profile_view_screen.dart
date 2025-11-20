@@ -31,8 +31,6 @@ class ProfileViewScreen extends StatelessWidget {
         builder: (context, userProvider, child) {
           final user = userProvider.user;
           final profile = userProvider.profile;
-          final userAvatarUrl = user?.userMetadata?['avatar_url'] as String?;
-
           return Padding(
             padding: const EdgeInsets.all(16.0),
             child: ListView(
@@ -42,8 +40,8 @@ class ProfileViewScreen extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 60,
-                        backgroundImage: userAvatarUrl != null
-                            ? NetworkImage(userAvatarUrl)
+                        backgroundImage: profile?.avatarUrl != null
+                            ? NetworkImage(profile!.avatarUrl!)
                             : const AssetImage('assets/images/avatar_s.png')
                                   as ImageProvider, // Placeholder image
                       ),
@@ -53,6 +51,14 @@ class ProfileViewScreen extends StatelessWidget {
                         style: Theme.of(context).textTheme.headlineMedium,
                       ),
                       const SizedBox(height: 8.0),
+                      if (profile?.nickname != null)
+                        Text(
+                          profile!.nickname!,
+                          style: Theme.of(
+                            context,
+                          ).textTheme.titleSmall?.copyWith(color: Colors.blue),
+                        ),
+                      const SizedBox(height: 8.0),
                       Text(
                         user?.email ?? 'N/A',
                         style: Theme.of(
@@ -60,13 +66,40 @@ class ProfileViewScreen extends StatelessWidget {
                         ).textTheme.titleMedium?.copyWith(color: Colors.grey),
                       ),
                       const SizedBox(height: 16.0),
-                      const Text(
-                        'UX Designer and coffee enthusiast.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 16.0),
-                      ),
+                      if (profile?.about != null)
+                        Text(
+                          profile!.about!,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 16.0),
+                        )
+                      else
+                        const Text(
+                          'No bio yet.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 16.0, color: Colors.grey),
+                        ),
+                      const SizedBox(height: 16.0),
+                      if (profile?.badges != null &&
+                          profile!.badges!.isNotEmpty)
+                        Wrap(
+                          spacing: 8.0,
+                          runSpacing: 4.0,
+                          children: profile.badges!
+                              .map(
+                                (badge) => Chip(
+                                  label: Text(badge),
+                                  backgroundColor: Colors.amber,
+                                ),
+                              )
+                              .toList(),
+                        ),
                       const SizedBox(height: 32.0),
-                      // Removed ElevatedButton since the functionality is moved to AppBar actions
+                      ElevatedButton(
+                        onPressed: () {
+                          context.push('/profile/stats');
+                        },
+                        child: const Text('View Personal Stats'),
+                      ),
                     ],
                   ),
                 ),

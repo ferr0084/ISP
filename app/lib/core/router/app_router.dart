@@ -20,6 +20,7 @@ import '../../features/groups/presentation/screens/my_groups_overview_screen.dar
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/idiot_game/presentation/screens/idiot_game_dashboard_screen.dart';
 import '../../features/profile/presentation/screens/profile_editing_screen.dart';
+import '../../features/profile/presentation/screens/profile_stats_screen.dart';
 import '../../features/profile/presentation/screens/profile_view_screen.dart';
 
 class AppRouter {
@@ -134,6 +135,10 @@ class AppRouter {
           GoRoute(
             path: 'edit',
             builder: (context, state) => const ProfileEditingScreen(),
+          ),
+          GoRoute(
+            path: 'stats',
+            builder: (context, state) => const ProfileStatsScreen(),
           ),
         ],
       ),
