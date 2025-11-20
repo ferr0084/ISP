@@ -1,10 +1,10 @@
+import 'package:app/core/di/service_locator.dart'; // For sl
+import 'package:app/features/profile/domain/entities/user_profile.dart'; // Corrected import for UserProfile entity
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import 'package:app/features/profile/domain/entities/user_profile.dart'; // Corrected import for UserProfile entity
 import '../notifiers/group_invite_notifier.dart'; // Changed to GroupInviteNotifier
-import 'package:app/core/di/service_locator.dart'; // For sl
 
 class GroupInviteScreen extends StatefulWidget {
   final String groupId;
@@ -18,7 +18,8 @@ class GroupInviteScreen extends StatefulWidget {
 class _GroupInviteScreenState extends State<GroupInviteScreen> {
   final TextEditingController _searchController = TextEditingController();
   final Set<UserProfile> _selectedUsers = {};
-  late GroupInviteNotifier _groupInviteNotifier; // Renamed to _groupInviteNotifier
+  late GroupInviteNotifier
+  _groupInviteNotifier; // Renamed to _groupInviteNotifier
 
   @override
   void initState() {
@@ -40,7 +41,10 @@ class _GroupInviteScreenState extends State<GroupInviteScreen> {
   void _onSearchChanged() {
     final query = _searchController.text.trim();
     if (query.isNotEmpty) {
-      _groupInviteNotifier.searchUsers(query, widget.groupId); // Pass groupId for group-specific search
+      _groupInviteNotifier.searchUsers(
+        query,
+        widget.groupId,
+      ); // Pass groupId for group-specific search
     } else {
       _groupInviteNotifier.clearSearch();
     }
@@ -71,7 +75,10 @@ class _GroupInviteScreenState extends State<GroupInviteScreen> {
       return;
     }
 
-    await _groupInviteNotifier.sendGroupInvites(inviteeEmails, widget.groupId); // Use sendGroupInvites
+    await _groupInviteNotifier.sendGroupInvites(
+      inviteeEmails,
+      widget.groupId,
+    ); // Use sendGroupInvites
 
     if (!mounted) return;
     if (_groupInviteNotifier.errorMessage != null) {
@@ -153,12 +160,12 @@ class _GroupInviteScreenState extends State<GroupInviteScreen> {
                                 radius: 30,
                                 backgroundImage:
                                     (user.avatarUrl != null &&
-                                            user.avatarUrl!.isNotEmpty)
-                                        ? NetworkImage(user.avatarUrl!)
-                                        : const AssetImage(
-                                                'assets/images/avatar_s.png',
-                                              )
-                                              as ImageProvider,
+                                        user.avatarUrl!.isNotEmpty)
+                                    ? NetworkImage(user.avatarUrl!)
+                                    : const AssetImage(
+                                            'assets/images/avatar_s.png',
+                                          )
+                                          as ImageProvider,
                               ),
                               Positioned(
                                 top: -4,
@@ -232,7 +239,9 @@ class _GroupInviteScreenState extends State<GroupInviteScreen> {
               child: Consumer<GroupInviteNotifier>(
                 builder: (context, notifier, child) {
                   if (_searchController.text.trim().isEmpty) {
-                    return const Center(child: Text('Start typing to search for users.'));
+                    return const Center(
+                      child: Text('Start typing to search for users.'),
+                    );
                   }
 
                   if (notifier.isSearching) {
@@ -265,11 +274,10 @@ class _GroupInviteScreenState extends State<GroupInviteScreen> {
                           radius: 24,
                           backgroundImage:
                               (user.avatarUrl != null &&
-                                      user.avatarUrl!.isNotEmpty)
-                                  ? NetworkImage(user.avatarUrl!)
-                                  : const AssetImage(
-                                          'assets/images/avatar_s.png')
-                                          as ImageProvider,
+                                  user.avatarUrl!.isNotEmpty)
+                              ? NetworkImage(user.avatarUrl!)
+                              : const AssetImage('assets/images/avatar_s.png')
+                                    as ImageProvider,
                         ),
                         title: Text(
                           user.fullName ?? 'Unknown User',

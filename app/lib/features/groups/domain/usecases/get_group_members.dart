@@ -5,13 +5,16 @@ import 'package:app/features/groups/domain/repositories/group_members_repository
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 
-class GetGroupMembers implements UseCase<List<GroupMember>, GetGroupMembersParams> {
+class GetGroupMembers
+    implements UseCase<List<GroupMember>, GetGroupMembersParams> {
   final GroupMembersRepository repository;
 
   GetGroupMembers(this.repository);
 
   @override
-  Future<Either<Failure, List<GroupMember>>> call(GetGroupMembersParams params) async {
+  Future<Either<Failure, List<GroupMember>>> call(
+    GetGroupMembersParams params,
+  ) async {
     return await repository.getGroupMembers(params.groupId);
   }
 }

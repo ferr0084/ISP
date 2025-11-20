@@ -1,8 +1,8 @@
+import 'package:app/features/groups/domain/repositories/group_repository.dart';
 import 'package:app/features/groups/domain/repositories/invitation_repository.dart';
+import 'package:app/features/profile/domain/entities/user_profile.dart'; // Ensure this path is correct
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:app/features/profile/domain/entities/user_profile.dart'; // Ensure this path is correct
-import 'package:app/features/groups/domain/repositories/group_repository.dart';
 
 class GroupInviteNotifier extends ChangeNotifier {
   final InvitationRepository _invitationRepository;
@@ -24,7 +24,9 @@ class GroupInviteNotifier extends ChangeNotifier {
   List<UserProfile> get searchResults => _searchResults;
 
   Future<void> sendGroupInvites(
-      List<String> inviteeEmails, String groupId) async {
+    List<String> inviteeEmails,
+    String groupId,
+  ) async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
@@ -40,7 +42,10 @@ class GroupInviteNotifier extends ChangeNotifier {
     try {
       for (final email in inviteeEmails) {
         await _invitationRepository.sendGroupInvite(
-            inviterId: currentUserId, inviteeEmail: email, groupId: groupId);
+          inviterId: currentUserId,
+          inviteeEmail: email,
+          groupId: groupId,
+        );
       }
     } catch (e) {
       _errorMessage = e.toString();
@@ -57,7 +62,10 @@ class GroupInviteNotifier extends ChangeNotifier {
 
     try {
       // Assuming GroupRepository has a method to search users not in the group
-      final users = await _groupRepository.searchUsersNotInGroup(query, groupId);
+      final users = await _groupRepository.searchUsersNotInGroup(
+        query,
+        groupId,
+      );
       _searchResults = users;
     } catch (e) {
       _errorMessage = 'Failed to search for users: $e';

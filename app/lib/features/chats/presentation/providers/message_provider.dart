@@ -1,9 +1,9 @@
-import 'package:app/core/di/service_locator.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'dart:async';
 
+import 'package:app/core/di/service_locator.dart';
 import 'package:app/core/error/failures.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../domain/entities/message.dart';
 import '../../domain/usecases/get_messages.dart';
@@ -54,7 +54,9 @@ class MessageProvider extends ChangeNotifier {
           onError: (error) {
             // Propagate stream errors to the UI
             _messages = [];
-            _error = const ServerFailure('Failed to fetch messages'); // Changed to instantiate with arguments
+            _error = const ServerFailure(
+              'Failed to fetch messages',
+            ); // Changed to instantiate with arguments
             _isLoading = false;
             notifyListeners();
           },
@@ -66,7 +68,9 @@ class MessageProvider extends ChangeNotifier {
 
     final senderId = sl<SupabaseClient>().auth.currentUser?.id;
     if (senderId == null) {
-      _error = const ServerFailure('User not authenticated'); // Or some other appropriate failure
+      _error = const ServerFailure(
+        'User not authenticated',
+      ); // Or some other appropriate failure
       notifyListeners();
       return false;
     }

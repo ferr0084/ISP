@@ -21,9 +21,7 @@ Future<void> main() async {
       MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => sl<UserProvider>()),
-          ChangeNotifierProvider(
-            create: (_) => ThemeProvider(),
-          ),
+          ChangeNotifierProvider(create: (_) => ThemeProvider()),
           ChangeNotifierProvider(create: (_) => sl<GroupProvider>()),
           ChangeNotifierProvider(create: (_) => sl<GroupInviteNotifier>()),
         ],

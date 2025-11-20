@@ -16,12 +16,12 @@ import '../../features/groups/presentation/screens/edit_group_screen.dart';
 import '../../features/groups/presentation/screens/group_home_screen.dart';
 import '../../features/groups/presentation/screens/group_invite_screen.dart';
 import '../../features/groups/presentation/screens/group_members_screen.dart';
+import '../../features/groups/presentation/screens/invite_accept_screen.dart';
 import '../../features/groups/presentation/screens/my_groups_overview_screen.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/idiot_game/presentation/screens/idiot_game_dashboard_screen.dart';
 import '../../features/profile/presentation/screens/profile_editing_screen.dart';
 import '../../features/profile/presentation/screens/profile_view_screen.dart';
-import '../../features/groups/presentation/screens/invite_accept_screen.dart';
 
 class AppRouter {
   final UserProvider _userProvider;
@@ -66,8 +66,7 @@ class AppRouter {
       ),
       GoRoute(
         path: '/groups',
-        builder: (context, state) =>
-            const MyGroupsOverviewScreen(),
+        builder: (context, state) => const MyGroupsOverviewScreen(),
         routes: [
           GoRoute(
             path: 'create',
@@ -91,7 +90,8 @@ class AppRouter {
                 path: 'members',
                 builder: (context, state) {
                   final groupId = state.pathParameters['groupId']!;
-                  final groupDetailProvider = state.extra as GroupDetailProvider;
+                  final groupDetailProvider =
+                      state.extra as GroupDetailProvider;
                   return ChangeNotifierProvider.value(
                     value: groupDetailProvider,
                     child: GroupMembersScreen(groupId: groupId),

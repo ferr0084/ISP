@@ -49,13 +49,13 @@ void main() {
     // Arrange
     when(
       mockRepository.createChat('Test Chat', ['user1', 'user2']),
-    ).thenAnswer((_) async => Left(ServerFailure()));
+    ).thenAnswer((_) async => const Left(ServerFailure()));
 
     // Act
     final result = await usecase(tParams);
 
     // Assert
-    expect(result, Left(ServerFailure()));
+    expect(result, const Left(ServerFailure()));
     verify(mockRepository.createChat('Test Chat', ['user1', 'user2']));
     verifyNoMoreInteractions(mockRepository);
   });

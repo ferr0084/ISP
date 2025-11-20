@@ -1,8 +1,8 @@
+import 'package:app/features/groups/domain/entities/group_member.dart';
+import 'package:app/features/groups/presentation/providers/group_detail_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:app/features/groups/presentation/providers/group_detail_provider.dart';
-import 'package:app/features/groups/domain/entities/group_member.dart';
 
 class GroupMembersScreen extends StatelessWidget {
   final String groupId;
@@ -30,12 +30,15 @@ class GroupMembersScreen extends StatelessWidget {
       ),
       body: Consumer<GroupDetailProvider>(
         builder: (context, groupDetailProvider, child) {
-          if (groupDetailProvider.isLoading && groupDetailProvider.members.isEmpty) {
+          if (groupDetailProvider.isLoading &&
+              groupDetailProvider.members.isEmpty) {
             return const Center(child: CircularProgressIndicator());
           }
 
           if (groupDetailProvider.hasError) {
-            return Center(child: Text('Error: ${groupDetailProvider.errorMessage!}'));
+            return Center(
+              child: Text('Error: ${groupDetailProvider.errorMessage!}'),
+            );
           }
 
           final List<GroupMember> members = groupDetailProvider.members;

@@ -1,6 +1,6 @@
-import 'package:app/features/profile/domain/entities/user_profile.dart';
 import 'dart:async';
 
+import 'package:app/features/profile/domain/entities/user_profile.dart';
 import 'package:dartz/dartz.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
@@ -148,9 +148,13 @@ class GroupRepositoryImpl implements GroupRepository {
 
   @override
   Future<List<UserProfile>> searchUsersNotInGroup(
-      String query, String groupId) async {
-    final response = await _supabaseClient.rpc('search_users_not_in_group',
-        params: {'p_group_id': groupId, 'p_search_term': query});
+    String query,
+    String groupId,
+  ) async {
+    final response = await _supabaseClient.rpc(
+      'search_users_not_in_group',
+      params: {'p_group_id': groupId, 'p_search_term': query},
+    );
 
     if (response == null) {
       return [];

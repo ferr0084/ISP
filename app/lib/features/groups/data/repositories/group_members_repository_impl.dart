@@ -11,7 +11,8 @@ class GroupMembersRepositoryImpl implements GroupMembersRepository {
 
   @override
   Future<Either<Failure, List<GroupMember>>> getGroupMembers(
-      String groupId) async {
+    String groupId,
+  ) async {
     try {
       final groupMembers = await remoteDataSource.getGroupMembers(groupId);
       return Right(groupMembers);

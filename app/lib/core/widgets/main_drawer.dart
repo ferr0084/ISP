@@ -73,13 +73,7 @@ class MainDrawer extends StatelessWidget {
             route: '/home',
             currentRoute: currentRoute,
           ),
-          _buildDrawerItem(
-            context,
-            icon: Icons.chat_bubble_outline,
-            title: 'Chats',
-            route: '/chats',
-            currentRoute: currentRoute,
-          ),
+
           _buildDrawerItem(
             context,
             icon: Icons.group,

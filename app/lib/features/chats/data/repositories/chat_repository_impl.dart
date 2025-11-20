@@ -1,5 +1,5 @@
-import 'package:app/features/chats/domain/entities/message_with_sender.dart';
 import 'package:app/core/error/failures.dart';
+import 'package:app/features/chats/domain/entities/message_with_sender.dart';
 import 'package:dartz/dartz.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -75,8 +75,8 @@ class ChatRepositoryImpl implements ChatRepository {
     try {
       final userId = _supabaseClient.auth.currentUser?.id;
       if (userId == null) {
-        return Left(
-          const ServerFailure('User not authenticated'),
+        return const Left(
+          ServerFailure('User not authenticated'),
         ); // User must be authenticated to create chat
       }
 
@@ -142,19 +142,18 @@ class ChatRepositoryImpl implements ChatRepository {
         .limit(100) // Limit to last 100 messages for performance
         .map((data) {
           try {
-            final messages =
-                data
-                    .map(
-                      (json) => Message(
-                        id: json['id'] as String,
-                        chatId: json['chat_id'] as String,
-                        senderId: json['sender_id'] as String,
-                        content: json['content'] as String,
-                        createdAt: DateTime.parse(json['created_at'] as String),
-                        updatedAt: DateTime.parse(json['updated_at'] as String),
-                      ),
-                    )
-                    .toList();
+            final messages = data
+                .map(
+                  (json) => Message(
+                    id: json['id'] as String,
+                    chatId: json['chat_id'] as String,
+                    senderId: json['sender_id'] as String,
+                    content: json['content'] as String,
+                    createdAt: DateTime.parse(json['created_at'] as String),
+                    updatedAt: DateTime.parse(json['updated_at'] as String),
+                  ),
+                )
+                .toList();
             return Right(messages);
           } catch (e) {
             return Left(ServerFailure(e.toString()));
@@ -202,8 +201,8 @@ class ChatRepositoryImpl implements ChatRepository {
     try {
       final userId = _supabaseClient.auth.currentUser?.id;
       if (userId == null) {
-        return Left(
-          const ServerFailure('User not authenticated'),
+        return const Left(
+          ServerFailure('User not authenticated'),
         ); // User must be authenticated to send message
       }
 

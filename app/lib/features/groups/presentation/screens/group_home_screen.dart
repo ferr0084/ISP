@@ -50,22 +50,24 @@ class GroupHomeScreenState extends State<GroupHomeScreen> {
     amountOwed: 15.50,
   );
 
-
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<GroupDetailProvider>(
-      create: (_) => sl<GroupDetailProvider>(param1: widget.groupId)..fetchGroupDetails(),
+      create: (_) =>
+          sl<GroupDetailProvider>(param1: widget.groupId)..fetchGroupDetails(),
       child: Consumer<GroupDetailProvider>(
         builder: (context, groupDetailProvider, child) {
-          if (groupDetailProvider.isLoading && groupDetailProvider.group == null) {
+          if (groupDetailProvider.isLoading &&
+              groupDetailProvider.group == null) {
             return const Center(child: CircularProgressIndicator());
           }
 
           if (groupDetailProvider.hasError) {
             return Scaffold(
               appBar: AppBar(title: const Text('Error')),
-              body: Center(child: Text('Error: ${groupDetailProvider.errorMessage!}')),
+              body: Center(
+                child: Text('Error: ${groupDetailProvider.errorMessage!}'),
+              ),
             );
           }
 
@@ -184,7 +186,9 @@ class GroupHomeScreenState extends State<GroupHomeScreen> {
                               _announcement.content,
                               style: Theme.of(context).textTheme.bodyMedium
                                   ?.copyWith(
-                                    color: Theme.of(context).colorScheme.onPrimary
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimary
                                         .withAlpha(204), // 0.8 * 255 = 204
                                   ),
                             ),
@@ -234,7 +238,9 @@ class GroupHomeScreenState extends State<GroupHomeScreen> {
                               'Current Idiot',
                               style: Theme.of(context).textTheme.bodySmall
                                   ?.copyWith(
-                                    color: Theme.of(context).colorScheme.onSurface
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
                                         .withAlpha(178), // 0.7 * 255 = 178.5
                                   ),
                             ),
@@ -343,7 +349,9 @@ class GroupHomeScreenState extends State<GroupHomeScreen> {
                                 Container(
                                   padding: const EdgeInsets.all(8.0),
                                   decoration: BoxDecoration(
-                                    color: Theme.of(context).colorScheme.onSurface
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
                                         .withAlpha(25), // 0.1 * 255 = 25.5
                                     borderRadius: BorderRadius.circular(8),
                                   ),
@@ -357,7 +365,8 @@ class GroupHomeScreenState extends State<GroupHomeScreen> {
                                 const SizedBox(width: 16),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         event.title,
@@ -394,7 +403,9 @@ class GroupHomeScreenState extends State<GroupHomeScreen> {
                                         color: Theme.of(context)
                                             .colorScheme
                                             .onSurface
-                                            .withAlpha(178), // 0.7 * 255 = 178.5
+                                            .withAlpha(
+                                              178,
+                                            ), // 0.7 * 255 = 178.5
                                       ),
                                 ),
                               ],
@@ -445,7 +456,9 @@ class GroupHomeScreenState extends State<GroupHomeScreen> {
                               'You are owed',
                               style: Theme.of(context).textTheme.bodySmall
                                   ?.copyWith(
-                                    color: Theme.of(context).colorScheme.onSurface
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
                                         .withAlpha(178), // 0.7 * 255 = 178.5
                                   ),
                             ),
@@ -569,18 +582,22 @@ class GroupHomeScreenState extends State<GroupHomeScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 CircleAvatar(
-                                  backgroundImage: messageWithSender.senderAvatar != null
-                                      ? NetworkImage(messageWithSender.senderAvatar!)
+                                  backgroundImage:
+                                      messageWithSender.senderAvatar != null
+                                      ? NetworkImage(
+                                          messageWithSender.senderAvatar!,
+                                        )
                                       : null,
+                                  radius: 20,
                                   child: messageWithSender.senderAvatar == null
                                       ? const Icon(Icons.person)
                                       : null,
-                                  radius: 20,
                                 ),
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         messageWithSender.senderName,
@@ -664,7 +681,9 @@ class GroupHomeScreenState extends State<GroupHomeScreen> {
                               'Group Members',
                               style: Theme.of(context).textTheme.bodySmall
                                   ?.copyWith(
-                                    color: Theme.of(context).colorScheme.onSurface
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
                                         .withAlpha(178), // 0.7 * 255 = 178.5
                                   ),
                             ),
@@ -676,38 +695,38 @@ class GroupHomeScreenState extends State<GroupHomeScreen> {
                                     .take(3)
                                     .map(
                                       (member) => Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 8.0),
+                                        padding: const EdgeInsets.only(
+                                          right: 8.0,
+                                        ),
                                         child: CircleAvatar(
-                                          backgroundImage: member.avatarUrl !=
-                                                  null
+                                          backgroundImage:
+                                              member.avatarUrl != null
                                               ? NetworkImage(member.avatarUrl!)
                                               : null,
+                                          radius: 20,
                                           child: member.avatarUrl == null
                                               ? Text(member.name[0])
                                               : null,
-                                          radius: 20,
                                         ),
                                       ),
-                                    )
-                                    .toList(),
+                                    ),
                                 if (groupDetailProvider.members.length > 3)
                                   CircleAvatar(
-                                    backgroundColor: Theme.of(context)
-                                        .colorScheme
-                                        .primary,
+                                    backgroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                    radius: 20,
                                     child: Text(
                                       '+${groupDetailProvider.members.length - 3}',
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodySmall
                                           ?.copyWith(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onPrimary,
+                                            color: Theme.of(
+                                              context,
+                                            ).colorScheme.onPrimary,
                                           ),
                                     ),
-                                    radius: 20,
                                   ),
                               ],
                             ),

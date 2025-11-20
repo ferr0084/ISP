@@ -53,9 +53,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                   }
 
                   if (provider.error != null) {
-                    return Center(
-                      child: Text('Error: ${provider.error}'),
-                    );
+                    return Center(child: Text('Error: ${provider.error}'));
                   }
 
                   final messages = provider.messages;
@@ -76,12 +74,11 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                     itemCount: messages.length,
                     itemBuilder: (context, index) {
                       final message = messages[index];
-                      final isMe = message.senderId == sl<SupabaseClient>().auth.currentUser?.id;
+                      final isMe =
+                          message.senderId ==
+                          sl<SupabaseClient>().auth.currentUser?.id;
 
-                      return MessageBubble(
-                        message: message,
-                        isMe: isMe,
-                      );
+                      return MessageBubble(message: message, isMe: isMe);
                     },
                   );
                 },
@@ -103,9 +100,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
-        border: Border(
-          top: BorderSide(color: Theme.of(context).dividerColor),
-        ),
+        border: Border(top: BorderSide(color: Theme.of(context).dividerColor)),
       ),
       child: Row(
         children: [
@@ -113,7 +108,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
             child: TextField(
               controller: _messageController,
               decoration: const InputDecoration(
-                hintText: 'Type a message...', 
+                hintText: 'Type a message...',
                 border: InputBorder.none,
               ),
               maxLines: null,

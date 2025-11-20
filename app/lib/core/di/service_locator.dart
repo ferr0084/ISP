@@ -13,29 +13,28 @@ import '../../features/chats/data/repositories/chat_repository_impl.dart';
 import '../../features/chats/domain/repositories/chat_repository.dart';
 import '../../features/chats/domain/usecases/create_chat.dart';
 import '../../features/chats/domain/usecases/get_chats.dart';
+import '../../features/chats/domain/usecases/get_latest_messages.dart';
 import '../../features/chats/domain/usecases/get_messages.dart';
 import '../../features/chats/domain/usecases/send_message.dart';
 import '../../features/chats/presentation/providers/chat_provider.dart';
 import '../../features/chats/presentation/providers/message_provider.dart';
-import '../../features/groups/data/repositories/group_repository_impl.dart';
-import '../../features/groups/domain/repositories/group_repository.dart';
-import '../../features/groups/presentation/providers/group_provider.dart';
-import '../../features/chats/domain/usecases/get_latest_messages.dart';
-import '../../features/groups/presentation/providers/group_detail_provider.dart';
-import '../../features/profile/data/repositories/profile_repository_impl.dart';
-import '../../features/profile/domain/repositories/profile_repository.dart';
-import '../../features/profile/domain/usecases/get_profile.dart';
-
 import '../../features/groups/data/datasources/group_members_remote_data_source.dart';
 import '../../features/groups/data/datasources/group_members_remote_data_source_impl.dart';
 import '../../features/groups/data/repositories/group_members_repository_impl.dart';
-import '../../features/groups/domain/repositories/group_members_repository.dart';
-import '../../features/groups/domain/repositories/invitation_repository.dart';
+import '../../features/groups/data/repositories/group_repository_impl.dart';
 import '../../features/groups/data/repositories/invitation_repository_impl.dart';
+import '../../features/groups/domain/repositories/group_members_repository.dart';
+import '../../features/groups/domain/repositories/group_repository.dart';
+import '../../features/groups/domain/repositories/invitation_repository.dart';
 import '../../features/groups/domain/usecases/get_group_members.dart';
-import '../../features/groups/domain/usecases/send_group_invite.dart';
 import '../../features/groups/domain/usecases/search_users_not_in_group.dart';
+import '../../features/groups/domain/usecases/send_group_invite.dart';
 import '../../features/groups/presentation/notifiers/group_invite_notifier.dart';
+import '../../features/groups/presentation/providers/group_detail_provider.dart';
+import '../../features/groups/presentation/providers/group_provider.dart';
+import '../../features/profile/data/repositories/profile_repository_impl.dart';
+import '../../features/profile/domain/repositories/profile_repository.dart';
+import '../../features/profile/domain/usecases/get_profile.dart';
 
 final GetIt sl = GetIt.instance;
 
@@ -54,9 +53,11 @@ Future<void> setupServiceLocator() async {
     () => ProfileRepositoryImpl(sl()),
   );
   sl.registerLazySingleton<GroupMembersRemoteDataSource>(
-      () => GroupMembersRemoteDataSourceImpl());
+    () => GroupMembersRemoteDataSourceImpl(),
+  );
   sl.registerLazySingleton<GroupMembersRepository>(
-      () => GroupMembersRepositoryImpl(sl()));
+    () => GroupMembersRepositoryImpl(sl()),
+  );
 
   // Use Cases
   sl.registerLazySingleton<SignUp>(() => SignUp(sl()));
@@ -64,9 +65,7 @@ Future<void> setupServiceLocator() async {
     () => LoginWithEmailAndPassword(sl()),
   );
   sl.registerLazySingleton<Logout>(() => Logout(sl()));
-  sl.registerLazySingleton<GetUser>(
-    () => GetUser(sl()),
-  );
+  sl.registerLazySingleton<GetUser>(() => GetUser(sl()));
   sl.registerLazySingleton<UpdateProfile>(() => UpdateProfile(sl()));
   sl.registerLazySingleton<GetProfile>(() => GetProfile(sl()));
   sl.registerLazySingleton<GetChats>(() => GetChats(sl()));
@@ -77,7 +76,8 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<GetGroupMembers>(() => GetGroupMembers(sl()));
   sl.registerLazySingleton<SendGroupInvite>(() => SendGroupInvite(sl()));
   sl.registerLazySingleton<SearchUsersNotInGroup>(
-      () => SearchUsersNotInGroup(sl()));
+    () => SearchUsersNotInGroup(sl()),
+  );
 
   // Notifiers
   sl.registerFactory<UserProvider>(

@@ -1,12 +1,13 @@
 import 'dart:async';
+
+import 'package:app/core/error/failures.dart'; // Import failures
 import 'package:app/features/chats/domain/entities/message_with_sender.dart';
 import 'package:app/features/chats/domain/usecases/get_latest_messages.dart';
-import 'package:app/core/error/failures.dart'; // Import failures
-import 'package:flutter/material.dart';
 import 'package:app/features/groups/domain/entities/group.dart';
+import 'package:app/features/groups/domain/entities/group_member.dart';
 import 'package:app/features/groups/domain/repositories/group_repository.dart';
 import 'package:app/features/groups/domain/usecases/get_group_members.dart';
-import 'package:app/features/groups/domain/entities/group_member.dart';
+import 'package:flutter/material.dart';
 
 class GroupDetailProvider with ChangeNotifier {
   final GroupRepository _groupRepository;
