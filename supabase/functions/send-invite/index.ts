@@ -59,26 +59,23 @@ serve(async (req) => {
       throw invitationError;
     }
 
-    // Check if user already exists
-    console.log(`Looking up user by email: ${invitee_email}`);
-    const { data: existingUsers, error: existingUsersError } = await supabaseClient.auth.admin.listUsers({
-      email: invitee_email,
-    });
+    // Check if user already exists in profiles
+    console.log(`Looking up invitee_id by email: ${invitee_email}`);
+    const { data: inviteeProfile, error: inviteeProfileError } = await supabaseClient
+      .from("profiles")
+      .select("id")
+      .eq("email", invitee_email)
+      .single();
 
-    if (existingUsersError) {
-      console.error('Error looking up users:', existingUsersError);
-      throw existingUsersError;
+    if (inviteeProfileError && inviteeProfileError.code !== 'PGRST116') { // PGRST116 means no rows found
+      console.error('Error looking up invitee profile:', inviteeProfileError);
+      throw inviteeProfileError;
     }
 
-    console.log(`Found ${existingUsers?.users.length || 0} users with email ${invitee_email}`);
-    if (existingUsers?.users.length > 0) {
-      console.log(`Existing user details:`, existingUsers.users[0]);
-    }
-
-    if (existingUsers?.users.length > 0) {
+    if (inviteeProfile) {
       // User exists, send in-app notification
-      const existingUser = existingUsers.users[0];
-      console.log(`Sending notification to user_id: ${existingUser.id}, email: ${existingUser.email}`);
+      const invitee_id = inviteeProfile.id;
+      console.log(`Sending notification to user_id (invitee): ${invitee_id}, email: ${invitee_email}`);
       const notificationMessage = `You have been invited to a group.`;
       const notificationData = {
         group_id: group_id,
@@ -89,7 +86,7 @@ serve(async (req) => {
       const { error: notificationError } = await supabaseClient
         .from("notifications")
         .insert({
-          user_id: existingUser.id,
+          user_id: invitee_id,
           type: "group_invite",
           title: "Group Invitation",
           message: notificationMessage,
@@ -101,10 +98,10 @@ serve(async (req) => {
         throw notificationError;
       }
 
-      console.log(`Notification created successfully for user ${existingUser.id}`);
+      console.log(`Notification created successfully for user ${invitee_id}`);
       return new Response(JSON.stringify({
         message: "User already exists, in-app notification sent.",
-        user_id: existingUser.id,
+        user_id: invitee_id,
       }), {
         headers: { "Content-Type": "application/json" },
         status: 200,
