@@ -5,10 +5,11 @@ import 'package:app/features/chats/domain/usecases/create_chat.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:mockito/annotations.dart';
 
-// Mock class
-class MockChatRepository extends Mock implements ChatRepository {}
+import 'create_chat_test.mocks.dart';
 
+@GenerateMocks([ChatRepository])
 void main() {
   late CreateChat usecase;
   late MockChatRepository mockRepository;
@@ -49,13 +50,13 @@ void main() {
     // Arrange
     when(
       mockRepository.createChat('Test Chat', ['user1', 'user2']),
-    ).thenAnswer((_) async => const Left(ServerFailure()));
+    ).thenAnswer((_) async => const Left(ServerFailure('Server Failure')));
 
     // Act
     final result = await usecase(tParams);
 
     // Assert
-    expect(result, const Left(ServerFailure()));
+    expect(result, const Left(ServerFailure('Server Failure')));
     verify(mockRepository.createChat('Test Chat', ['user1', 'user2']));
     verifyNoMoreInteractions(mockRepository);
   });

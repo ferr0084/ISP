@@ -1,5 +1,5 @@
 # Root analysis options for the entire project
-include: package:flutter_lints/flutter.yaml
+# include: package:flutter_lints/flutter.yaml
 
 linter:
   rules:

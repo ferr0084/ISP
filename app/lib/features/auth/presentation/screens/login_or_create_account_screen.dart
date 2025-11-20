@@ -14,7 +14,8 @@ class _LoginOrCreateAccountScreenState
     extends State<LoginOrCreateAccountScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _isLogin = false;
+  final _nameController = TextEditingController();
+  bool _isLogin = true;
 
   @override
   Widget build(BuildContext context) {
@@ -22,14 +23,6 @@ class _LoginOrCreateAccountScreenState
 
     return Scaffold(
       backgroundColor: const Color(0xFF121212),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -37,43 +30,122 @@ class _LoginOrCreateAccountScreenState
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: 20),
-                Icon(
-                  _isLogin ? Icons.login : Icons.person_add_alt_1,
-                  color: Colors.blue,
-                  size: 64,
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  _isLogin ? 'Login' : 'Create Account',
+                const SizedBox(height: 40),
+                // Branding Logo
+                const Text(
+                  'IDIOT',
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
-                    fontSize: 28,
+                    fontSize: 48,
                     fontWeight: FontWeight.bold,
+                    letterSpacing: 8,
                   ),
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  _isLogin ? 'Welcome back!' : "Let's get you started!",
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.grey, fontSize: 16),
-                ),
                 const SizedBox(height: 40),
+                // Welcome Message
+                const Text(
+                  'Welcome to the Idiot Social Platform',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                const Text(
+                  'Connect with players, organize games, and track your stats',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.grey, fontSize: 14),
+                ),
+                const SizedBox(height: 48),
+                // Login/Signup Toggle
+                Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1E1E1E),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _isLogin = true;
+                            });
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            decoration: BoxDecoration(
+                              color: _isLogin
+                                  ? Colors.blue
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              'LOGIN',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: _isLogin ? Colors.white : Colors.grey,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _isLogin = false;
+                            });
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            decoration: BoxDecoration(
+                              color: !_isLogin
+                                  ? Colors.blue
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              'SIGNUP',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: !_isLogin ? Colors.white : Colors.grey,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 32),
+                // Form Fields
                 if (!_isLogin)
                   TextField(
+                    controller: _nameController,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Colors.white,
                       hintText: 'Full Name',
+                      hintStyle: const TextStyle(color: Colors.grey),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide: BorderSide.none,
                       ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 14,
+                      ),
                     ),
                     style: const TextStyle(color: Colors.black),
                   ),
-
                 if (!_isLogin) const SizedBox(height: 16),
                 TextField(
                   controller: _emailController,
@@ -81,9 +153,14 @@ class _LoginOrCreateAccountScreenState
                     filled: true,
                     fillColor: Colors.white,
                     hintText: 'Email Address',
+                    hintStyle: const TextStyle(color: Colors.grey),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: BorderSide.none,
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 14,
                     ),
                   ),
                   keyboardType: TextInputType.emailAddress,
@@ -97,9 +174,14 @@ class _LoginOrCreateAccountScreenState
                     filled: true,
                     fillColor: Colors.white,
                     hintText: 'Password',
+                    hintStyle: const TextStyle(color: Colors.grey),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: BorderSide.none,
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 14,
                     ),
                   ),
                   style: const TextStyle(color: Colors.black),
@@ -138,39 +220,15 @@ class _LoginOrCreateAccountScreenState
                     }
                   },
                   child: Text(
-                    _isLogin ? 'Login' : 'Sign Up',
-                    style: const TextStyle(color: Colors.white, fontSize: 16),
+                    _isLogin ? 'LOGIN' : 'SIGN UP',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 24),
-                Text.rich(
-                  TextSpan(
-                    text: _isLogin
-                        ? "Don't have an account? "
-                        : 'Already have an account? ',
-                    style: const TextStyle(color: Colors.grey),
-                    children: [
-                      WidgetSpan(
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _isLogin = !_isLogin;
-                            });
-                          },
-                          child: Text(
-                            _isLogin ? 'Sign Up' : 'Log In',
-                            style: const TextStyle(
-                              color: Colors.blue,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 20),
               ],
             ),
           ),

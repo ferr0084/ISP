@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../../features/auth/presentation/providers/user_provider.dart';
 import '../../features/auth/presentation/screens/login_callback_screen.dart';
 import '../../features/auth/presentation/screens/login_or_create_account_screen.dart';
-import '../../features/auth/presentation/screens/welcome_screen.dart';
 import '../../features/chats/presentation/screens/chat_detail_screen.dart';
 import '../../features/chats/presentation/screens/chat_list_screen.dart';
 import '../../features/common/presentation/pages/settings_page.dart';
@@ -34,17 +33,11 @@ class AppRouter {
     routes: [
       GoRoute(
         path: '/',
-        builder: (context, state) => const WelcomeScreen(),
-        routes: [
-          GoRoute(
-            path: 'login-or-create-account',
-            builder: (context, state) => const LoginOrCreateAccountScreen(),
-          ),
-          GoRoute(
-            path: 'login-callback',
-            builder: (context, state) => const LoginCallbackScreen(),
-          ),
-        ],
+        builder: (context, state) => const LoginOrCreateAccountScreen(),
+      ),
+      GoRoute(
+        path: '/login-callback',
+        builder: (context, state) => const LoginCallbackScreen(),
       ),
       GoRoute(path: '/home', builder: (context, state) => const HomePage()),
       GoRoute(
@@ -149,7 +142,6 @@ class AppRouter {
       final user = _userProvider.user;
       final isLoggingIn =
           state.matchedLocation == '/' ||
-          state.matchedLocation == '/login-or-create-account' ||
           state.matchedLocation == '/login-callback';
 
       if (user == null) {
