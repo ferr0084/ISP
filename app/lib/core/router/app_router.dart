@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../di/service_locator.dart';
 import '../../features/auth/presentation/providers/user_provider.dart';
 import '../../features/auth/presentation/screens/login_callback_screen.dart';
 import '../../features/auth/presentation/screens/login_or_create_account_screen.dart';
@@ -18,7 +19,12 @@ import '../../features/groups/presentation/screens/group_members_screen.dart';
 import '../../features/groups/presentation/screens/invite_accept_screen.dart';
 import '../../features/groups/presentation/screens/my_groups_overview_screen.dart';
 import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/idiot_game/presentation/providers/idiot_game_provider.dart';
 import '../../features/idiot_game/presentation/screens/idiot_game_dashboard_screen.dart';
+import '../../features/idiot_game/presentation/screens/achievements_stats_screen.dart';
+import '../../features/idiot_game/presentation/screens/game_details_screen.dart';
+import '../../features/idiot_game/presentation/screens/game_history_screen.dart';
+import '../../features/idiot_game/presentation/screens/new_game_screen.dart';
 import '../../features/notifications/presentation/screens/notifications_screen.dart';
 import '../../features/profile/presentation/screens/profile_editing_screen.dart';
 import '../../features/profile/presentation/screens/profile_stats_screen.dart';
@@ -112,9 +118,40 @@ class AppRouter {
         path: '/expenses',
         builder: (context, state) => const ExpensesHomeScreen(),
       ),
-      GoRoute(
-        path: '/idiot-game',
-        builder: (context, state) => const IdiotGameDashboardScreen(),
+      ShellRoute(
+        builder: (context, state, child) {
+          return ChangeNotifierProvider(
+            create: (_) => sl<IdiotGameProvider>(),
+            child: child,
+          );
+        },
+        routes: [
+          GoRoute(
+            path: '/idiot-game',
+            builder: (context, state) => const IdiotGameDashboardScreen(),
+            routes: [
+              GoRoute(
+                path: 'new',
+                builder: (context, state) => const NewGameScreen(),
+              ),
+              GoRoute(
+                path: 'history',
+                builder: (context, state) => const GameHistoryScreen(),
+              ),
+              GoRoute(
+                path: 'stats',
+                builder: (context, state) => const AchievementsStatsScreen(),
+              ),
+              GoRoute(
+                path: 'details/:gameId',
+                builder: (context, state) {
+                  final gameId = state.pathParameters['gameId']!;
+                  return GameDetailsScreen(gameId: gameId);
+                },
+              ),
+            ],
+          ),
+        ],
       ),
 
       GoRoute(

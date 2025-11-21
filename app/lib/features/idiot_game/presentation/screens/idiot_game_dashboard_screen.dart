@@ -1,262 +1,391 @@
+import 'package:app/features/idiot_game/domain/entities/achievement.dart';
+import 'package:app/features/idiot_game/presentation/providers/idiot_game_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart'; // Added import
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-// Data Models
-class CurrentIdiot {
-  final String name;
-  final String avatarAsset;
-  final int losses;
-  final String lastLostDate;
-
-  CurrentIdiot({
-    required this.name,
-    required this.avatarAsset,
-    required this.losses,
-    required this.lastLostDate,
-  });
-}
-
-class RecentGame {
-  final String loserAvatarAsset;
-  final String description;
-  final String date;
-
-  RecentGame({
-    required this.loserAvatarAsset,
-    required this.description,
-    required this.date,
-  });
-}
-
-class IdiotGameDashboardScreen extends StatelessWidget {
+class IdiotGameDashboardScreen extends StatefulWidget {
   const IdiotGameDashboardScreen({super.key});
 
-  // Dummy Data
-  static final CurrentIdiot _currentIdiot = CurrentIdiot(
-    name: 'Alex Johnson',
-    avatarAsset: 'assets/images/avatar_chris.png', // Placeholder
-    losses: 5,
-    lastLostDate: 'July 23, 2024',
-  );
+  @override
+  State<IdiotGameDashboardScreen> createState() =>
+      _IdiotGameDashboardScreenState();
+}
 
-  static final List<RecentGame> _recentGames = [
-    RecentGame(
-      loserAvatarAsset: 'assets/images/avatar_jessica.png', // Placeholder
-      description: 'Alex Johnson lost a game with Sarah L. and Mike P.',
-      date: 'Jul 23',
-    ),
-    RecentGame(
-      loserAvatarAsset: 'assets/images/avatar_maria.png', // Placeholder
-      description: 'Sarah Lee lost a game with Alex J. and Mike P.',
-      date: 'Jul 21',
-    ),
-    RecentGame(
-      loserAvatarAsset: 'assets/images/avatar_david.png', // Placeholder
-      description: 'Mike Perez lost a game with Sarah L. and Alex J.',
-      date: 'Jul 19',
-    ),
-  ];
+class _IdiotGameDashboardScreenState extends State<IdiotGameDashboardScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final provider = Provider.of<IdiotGameProvider>(context, listen: false);
+      final userId = Supabase.instance.client.auth.currentUser?.id;
+      if (userId != null) {
+        provider.fetchRecentGamesData();
+        provider.fetchUserStatsData(userId);
+        provider.fetchUserAchievementsData(userId);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-        elevation: Theme.of(context).appBarTheme.elevation,
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Theme.of(context).appBarTheme.foregroundColor,
-          ),
-          onPressed: () {
-            if (context.canPop()) {
-              context.pop();
-            } else {
-              context.go('/home');
-            }
-          },
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.pop(),
         ),
-        title: Text(
-          'Idiot Tracker',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            color: Theme.of(context).appBarTheme.foregroundColor,
-          ),
-        ),
+        title: const Text('Idiot Tracker'),
         actions: [
           IconButton(
-            icon: Icon(
-              Icons.bar_chart,
-              color: Theme.of(context).appBarTheme.foregroundColor,
-            ),
+            icon: const Icon(Icons.history),
             onPressed: () {
-              // TODO: Implement view stats functionality
+              context.push('/idiot-game/history');
             },
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Current Idiot',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Card(
-                color: Theme.of(context).cardTheme.color,
-                shape: Theme.of(context).cardTheme.shape,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Center(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.asset(
-                            _currentIdiot.avatarAsset,
-                            height: 200,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Loser ${_currentIdiot.losses} times',
-                        style: const TextStyle(
-                          color: Colors.orange,
-                          fontSize: 14,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        _currentIdiot.name,
-                        style: Theme.of(context).textTheme.displayLarge
-                            ?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface,
-                            ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Is the Current Idiot',
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface
-                              .withAlpha(178), // 0.7 * 255 = 178.5
-                        ),
-                      ),
-                      Text(
-                        'Lost on ${_currentIdiot.lastLostDate}',
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface
-                              .withAlpha(178), // 0.7 * 255 = 178.5
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    // TODO: View All Players
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: Text(
-                    'View All Players',
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Consumer<IdiotGameProvider>(
+        builder: (context, provider, child) {
+          if (provider.isLoading && provider.recentGames.isEmpty) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (provider.errorMessage != null && provider.recentGames.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    'Recent Games',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
-                  ),
-                  TextButton(
+                  Text(provider.errorMessage!),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
                     onPressed: () {
-                      // TODO: View All Recent Games
+                      final userId =
+                          Supabase.instance.client.auth.currentUser?.id;
+                      if (userId != null) {
+                        provider.fetchRecentGamesData();
+                        provider.fetchUserStatsData(userId);
+                        provider.fetchUserAchievementsData(userId);
+                      }
                     },
-                    child: Text(
-                      'View All',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
+                    child: const Text('Retry'),
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
-              ..._recentGames.map((game) {
-                return Card(
-                  color: Theme.of(context).cardTheme.color,
-                  shape: Theme.of(context).cardTheme.shape,
-                  margin: const EdgeInsets.only(bottom: 12),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
+            );
+          }
+
+          return RefreshIndicator(
+            onRefresh: () async {
+              final userId = Supabase.instance.client.auth.currentUser?.id;
+              if (userId != null) {
+                provider.fetchRecentGamesData();
+                provider.fetchUserStatsData(userId);
+                provider.fetchUserAchievementsData(userId);
+              }
+            },
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Stats Section
+                    if (provider.userStats != null) ...[
+                      _buildStatsSection(provider),
+                      const SizedBox(height: 24),
+                    ],
+
+                    // Achievements Section
+                    if (provider.achievements.isNotEmpty) ...[
+                      _buildAchievementsSection(provider.achievements),
+                      const SizedBox(height: 24),
+                    ],
+
+                    // Recent Games Section
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        CircleAvatar(
-                          backgroundImage: AssetImage(game.loserAvatarAsset),
-                          radius: 20,
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            game.description,
-                            style: Theme.of(context).textTheme.bodyLarge
-                                ?.copyWith(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onSurface,
-                                ),
+                        const Text(
+                          'Recent Games',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Text(
-                          game.date,
-                          style: Theme.of(context).textTheme.bodyMedium
-                              ?.copyWith(
-                                color: Theme.of(context).colorScheme.onSurface
-                                    .withAlpha(178), // 0.7 * 255 = 178.5
-                              ),
+                        TextButton(
+                          onPressed: () {
+                            context.push('/idiot-game/history');
+                          },
+                          child: const Text('View All'),
                         ),
                       ],
                     ),
-                  ),
-                );
-              }),
-            ],
-          ),
-        ),
+                    const SizedBox(height: 10),
+
+                    if (provider.recentGames.isEmpty)
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(32.0),
+                          child: Column(
+                            children: [
+                              Icon(
+                                Icons.games_outlined,
+                                size: 64,
+                                color: Colors.grey[400],
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                'No games yet',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Tap the + button to log your first game',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey[500],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    else
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: provider.recentGames.length > 5
+                            ? 5
+                            : provider.recentGames.length,
+                        itemBuilder: (context, index) {
+                          final game = provider.recentGames[index];
+                          return Card(
+                            margin: const EdgeInsets.only(bottom: 8),
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                child: Text('${index + 1}'),
+                              ),
+                              title: Text(game.description ?? 'Game'),
+                              subtitle: Text(
+                                game.gameDate.toString().split(' ')[0],
+                              ),
+                              trailing: const Icon(Icons.chevron_right),
+                              onTap: () {
+                                context.push('/idiot-game/details/${game.id}');
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // TODO: Implement log new game functionality
+          context.push('/idiot-game/new');
         },
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        child: Icon(Icons.add, color: Theme.of(context).colorScheme.onPrimary),
+        child: const Icon(Icons.add),
       ),
     );
+  }
+
+  Widget _buildStatsSection(IdiotGameProvider provider) {
+    final stats = provider.userStats!;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'My Stats',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: _StatCard(
+                label: 'Total Games',
+                value: stats.totalGames.toString(),
+                icon: Icons.videogame_asset,
+                color: Colors.blue,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _StatCard(
+                label: 'Win Rate',
+                value: '${(stats.winRate * 100).toStringAsFixed(1)}%',
+                icon: Icons.emoji_events,
+                color: Colors.orange,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        _StatCard(
+          label: 'Current Streak',
+          value: '${stats.currentStreak} ${stats.streakType}',
+          icon: stats.streakType == 'Win'
+              ? Icons.local_fire_department
+              : Icons.mood_bad,
+          color: stats.streakType == 'Win' ? Colors.red : Colors.grey,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAchievementsSection(List<Achievement> achievements) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'Achievements',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            TextButton(
+              onPressed: () {
+                context.push('/idiot-game/stats');
+              },
+              child: const Text('View All'),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        SizedBox(
+          height: 100,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: achievements.length,
+            itemBuilder: (context, index) {
+              final achievement = achievements[index];
+              return Padding(
+                padding: const EdgeInsets.only(right: 12.0),
+                child: _AchievementBadge(achievement: achievement),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _StatCard extends StatelessWidget {
+  final String label;
+  final String value;
+  final IconData icon;
+  final Color color;
+
+  const _StatCard({
+    required this.label,
+    required this.value,
+    required this.icon,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(icon, color: color, size: 28),
+            const SizedBox(height: 12),
+            Text(
+              value,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _AchievementBadge extends StatelessWidget {
+  final Achievement achievement;
+
+  const _AchievementBadge({required this.achievement});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          width: 60,
+          height: 60,
+          decoration: BoxDecoration(
+            color: achievement.isUnlocked
+                ? Colors.amber[100]
+                : Colors.grey[200],
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: achievement.isUnlocked ? Colors.amber : Colors.grey,
+              width: 2,
+            ),
+          ),
+          child: Icon(
+            // Map icon name to IconData or use a default
+            _getIconData(achievement.iconName),
+            color: achievement.isUnlocked ? Colors.amber[800] : Colors.grey,
+            size: 30,
+          ),
+        ),
+        const SizedBox(height: 8),
+        SizedBox(
+          width: 70,
+          child: Text(
+            achievement.name,
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 10,
+              color: achievement.isUnlocked ? Colors.black : Colors.grey,
+              fontWeight: achievement.isUnlocked
+                  ? FontWeight.bold
+                  : FontWeight.normal,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  IconData _getIconData(String iconName) {
+    switch (iconName) {
+      case 'first_win':
+        return Icons.emoji_events;
+      case 'streak_3':
+        return Icons.local_fire_department;
+      case 'streak_5':
+        return Icons.whatshot;
+      case 'participation':
+        return Icons.group;
+      default:
+        return Icons.star;
+    }
   }
 }

@@ -12,6 +12,7 @@ import 'features/groups/domain/repositories/invitation_repository.dart';
 import 'features/groups/presentation/notifiers/group_invite_notifier.dart';
 import 'features/groups/presentation/providers/group_provider.dart';
 import 'features/home/presentation/providers/recent_chats_provider.dart';
+import 'features/idiot_game/presentation/providers/idiot_game_provider.dart';
 import 'features/notifications/presentation/providers/notification_provider.dart';
 import 'features/profile/presentation/providers/profile_provider.dart';
 
@@ -32,6 +33,7 @@ Future<void> main() async {
           ChangeNotifierProvider(create: (_) => sl<NotificationProvider>()),
           ChangeNotifierProvider(create: (_) => sl<RecentChatsProvider>()),
           ChangeNotifierProvider(create: (_) => sl<ProfileProvider>()),
+          ChangeNotifierProvider(create: (_) => sl<IdiotGameProvider>()),
           Provider<SupabaseClient>(create: (_) => sl<SupabaseClient>()),
           Provider<InvitationRepository>(
             create: (_) => sl<InvitationRepository>(),

@@ -47,6 +47,18 @@ import '../../features/profile/domain/repositories/profile_repository.dart';
 import '../../features/profile/domain/usecases/get_profile.dart';
 import '../../features/profile/domain/usecases/update_profile.dart';
 import '../../features/profile/domain/usecases/upload_avatar.dart';
+import '../../features/idiot_game/data/datasources/idiot_game_remote_data_source.dart';
+import '../../features/idiot_game/data/datasources/idiot_game_remote_data_source_impl.dart';
+import '../../features/idiot_game/data/repositories/idiot_game_repository_impl.dart';
+import '../../features/idiot_game/domain/repositories/idiot_game_repository.dart';
+import '../../features/idiot_game/domain/usecases/create_game.dart';
+import '../../features/idiot_game/domain/usecases/get_game_details.dart';
+import '../../features/idiot_game/domain/usecases/get_game_history.dart';
+import '../../features/idiot_game/domain/usecases/get_potential_players.dart';
+import '../../features/idiot_game/domain/usecases/get_recent_games.dart';
+import 'package:app/features/idiot_game/domain/usecases/get_user_achievements.dart';
+import 'package:app/features/idiot_game/domain/usecases/get_user_stats.dart';
+import '../../features/idiot_game/presentation/providers/idiot_game_provider.dart';
 import '../../features/profile/presentation/providers/profile_provider.dart';
 
 final GetIt sl = GetIt.instance;
@@ -85,6 +97,12 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<NotificationRepository>(
     () => NotificationRepositoryImpl(sl()),
   );
+  sl.registerLazySingleton<IdiotGameRemoteDataSource>(
+    () => IdiotGameRemoteDataSourceImpl(supabaseClient: sl()),
+  );
+  sl.registerLazySingleton<IdiotGameRepository>(
+    () => IdiotGameRepositoryImpl(remoteDataSource: sl()),
+  );
 
   // Use Cases
   sl.registerLazySingleton<SignUp>(() => SignUp(sl()));
@@ -107,6 +125,15 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<SearchUsersNotInGroup>(
     () => SearchUsersNotInGroup(sl()),
   );
+  sl.registerLazySingleton<GetPotentialPlayers>(
+    () => GetPotentialPlayers(sl()),
+  );
+  sl.registerLazySingleton<CreateGame>(() => CreateGame(sl()));
+  sl.registerLazySingleton(() => GetRecentGames(sl()));
+  sl.registerLazySingleton(() => GetGameHistory(sl()));
+  sl.registerLazySingleton(() => GetGameDetails(sl()));
+  sl.registerLazySingleton(() => GetUserStats(sl()));
+  sl.registerLazySingleton(() => GetUserAchievements(sl()));
 
   // Notifiers
   sl.registerFactory<UserProvider>(
@@ -127,6 +154,20 @@ Future<void> setupServiceLocator() async {
   sl.registerFactory<RecentChatsProvider>(
     () => RecentChatsProvider(getRecentChats: sl()),
   );
+
+  // Providers
+  sl.registerFactory<IdiotGameProvider>(
+    () => IdiotGameProvider(
+      getPotentialPlayers: sl(),
+      createGame: sl(),
+      getRecentGames: sl(),
+      getGameHistory: sl(),
+      getGameDetails: sl(),
+      getUserStats: sl(),
+      getUserAchievements: sl(),
+    ),
+  );
+
   sl.registerFactory<ProfileProvider>(
     () => ProfileProvider(uploadAvatar: sl(), userProvider: sl()),
   );
