@@ -1,10 +1,12 @@
 import 'package:app/core/widgets/main_drawer.dart';
-import 'package:app/features/home/domain/entities/chat.dart';
+import 'package:app/features/chats/domain/entities/chat_with_last_message.dart';
 import 'package:app/features/home/domain/entities/event.dart';
 import 'package:app/features/home/domain/entities/expense.dart';
 import 'package:app/features/home/domain/entities/friend_status.dart';
 import 'package:flutter/material.dart';
+import 'packagepackage:app/features/home/presentation/providers/recent_chats_provider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../groups/presentation/providers/group_provider.dart';
@@ -53,29 +55,6 @@ class _HomePageState extends State<HomePage> {
       ),
       FriendStatus(name: 'Chris', avatarUrl: 'assets/images/avatar_chris.png'),
       FriendStatus(name: 'S', avatarUrl: 'assets/images/avatar_s.png'),
-    ];
-
-    final List<Chat> recentChats = [
-      Chat(
-        senderName: 'Jessica',
-        avatarUrl: 'assets/images/avatar_jessica.png',
-        message: 'Awesome, see you there!',
-        time: '10:42 AM',
-        unreadCount: 5,
-      ),
-      Chat(
-        senderName: 'Maria',
-        avatarUrl: 'assets/images/avatar_maria.png',
-        message: 'Can you send me the file?',
-        time: '9:15 AM',
-        unreadCount: 2,
-      ),
-      Chat(
-        senderName: 'David',
-        avatarUrl: 'assets/images/avatar_david.png',
-        message: 'Sounds good, let\'s do it.',
-        time: 'Yesterday',
-      ),
     ];
 
     final List<Event> upcomingEvents = [
@@ -288,55 +267,77 @@ class _HomePageState extends State<HomePage> {
               context.go('/chats');
             }),
             const SizedBox(height: 16.0),
-            ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: recentChats.length,
-              separatorBuilder: (context, index) => const Divider(height: 24.0),
-              itemBuilder: (context, index) {
-                final chat = recentChats[index];
-                return ListTile(
-                  leading: Stack(
-                    children: [
-                      CircleAvatar(backgroundImage: AssetImage(chat.avatarUrl)),
-                      if (chat.unreadCount != null && chat.unreadCount! > 0)
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: Container(
-                            padding: const EdgeInsets.all(4.0),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.secondary,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Text(
-                              chat.unreadCount.toString(),
-                              style: Theme.of(context).textTheme.bodySmall
-                                  ?.copyWith(color: Colors.white),
-                            ),
+            Consumer<RecentChatsProvider>(
+              builder: (context, provider, child) {
+                if (provider.isLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (provider.error != null) {
+                  return Center(child: Text('Error: ${provider.error}'));
+                }
+
+                if (provider.recentChats.isEmpty) {
+                  return const Center(child: Text('No recent chats.'));
+                }
+
+                return ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: provider.recentChats.length,
+                  separatorBuilder: (context, index) =>
+                      const Divider(height: 24.0),
+                  itemBuilder: (context, index) {
+                    final chat = provider.recentChats[index];
+                    return ListTile(
+                      leading: Stack(
+                        children: [
+                          CircleAvatar(
+                            backgroundImage: chat.senderAvatarUrl != null
+                                ? NetworkImage(chat.senderAvatarUrl!)
+                                : null,
+                            child: chat.senderAvatarUrl == null
+                                ? const Icon(Icons.person)
+                                : null,
                           ),
-                        ),
-                    ],
-                  ),
-                  title: Text(
-                    chat.senderName,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  subtitle: Text(
-                    chat.message,
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                  trailing: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        chat.time,
+                          if (chat.unreadCount > 0)
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: Container(
+                                padding: const EdgeInsets.all(4.0),
+                                decoration: BoxDecoration(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Text(
+                                  chat.unreadCount.toString(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(color: Colors.white),
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                      title: Text(
+                        chat.chatName ?? chat.senderName,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      subtitle: Text(
+                        chat.lastMessageContent,
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
-                    ],
-                  ),
-                  onTap: () {
-                    context.go('/chats');
+                      trailing: Text(
+                        DateFormat.jm().format(chat.lastMessageCreatedAt),
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      onTap: () {
+                        context.go('/chats/${chat.chatId}');
+                      },
+                    );
                   },
                 );
               },
