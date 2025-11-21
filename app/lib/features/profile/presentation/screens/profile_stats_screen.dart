@@ -30,11 +30,26 @@ class ProfileStatsScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16.0),
-                _buildStatCard('Games Played', stats?['gamesPlayed']?.toString() ?? '0'),
-                _buildStatCard('Games Won', stats?['gamesWon']?.toString() ?? '0'),
-                _buildStatCard('Games Lost', stats?['gamesLost']?.toString() ?? '0'),
-                _buildStatCard('Current Streak', stats?['currentStreak']?.toString() ?? '0'),
-                _buildStatCard('Longest Winning Streak', stats?['longestStreak']?.toString() ?? '0'),
+                _buildStatCard(
+                  'Games Played',
+                  stats?['gamesPlayed']?.toString() ?? '0',
+                ),
+                _buildStatCard(
+                  'Games Won',
+                  stats?['gamesWon']?.toString() ?? '0',
+                ),
+                _buildStatCard(
+                  'Games Lost',
+                  stats?['gamesLost']?.toString() ?? '0',
+                ),
+                _buildStatCard(
+                  'Current Streak',
+                  stats?['currentStreak']?.toString() ?? '0',
+                ),
+                _buildStatCard(
+                  'Longest Winning Streak',
+                  stats?['longestStreak']?.toString() ?? '0',
+                ),
                 const SizedBox(height: 32.0),
                 const Text(
                   'Achievements',
@@ -45,10 +60,14 @@ class ProfileStatsScreen extends StatelessWidget {
                   Wrap(
                     spacing: 8.0,
                     runSpacing: 8.0,
-                    children: profile.badges!.map((badge) => Chip(
-                      label: Text(badge),
-                      backgroundColor: Colors.amber,
-                    )).toList(),
+                    children: profile.badges!
+                        .map(
+                          (badge) => Chip(
+                            label: Text(badge),
+                            backgroundColor: Colors.amber,
+                          ),
+                        )
+                        .toList(),
                   )
                 else
                   const Text('No achievements yet.'),

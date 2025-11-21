@@ -23,13 +23,13 @@ class ChatWithLastMessage extends Equatable {
 
   @override
   List<Object?> get props => [
-        chatId,
-        chatName,
-        lastMessageContent,
-        lastMessageCreatedAt,
-        senderId,
-        senderName,
-        senderAvatarUrl,
-        unreadCount,
-      ];
+    chatId,
+    chatName,
+    lastMessageContent,
+    lastMessageCreatedAt,
+    senderId,
+    senderName,
+    senderAvatarUrl,
+    unreadCount,
+  ];
 }

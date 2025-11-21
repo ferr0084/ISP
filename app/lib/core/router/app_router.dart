@@ -19,10 +19,10 @@ import '../../features/groups/presentation/screens/invite_accept_screen.dart';
 import '../../features/groups/presentation/screens/my_groups_overview_screen.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/idiot_game/presentation/screens/idiot_game_dashboard_screen.dart';
+import '../../features/notifications/presentation/screens/notifications_screen.dart';
 import '../../features/profile/presentation/screens/profile_editing_screen.dart';
 import '../../features/profile/presentation/screens/profile_stats_screen.dart';
 import '../../features/profile/presentation/screens/profile_view_screen.dart';
-import '../../features/notifications/presentation/screens/notifications_screen.dart';
 
 class AppRouter {
   final UserProvider _userProvider;

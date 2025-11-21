@@ -1,13 +1,15 @@
 import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
 
+import '../../features/auth/data/datasources/auth_remote_data_source.dart';
+import '../../features/auth/data/datasources/auth_remote_data_source_impl.dart';
 import '../../features/auth/data/repositories/auth_repository_impl.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
 import '../../features/auth/domain/usecases/get_user.dart';
 import '../../features/auth/domain/usecases/login_with_email_and_password.dart';
 import '../../features/auth/domain/usecases/logout.dart';
 import '../../features/auth/domain/usecases/sign_up.dart';
-import '../../features/profile/domain/usecases/update_profile.dart';
 import '../../features/auth/presentation/providers/user_provider.dart';
 import '../../features/chats/data/repositories/chat_repository_impl.dart';
 import '../../features/chats/domain/repositories/chat_repository.dart';
@@ -18,7 +20,6 @@ import '../../features/chats/domain/usecases/get_messages.dart';
 import '../../features/chats/domain/usecases/get_recent_chats.dart';
 import '../../features/chats/domain/usecases/send_message.dart';
 import '../../features/chats/presentation/providers/chat_provider.dart';
-import '../../features/home/presentation/providers/recent_chats_provider.dart';
 import '../../features/chats/presentation/providers/message_provider.dart';
 import '../../features/groups/data/datasources/group_members_remote_data_source.dart';
 import '../../features/groups/data/datasources/group_members_remote_data_source_impl.dart';
@@ -34,13 +35,19 @@ import '../../features/groups/domain/usecases/send_group_invite.dart';
 import '../../features/groups/presentation/notifiers/group_invite_notifier.dart';
 import '../../features/groups/presentation/providers/group_detail_provider.dart';
 import '../../features/groups/presentation/providers/group_provider.dart';
-import '../../features/profile/data/repositories/profile_repository_impl.dart';
-import '../../features/profile/domain/repositories/profile_repository.dart';
-import '../../features/profile/domain/usecases/get_profile.dart';
+import '../../features/home/presentation/providers/recent_chats_provider.dart';
 import '../../features/notifications/data/datasources/notification_remote_data_source.dart';
 import '../../features/notifications/data/repositories/notification_repository_impl.dart';
 import '../../features/notifications/domain/repositories/notification_repository.dart';
 import '../../features/notifications/presentation/providers/notification_provider.dart';
+import '../../features/profile/data/datasources/profile_remote_data_source.dart';
+import '../../features/profile/data/datasources/profile_remote_data_source_impl.dart';
+import '../../features/profile/data/repositories/profile_repository_impl.dart';
+import '../../features/profile/domain/repositories/profile_repository.dart';
+import '../../features/profile/domain/usecases/get_profile.dart';
+import '../../features/profile/domain/usecases/update_profile.dart';
+import '../../features/profile/domain/usecases/upload_avatar.dart';
+import '../../features/profile/presentation/providers/profile_provider.dart';
 
 final GetIt sl = GetIt.instance;
 
@@ -52,11 +59,19 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<InvitationRepository>(
     () => InvitationRepositoryImpl(sl()),
   );
-  sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl()));
+  sl.registerLazySingleton<AuthRepository>(
+    () => AuthRepositoryImpl(remoteDataSource: sl()),
+  );
   sl.registerLazySingleton<ChatRepository>(() => ChatRepositoryImpl(sl()));
   sl.registerLazySingleton<GroupRepository>(() => GroupRepositoryImpl(sl()));
   sl.registerLazySingleton<ProfileRepository>(
-    () => ProfileRepositoryImpl(sl()),
+    () => ProfileRepositoryImpl(remoteDataSource: sl()),
+  );
+  sl.registerLazySingleton<AuthRemoteDataSource>(
+    () => AuthRemoteDataSourceImpl(supabaseClient: sl()),
+  );
+  sl.registerLazySingleton<ProfileRemoteDataSource>(
+    () => ProfileRemoteDataSourceImpl(supabaseClient: sl(), uuid: sl()),
   );
   sl.registerLazySingleton<GroupMembersRemoteDataSource>(
     () => GroupMembersRemoteDataSourceImpl(),
@@ -80,6 +95,7 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<GetUser>(() => GetUser(sl()));
   sl.registerLazySingleton<UpdateProfile>(() => UpdateProfile(sl()));
   sl.registerLazySingleton<GetProfile>(() => GetProfile(sl()));
+  sl.registerLazySingleton<UploadAvatar>(() => UploadAvatar(sl()));
   sl.registerLazySingleton<GetChats>(() => GetChats(sl()));
   sl.registerLazySingleton<CreateChat>(() => CreateChat(sl()));
   sl.registerLazySingleton<GetMessages>(() => GetMessages(sl()));
@@ -111,4 +127,10 @@ Future<void> setupServiceLocator() async {
   sl.registerFactory<RecentChatsProvider>(
     () => RecentChatsProvider(getRecentChats: sl()),
   );
+  sl.registerFactory<ProfileProvider>(
+    () => ProfileProvider(uploadAvatar: sl(), userProvider: sl()),
+  );
+
+  // External
+  sl.registerLazySingleton<Uuid>(() => const Uuid());
 }

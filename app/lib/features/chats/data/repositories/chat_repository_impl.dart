@@ -15,29 +15,29 @@ class ChatRepositoryImpl implements ChatRepository {
   ChatRepositoryImpl(this._supabaseClient);
 
   @override
-  Stream<Either<Failure, List<ChatWithLastMessage>>> getRecentChats() {
-    return _supabaseClient.rpc('get_recent_chats').stream().map((data) {
-      try {
-        final chats = (data as List)
-            .map(
-              (json) => ChatWithLastMessage(
-                chatId: json['chat_id'] as String,
-                chatName: json['chat_name'] as String?,
-                lastMessageContent: json['last_message_content'] as String,
-                lastMessageCreatedAt:
-                    DateTime.parse(json['last_message_created_at'] as String),
-                senderId: json['sender_id'] as String,
-                senderName: json['sender_name'] as String,
-                senderAvatarUrl: json['sender_avatar_url'] as String?,
-                unreadCount: json['unread_count'] as int,
+  Stream<Either<Failure, List<ChatWithLastMessage>>> getRecentChats() async* {
+    try {
+      final data = await _supabaseClient.rpc('get_recent_chats');
+      final chats = (data as List)
+          .map(
+            (json) => ChatWithLastMessage(
+              chatId: json['chat_id'] as String,
+              chatName: json['chat_name'] as String?,
+              lastMessageContent: json['last_message_content'] as String,
+              lastMessageCreatedAt: DateTime.parse(
+                json['last_message_created_at'] as String,
               ),
-            )
-            .toList();
-        return Right(chats);
-      } catch (e) {
-        return Left(ServerFailure(e.toString()));
-      }
-    });
+              senderId: json['sender_id'] as String,
+              senderName: json['sender_name'] as String,
+              senderAvatarUrl: json['sender_avatar_url'] as String?,
+              unreadCount: json['unread_count'] as int,
+            ),
+          )
+          .toList();
+      yield Right(chats);
+    } catch (e) {
+      yield Left(ServerFailure(e.toString()));
+    }
   }
 
   @override

@@ -45,19 +45,25 @@ class _ProfilePageState extends State<ProfilePage> {
           },
         ),
         actions: [
-           IconButton(
-             icon: Icon(_isEditing ? Icons.check : Icons.edit),
-             onPressed: () async {
-               if (_isEditing) {
-                 final updatedProfile = userProvider.profile?.copyWith(fullName: _nameController.text) ??
-                     Profile(id: userProvider.user!.id, fullName: _nameController.text);
-                 await userProvider.updateUserProfile(updatedProfile);
-               }
-               setState(() {
-                 _isEditing = !_isEditing;
-               });
-             },
-           ),
+          IconButton(
+            icon: Icon(_isEditing ? Icons.check : Icons.edit),
+            onPressed: () async {
+              if (_isEditing) {
+                final updatedProfile =
+                    userProvider.profile?.copyWith(
+                      fullName: _nameController.text,
+                    ) ??
+                    Profile(
+                      id: userProvider.user!.id,
+                      fullName: _nameController.text,
+                    );
+                await userProvider.updateUserProfile(updatedProfile);
+              }
+              setState(() {
+                _isEditing = !_isEditing;
+              });
+            },
+          ),
         ],
       ),
       body: user == null

@@ -46,7 +46,7 @@ class _ProfileEditingScreenState extends State<ProfileEditingScreen> {
     if (userId == null) return null;
 
     final fileName =
-        '$userId-avatar-${DateTime.now().millisecondsSinceEpoch}.jpg';
+        '$userId/avatar-${DateTime.now().millisecondsSinceEpoch}.jpg';
     final file = File(image.path);
 
     try {
@@ -193,20 +193,18 @@ class _ProfileEditingScreenState extends State<ProfileEditingScreen> {
 
                 try {
                   await userProvider.updateUserProfile(updatedProfile);
-                  if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Profile updated successfully!'),
-                      ),
-                    );
-                    Navigator.of(context).pop();
-                  }
+                  if (!mounted) return;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Profile updated successfully!'),
+                    ),
+                  );
+                  Navigator.of(context).pop();
                 } catch (e) {
-                  if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Failed to update profile: $e')),
-                    );
-                  }
+                  if (!mounted) return;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed to update profile: $e')),
+                  );
                 }
               },
               style: ElevatedButton.styleFrom(

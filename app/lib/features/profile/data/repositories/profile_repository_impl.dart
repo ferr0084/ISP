@@ -1,26 +1,45 @@
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'dart:io';
 
+import 'package:dartz/dartz.dart';
+
+import '../../../../core/error/exceptions.dart';
+import '../../../../core/error/failures.dart';
 import '../../domain/entities/profile.dart';
 import '../../domain/repositories/profile_repository.dart';
+import '../datasources/profile_remote_data_source.dart';
 
 class ProfileRepositoryImpl implements ProfileRepository {
-  final SupabaseClient _supabaseClient;
+  final ProfileRemoteDataSource remoteDataSource;
 
-  ProfileRepositoryImpl(this._supabaseClient);
+  ProfileRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<Profile> getProfile(String id) async {
-    final response = await _supabaseClient
-        .from('profiles')
-        .select()
-        .eq('id', id)
-        .single();
-
-    return Profile.fromMap(response);
+  Future<Either<Failure, Profile>> getProfile(String id) async {
+    try {
+      final profile = await remoteDataSource.getProfile(id);
+      return Right(profile);
+    } on ServerException {
+      return const Left(ServerFailure('Server Failure'));
+    }
   }
 
   @override
-  Future<void> updateProfile(Profile profile) async {
-    await _supabaseClient.from('profiles').upsert(profile.toMap());
+  Future<Either<Failure, void>> updateProfile(Profile profile) async {
+    try {
+      await remoteDataSource.updateProfile(profile);
+      return const Right(null);
+    } on ServerException {
+      return const Left(ServerFailure('Server Failure'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> uploadAvatar(File file) async {
+    try {
+      final avatarUrl = await remoteDataSource.uploadAvatar(file);
+      return Right(avatarUrl);
+    } on ServerException {
+      return const Left(ServerFailure('Server Failure'));
+    }
   }
 }

@@ -18,7 +18,7 @@ class WelcomeScreen extends StatelessWidget {
               const Spacer(flex: 2),
               const Icon(Icons.send, color: Colors.blue, size: 64),
               const Spacer(),
-               Image.asset('assets/images/odd-dog.jpg', height: 250),
+              Image.asset('assets/images/odd-dog.jpg', height: 250),
               const Spacer(),
               const Text(
                 "The world's fastest messaging app.",

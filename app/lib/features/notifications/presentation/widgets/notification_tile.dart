@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
+
+import '../../../groups/domain/repositories/invitation_repository.dart';
 import '../../domain/entities/notification.dart' as entity;
 import '../providers/notification_provider.dart';
-import '../../../groups/domain/repositories/invitation_repository.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class NotificationTile extends StatefulWidget {
   final entity.Notification notification;
@@ -46,6 +47,7 @@ class _NotificationTileState extends State<NotificationTile> {
 
       if (accept) {
         await invitationRepository.acceptInvite(token, currentUserId);
+        if (!mounted) return;
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text('Invitation accepted')));
@@ -55,6 +57,7 @@ class _NotificationTileState extends State<NotificationTile> {
         // For now, let's assume we just mark notification as read/handled.
         // But usually there should be a decline.
         // Let's check InvitationRepository later. For now, just show message.
+        if (!mounted) return;
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text('Invitation declined')));
@@ -65,7 +68,9 @@ class _NotificationTileState extends State<NotificationTile> {
         context,
         listen: false,
       ).markAsRead(widget.notification.id);
+      if (!mounted) return;
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));

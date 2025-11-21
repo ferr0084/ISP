@@ -1,14 +1,14 @@
 import 'package:app/core/widgets/main_drawer.dart';
-import 'package:app/features/chats/domain/entities/chat_with_last_message.dart';
 import 'package:app/features/home/domain/entities/event.dart';
 import 'package:app/features/home/domain/entities/expense.dart';
 import 'package:app/features/home/domain/entities/friend_status.dart';
+import 'package:app/features/home/presentation/providers/recent_chats_provider.dart';
 import 'package:flutter/material.dart';
-import 'packagepackage:app/features/home/presentation/providers/recent_chats_provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
 import '../../../groups/presentation/providers/group_provider.dart';
 import '../../../notifications/presentation/providers/notification_provider.dart';
 
@@ -224,8 +224,8 @@ class _HomePageState extends State<HomePage> {
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                if (provider.error != null) {
-                  return Center(child: Text('Error: ${provider.error}'));
+                if (provider.hasError) {
+                  return Center(child: Text('Error: ${provider.errorMessage}'));
                 }
 
                 final myGroups = provider.groups;
@@ -307,15 +307,14 @@ class _HomePageState extends State<HomePage> {
                               child: Container(
                                 padding: const EdgeInsets.all(4.0),
                                 decoration: BoxDecoration(
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.secondary,
                                   shape: BoxShape.circle,
                                 ),
                                 child: Text(
                                   chat.unreadCount.toString(),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
+                                  style: Theme.of(context).textTheme.bodySmall
                                       ?.copyWith(color: Colors.white),
                                 ),
                               ),

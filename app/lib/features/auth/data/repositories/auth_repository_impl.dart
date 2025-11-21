@@ -1,45 +1,52 @@
+import 'package:dartz/dartz.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../../../../core/error/exceptions.dart';
+import '../../../../core/error/failures.dart';
 import '../../domain/repositories/auth_repository.dart';
+import '../datasources/auth_remote_data_source.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
-  final SupabaseClient _supabaseClient;
+  final AuthRemoteDataSource remoteDataSource;
 
-  AuthRepositoryImpl(this._supabaseClient);
+  AuthRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<User?> signUp(String email, String password) async {
-    final response = await _supabaseClient.auth.signUp(
-      email: email,
-      password: password,
-    );
-    return response.user;
+  Future<Either<Failure, User>> signUp(String email, String password) async {
+    try {
+      final user = await remoteDataSource.signUp(email, password);
+      return Right(user);
+    } on ServerException {
+      return const Left(ServerFailure('Server Failure'));
+    }
   }
 
   @override
-  Future<User?> signIn(String email, String password) async {
-    final response = await _supabaseClient.auth.signInWithPassword(
-      email: email,
-      password: password,
-    );
-    return response.user;
+  Future<Either<Failure, User>> signIn(String email, String password) async {
+    try {
+      final user = await remoteDataSource.signIn(email, password);
+      return Right(user);
+    } on ServerException {
+      return const Left(ServerFailure('Server Failure'));
+    }
   }
 
   @override
-  Future<void> signOut() async {
-    await _supabaseClient.auth.signOut();
+  Future<Either<Failure, void>> signOut() async {
+    try {
+      await remoteDataSource.signOut();
+      return const Right(null);
+    } on ServerException {
+      return const Left(ServerFailure('Server Failure'));
+    }
   }
 
   @override
-  User? get currentUser => _supabaseClient.auth.currentUser;
+  User? get currentUser => remoteDataSource.currentUser;
 
   @override
-  Future<void> updateProfile(String name) async {
-    final updates = {
-      'id': currentUser!.id,
-      'name': name,
-      'updated_at': DateTime.now().toIso8601String(),
-    };
-
-    await _supabaseClient.from('profiles').upsert(updates);
+  Future<void> updateProfile(String name) {
+    // TODO: implement updateProfile
+    throw UnimplementedError();
   }
 }

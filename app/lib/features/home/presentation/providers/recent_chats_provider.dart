@@ -9,7 +9,7 @@ class RecentChatsProvider with ChangeNotifier {
   late StreamSubscription<dynamic> _recentChatsSubscription;
 
   RecentChatsProvider({required GetRecentChats getRecentChats})
-      : _getRecentChats = getRecentChats {
+    : _getRecentChats = getRecentChats {
     _subscribeToRecentChats();
   }
 
@@ -23,23 +23,21 @@ class RecentChatsProvider with ChangeNotifier {
   String? get error => _error;
 
   void _subscribeToRecentChats() {
-    _recentChatsSubscription = _getRecentChats().listen(
-      (either) {
-        either.fold(
-          (failure) {
-            _error = failure.toString();
-            _isLoading = false;
-            notifyListeners();
-          },
-          (chats) {
-            _recentChats = chats;
-            _isLoading = false;
-            _error = null;
-            notifyListeners();
-          },
-        );
-      },
-    );
+    _recentChatsSubscription = _getRecentChats().listen((either) {
+      either.fold(
+        (failure) {
+          _error = failure.toString();
+          _isLoading = false;
+          notifyListeners();
+        },
+        (chats) {
+          _recentChats = chats;
+          _isLoading = false;
+          _error = null;
+          notifyListeners();
+        },
+      );
+    });
   }
 
   @override

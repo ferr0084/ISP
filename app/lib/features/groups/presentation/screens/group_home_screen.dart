@@ -121,6 +121,7 @@ class GroupHomeScreenState extends State<GroupHomeScreen> {
                     } else if (value == 'Delete') {
                       await context.read<GroupProvider>().deleteGroup(group.id);
                       if (!mounted) return;
+                      if (!mounted) return;
                       if (context.read<GroupProvider>().hasError) {
                         scaffoldMessenger.showSnackBar(
                           SnackBar(
@@ -651,9 +652,10 @@ class GroupHomeScreenState extends State<GroupHomeScreen> {
                         ),
                         TextButton(
                           onPressed: () {
+                            final groupDetailProvider = context.read<GroupDetailProvider>();
                             context.push(
                               '/groups/detail/${widget.groupId}/members',
-                              extra: context.read<GroupDetailProvider>(),
+                              extra: groupDetailProvider,
                             );
                           },
                           child: Text(

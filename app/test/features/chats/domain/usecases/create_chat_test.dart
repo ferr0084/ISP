@@ -4,8 +4,8 @@ import 'package:app/features/chats/domain/repositories/chat_repository.dart';
 import 'package:app/features/chats/domain/usecases/create_chat.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 
 import 'create_chat_test.mocks.dart';
 
