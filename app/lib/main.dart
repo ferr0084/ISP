@@ -11,6 +11,7 @@ import 'features/auth/presentation/providers/user_provider.dart';
 import 'features/groups/domain/repositories/invitation_repository.dart';
 import 'features/groups/presentation/notifiers/group_invite_notifier.dart';
 import 'features/groups/presentation/providers/group_provider.dart';
+import 'features/home/presentation/providers/recent_chats_provider.dart';
 import 'features/notifications/presentation/providers/notification_provider.dart';
 
 Future<void> main() async {
@@ -28,6 +29,7 @@ Future<void> main() async {
           ChangeNotifierProvider(create: (_) => sl<GroupProvider>()),
           ChangeNotifierProvider(create: (_) => sl<GroupInviteNotifier>()),
           ChangeNotifierProvider(create: (_) => sl<NotificationProvider>()),
+          ChangeNotifierProvider(create: (_) => sl<RecentChatsProvider>()),
           Provider<SupabaseClient>(create: (_) => sl<SupabaseClient>()),
           Provider<InvitationRepository>(
             create: (_) => sl<InvitationRepository>(),

@@ -15,8 +15,10 @@ import '../../features/chats/domain/usecases/create_chat.dart';
 import '../../features/chats/domain/usecases/get_chats.dart';
 import '../../features/chats/domain/usecases/get_latest_messages.dart';
 import '../../features/chats/domain/usecases/get_messages.dart';
+import '../../features/chats/domain/usecases/get_recent_chats.dart';
 import '../../features/chats/domain/usecases/send_message.dart';
 import '../../features/chats/presentation/providers/chat_provider.dart';
+import '../../features/home/presentation/providers/recent_chats_provider.dart';
 import '../../features/chats/presentation/providers/message_provider.dart';
 import '../../features/groups/data/datasources/group_members_remote_data_source.dart';
 import '../../features/groups/data/datasources/group_members_remote_data_source_impl.dart';
@@ -83,6 +85,7 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<GetMessages>(() => GetMessages(sl()));
   sl.registerLazySingleton<SendMessage>(() => SendMessage(sl()));
   sl.registerLazySingleton<GetLatestMessages>(() => GetLatestMessages(sl()));
+  sl.registerLazySingleton<GetRecentChats>(() => GetRecentChats(sl()));
   sl.registerLazySingleton<GetGroupMembers>(() => GetGroupMembers(sl()));
   sl.registerLazySingleton<SendGroupInvite>(() => SendGroupInvite(sl()));
   sl.registerLazySingleton<SearchUsersNotInGroup>(
@@ -105,4 +108,7 @@ Future<void> setupServiceLocator() async {
     () => GroupInviteNotifier(sl(), sl()),
   );
   sl.registerFactory<NotificationProvider>(() => NotificationProvider(sl()));
+  sl.registerFactory<RecentChatsProvider>(
+    () => RecentChatsProvider(getRecentChats: sl()),
+  );
 }

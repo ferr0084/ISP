@@ -1,4 +1,5 @@
 import 'package:app/core/error/failures.dart';
+import 'package:app/features/chats/domain/entities/chat_with_last_message.dart';
 import 'package:app/features/chats/domain/entities/message_with_sender.dart';
 import 'package:dartz/dartz.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -12,6 +13,32 @@ class ChatRepositoryImpl implements ChatRepository {
   final SupabaseClient _supabaseClient;
 
   ChatRepositoryImpl(this._supabaseClient);
+
+  @override
+  Stream<Either<Failure, List<ChatWithLastMessage>>> getRecentChats() {
+    return _supabaseClient.rpc('get_recent_chats').stream().map((data) {
+      try {
+        final chats = (data as List)
+            .map(
+              (json) => ChatWithLastMessage(
+                chatId: json['chat_id'] as String,
+                chatName: json['chat_name'] as String?,
+                lastMessageContent: json['last_message_content'] as String,
+                lastMessageCreatedAt:
+                    DateTime.parse(json['last_message_created_at'] as String),
+                senderId: json['sender_id'] as String,
+                senderName: json['sender_name'] as String,
+                senderAvatarUrl: json['sender_avatar_url'] as String?,
+                unreadCount: json['unread_count'] as int,
+              ),
+            )
+            .toList();
+        return Right(chats);
+      } catch (e) {
+        return Left(ServerFailure(e.toString()));
+      }
+    });
+  }
 
   @override
   Stream<Either<Failure, List<Chat>>> getChats() {
