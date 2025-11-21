@@ -41,8 +41,8 @@ class MainDrawer extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 30,
-                        backgroundImage: userAvatarUrl != null
-                            ? NetworkImage(userAvatarUrl)
+                        backgroundImage: profile?.avatarUrl != null
+                            ? NetworkImage(profile!.avatarUrl!)
                             : const AssetImage('assets/images/avatar_james.png')
                                   as ImageProvider, // Default avatar
                       ),

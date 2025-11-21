@@ -46,7 +46,7 @@ class _ProfileEditingScreenState extends State<ProfileEditingScreen> {
     if (userId == null) return null;
 
     final fileName =
-        '$userId-avatar-${DateTime.now().millisecondsSinceEpoch}.jpg';
+        '$userId/avatar-${DateTime.now().millisecondsSinceEpoch}.jpg';
     final file = File(image.path);
 
     try {
