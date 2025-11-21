@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:app/features/auth/presentation/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+
+import '../providers/profile_provider.dart';
 
 class ProfileViewScreen extends StatelessWidget {
   const ProfileViewScreen({super.key});
@@ -38,12 +43,42 @@ class ProfileViewScreen extends StatelessWidget {
                 Center(
                   child: Column(
                     children: [
-                      CircleAvatar(
-                        radius: 60,
-                        backgroundImage: profile?.avatarUrl != null
-                            ? NetworkImage(profile!.avatarUrl!)
-                            : const AssetImage('assets/images/avatar_s.png')
-                                  as ImageProvider, // Placeholder image
+                      Consumer<ProfileProvider>(
+                        builder: (context, provider, child) {
+                          return Stack(
+                            children: [
+                              CircleAvatar(
+                                radius: 60,
+                                backgroundImage: profile?.avatarUrl != null
+                                    ? NetworkImage(profile!.avatarUrl!)
+                                    : const AssetImage(
+                                            'assets/images/avatar_s.png')
+                                        as ImageProvider, // Placeholder image
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: IconButton(
+                                  icon: const Icon(Icons.camera_alt),
+                                  onPressed: () async {
+                                    final imagePicker = ImagePicker();
+                                    final pickedFile =
+                                        await imagePicker.pickImage(
+                                            source: ImageSource.gallery);
+                                    if (pickedFile != null) {
+                                      await provider.uploadProfilePicture(
+                                          File(pickedFile.path));
+                                    }
+                                  },
+                                ),
+                              ),
+                              if (provider.isLoading)
+                                const Positioned.fill(
+                                  child: CircularProgressIndicator(),
+                                ),
+                            ],
+                          );
+                        },
                       ),
                       const SizedBox(height: 16.0),
                       Text(
