@@ -3,11 +3,11 @@ import 'package:app/features/home/domain/entities/chat.dart';
 import 'package:app/features/home/domain/entities/event.dart';
 import 'package:app/features/home/domain/entities/expense.dart';
 import 'package:app/features/home/domain/entities/friend_status.dart';
-import 'package:app/features/home/domain/entities/group.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../../groups/presentation/providers/group_provider.dart';
 import '../../../notifications/presentation/providers/notification_provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -32,6 +32,7 @@ class _HomePageState extends State<HomePage> {
           listen: false,
         ).fetchNotifications(userId);
       }
+      Provider.of<GroupProvider>(context, listen: false).fetchGroups();
     });
   }
 
@@ -52,24 +53,6 @@ class _HomePageState extends State<HomePage> {
       ),
       FriendStatus(name: 'Chris', avatarUrl: 'assets/images/avatar_chris.png'),
       FriendStatus(name: 'S', avatarUrl: 'assets/images/avatar_s.png'),
-    ];
-
-    final List<Group> myGroups = [
-      Group(
-        name: 'Design Team',
-        avatarUrl: 'assets/images/group_design_team.png',
-        description: '5 new messages',
-      ),
-      Group(
-        name: 'Project Phoenix',
-        avatarUrl: 'assets/images/group_project_phoenix.png',
-        description: 'Kickoff meeting today @ 2:30 PM',
-      ),
-      Group(
-        name: 'Weekend Trip',
-        avatarUrl: 'assets/images/group_weekend_trip.png',
-        description: 'You owe \u002445 for gas',
-      ),
     ];
 
     final List<Chat> recentChats = [
@@ -256,32 +239,47 @@ class _HomePageState extends State<HomePage> {
               context.go('/groups');
             }),
             const SizedBox(height: 16.0),
-            ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: myGroups.length,
-              separatorBuilder: (context, index) => const Divider(height: 24.0),
-              itemBuilder: (context, index) {
-                final group = myGroups[index];
-                return ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: group.avatarUrl != null
-                        ? AssetImage(group.avatarUrl!)
-                        : null,
-                    child: group.avatarUrl == null
-                        ? const Icon(Icons.group)
-                        : null,
-                  ),
-                  title: Text(
-                    group.name,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  subtitle: Text(
-                    group.description,
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                  trailing: const Icon(Icons.arrow_forward_ios, size: 16.0),
-                  onTap: () {},
+            Consumer<GroupProvider>(
+              builder: (context, provider, child) {
+                if (provider.isLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (provider.error != null) {
+                  return Center(child: Text('Error: ${provider.error}'));
+                }
+
+                final myGroups = provider.groups;
+
+                return ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: myGroups.length,
+                  separatorBuilder: (context, index) =>
+                      const Divider(height: 24.0),
+                  itemBuilder: (context, index) {
+                    final group = myGroups[index];
+                    return ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: (group.avatarUrl.isNotEmpty)
+                            ? NetworkImage(group.avatarUrl)
+                            : null,
+                        child: (group.avatarUrl.isEmpty)
+                            ? const Icon(Icons.group)
+                            : null,
+                      ),
+                      title: Text(
+                        group.name,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      subtitle: Text(
+                        group.lastMessage,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      trailing: const Icon(Icons.arrow_forward_ios, size: 16.0),
+                      onTap: () {},
+                    );
+                  },
                 );
               },
             ),
