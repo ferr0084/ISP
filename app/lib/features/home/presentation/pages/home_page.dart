@@ -240,9 +240,7 @@ class _HomePageState extends State<HomePage> {
                     final group = myGroups[index];
                     return ListTile(
                       leading: CircleAvatar(
-                        backgroundImage: (group.avatarUrl.isNotEmpty)
-                            ? NetworkImage(group.avatarUrl)
-                            : null,
+                        backgroundImage: _getImageProvider(group.avatarUrl),
                         child: (group.avatarUrl.isEmpty)
                             ? const Icon(Icons.group)
                             : null,
@@ -293,9 +291,9 @@ class _HomePageState extends State<HomePage> {
                       leading: Stack(
                         children: [
                           CircleAvatar(
-                            backgroundImage: chat.senderAvatarUrl != null
-                                ? NetworkImage(chat.senderAvatarUrl!)
-                                : null,
+                            backgroundImage: _getImageProvider(
+                              chat.senderAvatarUrl,
+                            ),
                             child: chat.senderAvatarUrl == null
                                 ? const Icon(Icons.person)
                                 : null,
@@ -496,5 +494,13 @@ class _HomePageState extends State<HomePage> {
         ),
       ],
     );
+  }
+
+  ImageProvider? _getImageProvider(String? url) {
+    if (url == null || url.isEmpty) return null;
+    if (url.startsWith('http')) {
+      return NetworkImage(url);
+    }
+    return AssetImage(url);
   }
 }
