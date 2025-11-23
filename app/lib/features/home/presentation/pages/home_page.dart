@@ -11,6 +11,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../groups/presentation/providers/group_provider.dart';
 import '../../../notifications/presentation/providers/notification_provider.dart';
+import '../widgets/my_groups_list.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -213,52 +214,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             const SizedBox(height: 24.0),
-            _buildSectionHeader(context, 'My Groups', () {
-              context.go('/groups');
-            }),
-            const SizedBox(height: 16.0),
-            Consumer<GroupProvider>(
-              builder: (context, provider, child) {
-                if (provider.isLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
-                if (provider.hasError) {
-                  return Center(child: Text('Error: ${provider.errorMessage}'));
-                }
-
-                final myGroups = provider.groups;
-
-                return ListView.separated(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: myGroups.length,
-                  separatorBuilder: (context, index) =>
-                      const Divider(height: 24.0),
-                  itemBuilder: (context, index) {
-                    final group = myGroups[index];
-                    return ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: _getImageProvider(group.avatarUrl),
-                        child: (group.avatarUrl.isEmpty)
-                            ? const Icon(Icons.group)
-                            : null,
-                      ),
-                      title: Text(
-                        group.name,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      subtitle: Text(
-                        group.lastMessage,
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      trailing: const Icon(Icons.arrow_forward_ios, size: 16.0),
-                      onTap: () {},
-                    );
-                  },
-                );
-              },
-            ),
+            const MyGroupsList(),
             const SizedBox(height: 24.0),
             _buildSectionHeader(context, 'Recent Chats', () {
               context.go('/chats');

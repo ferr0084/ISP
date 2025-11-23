@@ -1,82 +1,102 @@
-import 'package:app/features/home/domain/group.dart';
+import 'package:app/features/groups/presentation/providers/group_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class MyGroupsList extends StatelessWidget {
   const MyGroupsList({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Placeholder data
-    final groups = [
-      Group(
-        name: 'Design Team',
-        description: '5 new messages',
-        iconUrl: 'assets/images/globe.png',
-      ),
-      Group(
-        name: 'Project Phoenix',
-        description: 'Kick-off meeting today @ 2:30 PM',
-        iconUrl: 'assets/images/globe.png',
-      ),
-      Group(
-        name: 'Weekend Trip',
-        description: 'You owe \$45 for gas',
-        iconUrl: 'assets/images/globe.png',
-      ),
-    ];
+    return Consumer<GroupProvider>(
+      builder: (context, provider, child) {
+        if (provider.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'My Groups',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+        if (provider.hasError) {
+          return Center(child: Text('Error: ${provider.errorMessage}'));
+        }
+
+        final myGroups = provider.groups;
+
+        if (myGroups.isEmpty) {
+          return const SizedBox.shrink();
+        }
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 8.0,
               ),
-              TextButton(
-                onPressed: () {},
-                child: const Text(
-                  'View All',
-                  style: TextStyle(color: Colors.blue),
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'My Groups',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      context.go('/groups');
+                    },
+                    child: Text(
+                      'View All',
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
-        ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: groups.length,
-          itemBuilder: (context, index) {
-            final group = groups[index];
-            return ListTile(
-              leading: CircleAvatar(backgroundImage: AssetImage(group.iconUrl)),
-              title: Text(
-                group.name,
-                style: const TextStyle(color: Colors.white),
-              ),
-              subtitle: Text(
-                group.description,
-                style: const TextStyle(color: Colors.grey),
-              ),
-              trailing: const Icon(
-                Icons.arrow_forward_ios,
-                color: Colors.grey,
-                size: 16,
-              ),
-              onTap: () {},
-            );
-          },
-        ),
-      ],
+            ),
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: myGroups.take(3).length, // Show only top 3
+              separatorBuilder: (context, index) => const Divider(height: 24.0),
+              itemBuilder: (context, index) {
+                final group = myGroups[index];
+                return ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: _getImageProvider(group.avatarUrl),
+                    child: (group.avatarUrl.isEmpty)
+                        ? const Icon(Icons.group)
+                        : null,
+                  ),
+                  title: Text(
+                    group.name,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  subtitle: Text(
+                    group.lastMessage,
+                    style: Theme.of(context).textTheme.bodySmall,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 16.0),
+                  onTap: () {
+                    context.push('/groups/detail/${group.id}');
+                  },
+                );
+              },
+            ),
+          ],
+        );
+      },
     );
+  }
+
+  ImageProvider? _getImageProvider(String? url) {
+    if (url == null || url.isEmpty) return null;
+    if (url.startsWith('http')) {
+      return NetworkImage(url);
+    }
+    return AssetImage(url);
   }
 }
