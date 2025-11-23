@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -25,14 +26,6 @@ class _NotificationTileState extends State<NotificationTile> {
     });
 
     try {
-      final token = widget.notification.data?['token'];
-      if (token == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Invalid invitation data')),
-        );
-        return;
-      }
-
       final supabaseClient = Provider.of<SupabaseClient>(
         context,
         listen: false,
@@ -40,27 +33,54 @@ class _NotificationTileState extends State<NotificationTile> {
       final currentUserId = supabaseClient.auth.currentUser?.id;
       if (currentUserId == null) return;
 
-      final invitationRepository = Provider.of<InvitationRepository>(
-        context,
-        listen: false,
-      );
+      if (widget.notification.type == 'group_invite') {
+        final token = widget.notification.data?['token'];
+        if (token == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Invalid invitation data')),
+          );
+          return;
+        }
 
-      if (accept) {
-        await invitationRepository.acceptInvite(token, currentUserId);
-        if (!mounted) return;
-        ScaffoldMessenger.of(
+        final invitationRepository = Provider.of<InvitationRepository>(
           context,
-        ).showSnackBar(const SnackBar(content: Text('Invitation accepted')));
-      } else {
-        // Assuming there is a decline method, or we just ignore it.
-        // If no decline method, maybe just delete the notification?
-        // For now, let's assume we just mark notification as read/handled.
-        // But usually there should be a decline.
-        // Let's check InvitationRepository later. For now, just show message.
-        if (!mounted) return;
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Invitation declined')));
+          listen: false,
+        );
+
+        if (accept) {
+          await invitationRepository.acceptInvite(token, currentUserId);
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Group invitation accepted')),
+          );
+        } else {
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Group invitation declined')),
+          );
+        }
+      } else if (widget.notification.type == 'event_invite') {
+        final eventId = widget.notification.data?['event_id'];
+        if (eventId == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Invalid event invitation data')),
+          );
+          return;
+        }
+
+        // For event invitations, we need to find the invitation ID
+        // This is a bit complex, but for now let's navigate to the event details
+        // where the user can respond
+        if (accept) {
+          // Navigate to event details to accept
+          context.go('/events/$eventId');
+          return;
+        } else {
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Event invitation declined')),
+          );
+        }
       }
 
       // Mark notification as read
@@ -71,9 +91,9 @@ class _NotificationTileState extends State<NotificationTile> {
       if (!mounted) return;
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: ${e.toString()}')),
+      );
     } finally {
       if (mounted) {
         setState(() {
@@ -86,16 +106,24 @@ class _NotificationTileState extends State<NotificationTile> {
   @override
   Widget build(BuildContext context) {
     final n = widget.notification;
-    final isInvite = n.type == 'group_invite';
+    final isInvite = n.type == 'group_invite' || n.type == 'event_invite';
 
     return ListTile(
       tileColor: n.read
           ? null
           : Theme.of(context).colorScheme.primaryContainer.withOpacity(0.1),
       leading: CircleAvatar(
-        backgroundColor: isInvite ? Colors.blue : Colors.grey,
+        backgroundColor: n.type == 'event_invite'
+            ? Colors.green
+            : n.type == 'group_invite'
+                ? Colors.blue
+                : Colors.grey,
         child: Icon(
-          isInvite ? Icons.group_add : Icons.notifications,
+          n.type == 'event_invite'
+              ? Icons.event
+              : n.type == 'group_invite'
+                  ? Icons.group_add
+                  : Icons.notifications,
           color: Colors.white,
         ),
       ),
@@ -125,31 +153,31 @@ class _NotificationTileState extends State<NotificationTile> {
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
                 else ...[
-                  ElevatedButton(
-                    onPressed: () => _handleInvite(true),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 0,
-                      ),
-                      visualDensity: VisualDensity.compact,
-                    ),
-                    child: const Text('Accept'),
-                  ),
-                  const SizedBox(width: 8),
-                  OutlinedButton(
-                    onPressed: () => _handleInvite(false),
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 0,
-                      ),
-                      visualDensity: VisualDensity.compact,
-                    ),
-                    child: const Text('Decline'),
-                  ),
+                   ElevatedButton(
+                     onPressed: () => _handleInvite(true),
+                     style: ElevatedButton.styleFrom(
+                       backgroundColor: Colors.green,
+                       foregroundColor: Colors.white,
+                       padding: const EdgeInsets.symmetric(
+                         horizontal: 16,
+                         vertical: 0,
+                       ),
+                       visualDensity: VisualDensity.compact,
+                     ),
+                     child: Text(n.type == 'event_invite' ? 'View Event' : 'Accept'),
+                   ),
+                   const SizedBox(width: 8),
+                   OutlinedButton(
+                     onPressed: () => _handleInvite(false),
+                     style: OutlinedButton.styleFrom(
+                       padding: const EdgeInsets.symmetric(
+                         horizontal: 16,
+                         vertical: 0,
+                       ),
+                       visualDensity: VisualDensity.compact,
+                     ),
+                     child: const Text('Decline'),
+                   ),
                 ],
               ],
             ),

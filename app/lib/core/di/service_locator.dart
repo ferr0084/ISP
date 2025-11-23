@@ -28,6 +28,18 @@ import '../../features/groups/data/repositories/group_repository_impl.dart';
 import '../../features/groups/data/repositories/invitation_repository_impl.dart';
 import '../../features/groups/domain/repositories/group_members_repository.dart';
 import '../../features/groups/domain/repositories/group_repository.dart';
+import '../../features/events/data/datasources/events_remote_data_source.dart';
+import '../../features/events/data/datasources/events_remote_data_source_impl.dart';
+import '../../features/events/data/repositories/event_repository_impl.dart';
+import '../../features/events/domain/repositories/event_repository.dart';
+import '../../features/events/domain/usecases/get_events.dart';
+import '../../features/events/domain/usecases/get_event.dart';
+import '../../features/events/domain/usecases/create_event.dart';
+import '../../features/events/domain/usecases/update_event.dart';
+import '../../features/events/domain/usecases/delete_event.dart';
+import '../../features/events/domain/usecases/get_event_invitations.dart';
+import '../../features/events/domain/usecases/send_event_invitations.dart';
+import '../../features/events/domain/usecases/respond_to_invitation.dart';
 import '../../features/groups/domain/repositories/invitation_repository.dart';
 import '../../features/groups/domain/usecases/get_group_members.dart';
 import '../../features/groups/domain/usecases/search_users_not_in_group.dart';
@@ -39,6 +51,7 @@ import '../../features/home/presentation/providers/recent_chats_provider.dart';
 import '../../features/notifications/data/datasources/notification_remote_data_source.dart';
 import '../../features/notifications/data/repositories/notification_repository_impl.dart';
 import '../../features/notifications/domain/repositories/notification_repository.dart';
+import '../../features/notifications/domain/usecases/create_notification.dart';
 import '../../features/notifications/presentation/providers/notification_provider.dart';
 import '../../features/profile/data/datasources/profile_remote_data_source.dart';
 import '../../features/profile/data/datasources/profile_remote_data_source_impl.dart';
@@ -60,6 +73,10 @@ import 'package:app/features/idiot_game/domain/usecases/get_user_achievements.da
 import 'package:app/features/idiot_game/domain/usecases/get_user_stats.dart';
 import '../../features/idiot_game/presentation/providers/idiot_game_provider.dart';
 import '../../features/profile/presentation/providers/profile_provider.dart';
+import '../../features/events/presentation/providers/event_provider.dart';
+import '../../features/contacts/data/repositories/contact_repository_impl.dart';
+import '../../features/contacts/domain/repositories/contact_repository.dart';
+import '../../features/contacts/presentation/notifiers/contact_list_notifier.dart';
 
 final GetIt sl = GetIt.instance;
 
@@ -134,6 +151,21 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton(() => GetGameDetails(sl()));
   sl.registerLazySingleton(() => GetUserStats(sl()));
   sl.registerLazySingleton(() => GetUserAchievements(sl()));
+  // Events
+  sl.registerLazySingleton<EventsRemoteDataSource>(
+    () => EventsRemoteDataSourceImpl(client: sl<SupabaseClient>()),
+  );
+  sl.registerLazySingleton<EventRepository>(
+    () => EventRepositoryImpl(remote: sl<EventsRemoteDataSource>()),
+  );
+  sl.registerLazySingleton(() => GetEvents(sl<EventRepository>()));
+  sl.registerLazySingleton(() => GetEvent(sl<EventRepository>()));
+  sl.registerLazySingleton(() => CreateEvent(sl<EventRepository>()));
+  sl.registerLazySingleton(() => UpdateEvent(sl<EventRepository>()));
+  sl.registerLazySingleton(() => DeleteEvent(sl<EventRepository>()));
+  sl.registerLazySingleton(() => GetEventInvitations(sl<EventRepository>()));
+  sl.registerLazySingleton(() => SendEventInvitations(sl<EventRepository>()));
+  sl.registerLazySingleton(() => RespondToInvitation(sl<EventRepository>()));
 
   // Notifiers
   sl.registerFactory<UserProvider>(
@@ -151,6 +183,7 @@ Future<void> setupServiceLocator() async {
     () => GroupInviteNotifier(sl(), sl()),
   );
   sl.registerFactory<NotificationProvider>(() => NotificationProvider(sl()));
+  sl.registerLazySingleton(() => CreateNotification(sl()));
   sl.registerFactory<RecentChatsProvider>(
     () => RecentChatsProvider(getRecentChats: sl()),
   );
@@ -171,6 +204,28 @@ Future<void> setupServiceLocator() async {
   sl.registerFactory<ProfileProvider>(
     () => ProfileProvider(uploadAvatar: sl(), userProvider: sl()),
   );
+
+  sl.registerFactory<EventProvider>(
+    () => EventProvider(
+      getEvents: sl(),
+      getEvent: sl(),
+      createEvent: sl(),
+      updateEvent: sl(),
+      deleteEvent: sl(),
+      getEventInvitations: sl(),
+      sendEventInvitations: sl(),
+      respondToInvitation: sl(),
+      createNotification: sl(),
+      contactRepository: sl(),
+      groupRepository: sl(),
+    ),
+  );
+
+  // Contacts
+  sl.registerLazySingleton<ContactRepository>(
+    () => ContactRepositoryImpl(supabaseClient: sl()),
+  );
+  sl.registerFactory<ContactListNotifier>(() => ContactListNotifier(sl()));
 
   // External
   sl.registerLazySingleton<Uuid>(() => const Uuid());

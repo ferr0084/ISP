@@ -48,3 +48,4 @@ supabase/.temp
 .gemini/
 gha-creds-*.json
 .vscode
+.opencode/opencode.json

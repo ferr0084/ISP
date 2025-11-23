@@ -1,7 +1,7 @@
-import 'package:app/features/events/domain/entities/event.dart';
-import 'package:app/features/events/domain/entities/event_invitation.dart';
+import '../../domain/entities/event.dart';
+import '../../domain/entities/event_invitation.dart';
 
-abstract class EventRepository {
+abstract class EventsRemoteDataSource {
   Stream<List<Event>> getEvents();
   Future<Event> getEvent(String id);
   Future<Event> createEvent(Event event, {List<String> inviteeIds = const []});

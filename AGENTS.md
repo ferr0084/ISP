@@ -1,5 +1,8 @@
 # AGENTS.md
 
+Use MCP servers if available
+Use LSP servers if available
+
 ## Commands
 - **Install deps**: `cd app && flutter pub get`
 - **Check outdated deps**: `cd app && flutter pub outdated`

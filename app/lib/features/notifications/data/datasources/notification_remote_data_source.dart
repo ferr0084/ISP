@@ -5,6 +5,7 @@ abstract class NotificationRemoteDataSource {
   Future<List<NotificationModel>> getNotifications(String userId);
   Future<void> markAsRead(String notificationId);
   Future<void> markAllAsRead(String userId);
+  Future<void> createNotification(NotificationModel notification);
 }
 
 class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
@@ -40,5 +41,12 @@ class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
         .update({'read': true})
         .eq('user_id', userId)
         .eq('read', false);
+  }
+
+  @override
+  Future<void> createNotification(NotificationModel notification) async {
+    await supabaseClient
+        .from('notifications')
+        .insert(notification.toJson());
   }
 }

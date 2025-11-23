@@ -1,5 +1,5 @@
 import 'package:app/core/widgets/main_drawer.dart';
-import 'package:app/features/home/domain/entities/event.dart';
+import 'package:app/features/events/presentation/providers/event_provider.dart';
 import 'package:app/features/home/domain/entities/expense.dart';
 import 'package:app/features/home/domain/entities/friend_status.dart';
 import 'package:app/features/home/presentation/providers/recent_chats_provider.dart';
@@ -35,6 +35,11 @@ class _HomePageState extends State<HomePage> {
         ).fetchNotifications(userId);
       }
       Provider.of<GroupProvider>(context, listen: false).fetchGroups();
+      // EventProvider loads events in its constructor, but we can trigger a refresh if needed.
+      // Ideally, we should rely on the stream or initial load.
+      // If we want to be sure, we can't easily trigger a reload without exposing a public method.
+      // But since it's a singleton/provider, it should be alive.
+      // Let's just rely on the provider's state for now.
     });
   }
 
@@ -57,20 +62,14 @@ class _HomePageState extends State<HomePage> {
       FriendStatus(name: 'S', avatarUrl: 'assets/images/avatar_s.png'),
     ];
 
-    final List<Event> upcomingEvents = [
-      Event(
-        month: 'SEP',
-        day: '28',
-        title: 'Design Team Sync',
-        timeLocation: '10:00 AM - Conference Room',
-      ),
-      Event(
-        month: 'OCT',
-        day: '02',
-        title: 'Project Phoenix Kickoff',
-        timeLocation: '2:30 PM - Main Office',
-      ),
-    ];
+    // Real Events Logic
+    final eventProvider = context.watch<EventProvider>();
+    final now = DateTime.now();
+    final upcomingEvents =
+        eventProvider.events.where((event) => event.date.isAfter(now)).toList()
+          ..sort((a, b) => a.date.compareTo(b.date));
+
+    final displayEvents = upcomingEvents.take(3).toList();
 
     final List<Expense> pendingExpenses = [
       Expense(
@@ -347,10 +346,10 @@ class _HomePageState extends State<HomePage> {
             ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: upcomingEvents.length,
+              itemCount: displayEvents.length,
               separatorBuilder: (context, index) => const Divider(height: 24.0),
               itemBuilder: (context, index) {
-                final event = upcomingEvents[index];
+                final event = displayEvents[index];
                 return ListTile(
                   leading: Container(
                     width: 60,
@@ -363,7 +362,7 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          event.month,
+                          DateFormat.MMM().format(event.date).toUpperCase(),
                           style: Theme.of(context).textTheme.bodySmall
                               ?.copyWith(
                                 color: Theme.of(
@@ -372,7 +371,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                         ),
                         Text(
-                          event.day,
+                          event.date.day.toString(),
                           style: Theme.of(context).textTheme.titleLarge
                               ?.copyWith(
                                 color: Theme.of(
@@ -384,19 +383,26 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   title: Text(
-                    event.title,
+                    event.name,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   subtitle: Text(
-                    event.timeLocation,
+                    '${DateFormat.jm().format(event.date)} - ${event.location}',
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   onTap: () {
-                    context.go('/events');
+                    context.go('/events/${event.id}');
                   },
                 );
               },
             ),
+            if (displayEvents.isEmpty)
+              const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Text('No upcoming events'),
+                ),
+              ),
             const SizedBox(height: 24.0),
             _buildSectionHeader(context, 'Pending Expenses', () {
               context.go('/expenses');

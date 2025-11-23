@@ -73,8 +73,7 @@ class NotificationProvider extends ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      // Handle error
-      print('Error marking as read: $e');
+      // Handle error - could log to analytics or show user message
     }
   }
 
@@ -97,7 +96,7 @@ class NotificationProvider extends ChangeNotifier {
           .toList();
       notifyListeners();
     } catch (e) {
-      print('Error marking all as read: $e');
+      // Handle error - could log to analytics or show user message
     }
   }
 }

@@ -2,8 +2,10 @@ import 'package:app/core/di/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 import '../../domain/entities/announcement.dart';
-import '../../domain/entities/event.dart';
+import '../../../events/domain/entities/event.dart';
+import '../../../events/presentation/providers/event_provider.dart';
 import '../../domain/entities/expense_summary.dart';
 import '../../domain/entities/idiot_game_info.dart';
 import '../providers/group_detail_provider.dart';
@@ -30,21 +32,6 @@ class GroupHomeScreenState extends State<GroupHomeScreen> {
     currentIdiotName: 'Ben',
     currentIdiotAvatar: 'assets/images/avatar_chris.png', // Placeholder
   );
-
-  static final List<Event> _upcomingEvents = [
-    Event(
-      icon: Icons.calendar_today,
-      title: 'Weekly Sync',
-      subtitle: 'Team Check-in',
-      time: 'Tomorrow, 10 AM',
-    ),
-    Event(
-      icon: Icons.play_circle_outline,
-      title: 'Client Pitch',
-      subtitle: 'Final Presentation',
-      time: 'Nov 25th, 2 PM',
-    ),
-  ];
 
   static final ExpenseSummary _expenseSummary = ExpenseSummary(
     amountOwed: 15.50,
@@ -308,112 +295,169 @@ class GroupHomeScreenState extends State<GroupHomeScreen> {
                     const SizedBox(height: 24),
 
                     // Upcoming Events Section
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Upcoming Events',
-                          style: Theme.of(context).textTheme.headlineSmall
-                              ?.copyWith(
-                                color: Theme.of(context).colorScheme.onSurface,
-                              ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            context.push('/events');
-                          },
-                          child: Text(
-                            'View All',
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.primary,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    Card(
-                      color: Theme.of(context).colorScheme.surface,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        children: _upcomingEvents.map((event) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 8.0,
-                              horizontal: 16.0,
-                            ),
-                            child: Row(
+                    Consumer<EventProvider>(
+                      builder: (context, eventProvider, child) {
+                        final now = DateTime.now();
+                        final groupEvents =
+                            eventProvider.events
+                                .where(
+                                  (event) =>
+                                      event.groupId == widget.groupId &&
+                                      event.date.isAfter(now),
+                                )
+                                .toList()
+                              ..sort((a, b) => a.date.compareTo(b.date));
+
+                        final displayEvents = groupEvents.take(3).toList();
+
+                        return Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Container(
-                                  padding: const EdgeInsets.all(8.0),
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurface
-                                        .withAlpha(25), // 0.1 * 255 = 25.5
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Icon(
-                                    event.icon,
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.onSurface,
-                                  ),
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        event.title,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium
-                                            ?.copyWith(
-                                              color: Theme.of(
-                                                context,
-                                              ).colorScheme.onSurface,
-                                            ),
-                                      ),
-                                      Text(
-                                        event.subtitle,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium
-                                            ?.copyWith(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .onSurface
-                                                  .withAlpha(
-                                                    178,
-                                                  ), // 0.7 * 255 = 178.5
-                                            ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
                                 Text(
-                                  event.time,
-                                  style: Theme.of(context).textTheme.bodyMedium
+                                  'Upcoming Events',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineSmall
                                       ?.copyWith(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onSurface
-                                            .withAlpha(
-                                              178,
-                                            ), // 0.7 * 255 = 178.5
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onSurface,
                                       ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    context.push('/events');
+                                  },
+                                  child: Text(
+                                    'View All',
+                                    style: TextStyle(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
+                                      fontSize: 16,
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
-                          );
-                        }).toList(),
-                      ),
+                            const SizedBox(height: 16),
+                            if (displayEvents.isEmpty)
+                              Card(
+                                color: Theme.of(context).colorScheme.surface,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: const Padding(
+                                  padding: EdgeInsets.all(16.0),
+                                  child: Center(
+                                    child: Text('No upcoming events'),
+                                  ),
+                                ),
+                              )
+                            else
+                              Card(
+                                color: Theme.of(context).colorScheme.surface,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Column(
+                                  children: displayEvents.map((event) {
+                                    return InkWell(
+                                      onTap: () {
+                                        context.push('/events/${event.id}');
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 8.0,
+                                          horizontal: 16.0,
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              padding: const EdgeInsets.all(
+                                                8.0,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onSurface
+                                                    .withAlpha(
+                                                      25,
+                                                    ), // 0.1 * 255 = 25.5
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                              child: Icon(
+                                                Icons.event,
+                                                color: Theme.of(
+                                                  context,
+                                                ).colorScheme.onSurface,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 16),
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    event.name,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .titleMedium
+                                                        ?.copyWith(
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .colorScheme
+                                                                  .onSurface,
+                                                        ),
+                                                  ),
+                                                  Text(
+                                                    event.location,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium
+                                                        ?.copyWith(
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .colorScheme
+                                                                  .onSurface
+                                                                  .withAlpha(
+                                                                    178,
+                                                                  ),
+                                                        ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Text(
+                                              DateFormat.MMMd().add_jm().format(
+                                                event.date,
+                                              ),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium
+                                                  ?.copyWith(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .onSurface
+                                                        .withAlpha(
+                                                          178,
+                                                        ), // 0.7 * 255 = 178.5
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                          ],
+                        );
+                      },
                     ),
                     const SizedBox(height: 24),
 
@@ -652,7 +696,8 @@ class GroupHomeScreenState extends State<GroupHomeScreen> {
                         ),
                         TextButton(
                           onPressed: () {
-                            final groupDetailProvider = context.read<GroupDetailProvider>();
+                            final groupDetailProvider = context
+                                .read<GroupDetailProvider>();
                             context.push(
                               '/groups/detail/${widget.groupId}/members',
                               extra: groupDetailProvider,

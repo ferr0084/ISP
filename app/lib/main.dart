@@ -15,6 +15,8 @@ import 'features/home/presentation/providers/recent_chats_provider.dart';
 import 'features/idiot_game/presentation/providers/idiot_game_provider.dart';
 import 'features/notifications/presentation/providers/notification_provider.dart';
 import 'features/profile/presentation/providers/profile_provider.dart';
+import 'features/contacts/presentation/notifiers/contact_list_notifier.dart';
+import 'features/events/presentation/providers/event_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,6 +40,8 @@ Future<void> main() async {
           Provider<InvitationRepository>(
             create: (_) => sl<InvitationRepository>(),
           ),
+          ChangeNotifierProvider(create: (_) => sl<ContactListNotifier>()),
+          ChangeNotifierProvider(create: (_) => sl<EventProvider>()),
         ],
         child: const MyApp(),
       ),

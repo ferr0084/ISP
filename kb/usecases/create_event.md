@@ -11,7 +11,7 @@
 ## Preconditions
 - User has an account
 - User has logged in
-- User is a member of at least one group (for inviting friends from the group)
+- User is a member of at least one group (optional for associating event with a group, required for inviting friends from the group)
 
 ## Postconditions
 - Event is created with proposed time slots
@@ -24,8 +24,9 @@
 1. User navigates to the events page
 2. User selects "Create Event" button
 3. System shows a form/dialog for event details: Title, description, duration, and 1-3 proposed time slots (user enters dates/times for each)
-4. User invites friends by entering email addresses or selecting from their group members
-5. User reviews and clicks "Create Event" button
+4. User optionally selects a group they are a member of for the event
+5. User invites friends by entering email addresses or selecting from their group members
+6. User reviews and clicks "Create Event" button
 6. System creates the event in the database
 7. System displays the new event details page, showing proposed time slots and voting options
 8. System sends invitations to friends via email or in-app notifications, including a link to rank preferences (1st choice, 2nd, etc.)

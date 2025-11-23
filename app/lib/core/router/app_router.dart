@@ -8,6 +8,8 @@ import '../../features/auth/presentation/screens/login_or_create_account_screen.
 import '../../features/chats/presentation/screens/chat_detail_screen.dart';
 import '../../features/chats/presentation/screens/chat_list_screen.dart';
 import '../../features/common/presentation/pages/settings_page.dart';
+import '../../features/events/presentation/screens/create_event_screen.dart';
+import '../../features/events/presentation/screens/event_details_screen.dart';
 import '../../features/events/presentation/screens/events_dashboard_screen.dart';
 import '../../features/expenses/presentation/screens/expenses_home_screen.dart';
 import '../../features/groups/presentation/providers/group_detail_provider.dart';
@@ -25,6 +27,7 @@ import '../../features/idiot_game/presentation/screens/achievements_stats_screen
 import '../../features/idiot_game/presentation/screens/game_details_screen.dart';
 import '../../features/idiot_game/presentation/screens/game_history_screen.dart';
 import '../../features/idiot_game/presentation/screens/new_game_screen.dart';
+import '../../features/notifications/presentation/providers/notification_provider.dart';
 import '../../features/notifications/presentation/screens/notifications_screen.dart';
 import '../../features/profile/presentation/screens/profile_editing_screen.dart';
 import '../../features/profile/presentation/screens/profile_stats_screen.dart';
@@ -110,9 +113,29 @@ class AppRouter {
           ),
         ],
       ),
-      GoRoute(
-        path: '/events',
-        builder: (context, state) => const EventsDashboardScreen(),
+      ShellRoute(
+        builder: (context, state, child) {
+          return child;
+        },
+        routes: [
+          GoRoute(
+            path: '/events',
+            builder: (context, state) => const EventsDashboardScreen(),
+            routes: [
+              GoRoute(
+                path: 'create',
+                builder: (context, state) => const CreateEventScreen(),
+              ),
+              GoRoute(
+                path: ':eventId',
+                builder: (context, state) {
+                  final eventId = state.pathParameters['eventId']!;
+                  return EventDetailsScreen(eventId: eventId);
+                },
+              ),
+            ],
+          ),
+        ],
       ),
       GoRoute(
         path: '/expenses',
@@ -180,9 +203,19 @@ class AppRouter {
           ),
         ],
       ),
-      GoRoute(
-        path: '/notifications',
-        builder: (context, state) => const NotificationsScreen(),
+      ShellRoute(
+        builder: (context, state, child) {
+          return ChangeNotifierProvider(
+            create: (_) => sl<NotificationProvider>(),
+            child: child,
+          );
+        },
+        routes: [
+          GoRoute(
+            path: '/notifications',
+            builder: (context, state) => const NotificationsScreen(),
+          ),
+        ],
       ),
     ],
     redirect: (context, state) {
