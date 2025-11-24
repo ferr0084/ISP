@@ -1,4 +1,5 @@
 import 'package:app/features/groups/presentation/providers/group_provider.dart';
+import 'package:app/features/groups/presentation/widgets/group_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -63,12 +64,7 @@ class MyGroupsList extends StatelessWidget {
               itemBuilder: (context, index) {
                 final group = myGroups[index];
                 return ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: _getImageProvider(group.avatarUrl),
-                    child: (group.avatarUrl.isEmpty)
-                        ? const Icon(Icons.group)
-                        : null,
-                  ),
+                  leading: GroupAvatar(avatarUrl: group.avatarUrl),
                   title: Text(
                     group.name,
                     style: Theme.of(context).textTheme.titleMedium,
@@ -90,13 +86,5 @@ class MyGroupsList extends StatelessWidget {
         );
       },
     );
-  }
-
-  ImageProvider? _getImageProvider(String? url) {
-    if (url == null || url.isEmpty) return null;
-    if (url.startsWith('http')) {
-      return NetworkImage(url);
-    }
-    return AssetImage(url);
   }
 }

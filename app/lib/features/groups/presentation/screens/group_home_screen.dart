@@ -10,6 +10,7 @@ import '../../domain/entities/expense_summary.dart';
 import '../providers/group_detail_provider.dart';
 import '../providers/group_provider.dart';
 import '../../../idiot_game/presentation/providers/idiot_game_provider.dart';
+import '../widgets/group_avatar.dart';
 
 class GroupHomeScreen extends StatefulWidget {
   final String groupId;
@@ -85,10 +86,7 @@ class GroupHomeScreenState extends State<GroupHomeScreen> {
               ),
               title: Row(
                 children: [
-                  CircleAvatar(
-                    backgroundImage: AssetImage(group.avatarUrl),
-                    radius: 16,
-                  ),
+                  GroupAvatar(avatarUrl: group.avatarUrl, radius: 16),
                   const SizedBox(width: 8),
                   Text(
                     group.name,

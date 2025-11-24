@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/group_provider.dart';
+import '../widgets/group_avatar.dart';
 
 class MyGroupsOverviewScreen extends StatefulWidget {
   const MyGroupsOverviewScreen({super.key});
@@ -114,9 +115,7 @@ class MyGroupsOverviewScreenState extends State<MyGroupsOverviewScreen> {
                   itemBuilder: (context, index) {
                     final group = filteredGroups[index];
                     return ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: AssetImage(group.avatarUrl),
-                      ),
+                      leading: GroupAvatar(avatarUrl: group.avatarUrl),
                       title: Text(
                         group.name,
                         style: TextStyle(

@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart'; // Added import
+import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../providers/group_provider.dart';
+import '../widgets/group_avatar.dart';
 
 class EditGroupScreen extends StatefulWidget {
   final String groupId;
@@ -16,24 +21,44 @@ class EditGroupScreen extends StatefulWidget {
 class EditGroupScreenState extends State<EditGroupScreen> {
   final _formKey = GlobalKey<FormState>();
   late String _groupName;
+  XFile? _selectedImage;
 
   @override
   void initState() {
     super.initState();
-    // We need to fetch the group first to initialize _groupName
-    // This assumes that the group will be available by the time initState is called
-    // or that the GroupProvider will have fetched it.
-    // A more robust solution might involve passing the initial group name
-    // as a parameter or using a FutureBuilder/StreamBuilder if the group
-    // might not be immediately available.
     final groupProvider = Provider.of<GroupProvider>(context, listen: false);
     final group = groupProvider.getGroup(widget.groupId);
     if (group != null) {
       _groupName = group.name;
     } else {
-      // Handle case where group is not found during initState
-      // This scenario should ideally be prevented by proper routing/data loading
-      _groupName = ''; // Fallback
+      _groupName = '';
+    }
+  }
+
+  Future<void> _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      setState(() {
+        _selectedImage = image;
+      });
+    }
+  }
+
+  Future<String?> _uploadImage(XFile image) async {
+    final supabase = Supabase.instance.client;
+    // Use a dedicated folder for group avatars
+    final fileName =
+        'group_avatars/${widget.groupId}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+    final file = File(image.path);
+
+    try {
+      await supabase.storage.from('avatars').upload(fileName, file);
+      final publicUrl = supabase.storage.from('avatars').getPublicUrl(fileName);
+      return publicUrl;
+    } catch (e) {
+      debugPrint('Error uploading image: $e');
+      return null;
     }
   }
 
@@ -41,7 +66,7 @@ class EditGroupScreenState extends State<EditGroupScreen> {
   Widget build(BuildContext context) {
     return Consumer<GroupProvider>(
       builder: (context, groupProvider, child) {
-        final group = groupProvider.getGroup(widget.groupId); // Use getGroup
+        final group = groupProvider.getGroup(widget.groupId);
 
         if (group == null) {
           return Scaffold(
@@ -64,8 +89,26 @@ class EditGroupScreenState extends State<EditGroupScreen> {
             padding: const EdgeInsets.all(16.0),
             child: Form(
               key: _formKey,
-              child: Column(
+              child: ListView(
                 children: [
+                  Center(
+                    child: Column(
+                      children: [
+                        GroupAvatar(
+                          radius: 60,
+                          avatarUrl: group.avatarUrl,
+                          localImage: _selectedImage != null
+                              ? File(_selectedImage!.path)
+                              : null,
+                        ),
+                        TextButton(
+                          onPressed: _pickImage,
+                          child: const Text('Set New Photo'),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24.0),
                   TextFormField(
                     initialValue: _groupName,
                     decoration: const InputDecoration(labelText: 'Group Name'),
@@ -86,8 +129,25 @@ class EditGroupScreenState extends State<EditGroupScreen> {
                         : () async {
                             if (_formKey.currentState!.validate()) {
                               _formKey.currentState!.save();
+
+                              String? avatarUrl = group.avatarUrl;
+                              if (_selectedImage != null) {
+                                avatarUrl = await _uploadImage(_selectedImage!);
+                                if (avatarUrl == null) {
+                                  if (mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text('Failed to upload image'),
+                                      ),
+                                    );
+                                  }
+                                  return;
+                                }
+                              }
+
                               final updatedGroup = group.copyWith(
                                 name: _groupName,
+                                avatarUrl: avatarUrl,
                               );
                               final navigator = Navigator.of(context);
                               final scaffoldMessenger = ScaffoldMessenger.of(
