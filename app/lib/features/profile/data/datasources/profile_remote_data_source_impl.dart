@@ -49,4 +49,16 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
       throw ServerException();
     }
   }
+
+  @override
+  Future<void> updateLastSeen(String userId) async {
+    try {
+      await supabaseClient
+          .from('profiles')
+          .update({'last_seen': DateTime.now().toIso8601String()})
+          .eq('id', userId);
+    } catch (e) {
+      throw ServerException();
+    }
+  }
 }

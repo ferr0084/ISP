@@ -42,4 +42,14 @@ class ProfileRepositoryImpl implements ProfileRepository {
       return const Left(ServerFailure('Server Failure'));
     }
   }
+
+  @override
+  Future<Either<Failure, void>> updateLastSeen(String userId) async {
+    try {
+      await remoteDataSource.updateLastSeen(userId);
+      return const Right(null);
+    } on ServerException {
+      return const Left(ServerFailure('Server Failure'));
+    }
+  }
 }

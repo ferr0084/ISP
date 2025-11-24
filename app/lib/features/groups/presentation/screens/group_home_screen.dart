@@ -7,9 +7,9 @@ import '../../domain/entities/announcement.dart';
 import '../../../events/domain/entities/event.dart';
 import '../../../events/presentation/providers/event_provider.dart';
 import '../../domain/entities/expense_summary.dart';
-import '../../domain/entities/idiot_game_info.dart';
 import '../providers/group_detail_provider.dart';
 import '../providers/group_provider.dart';
+import '../../../idiot_game/presentation/providers/idiot_game_provider.dart';
 
 class GroupHomeScreen extends StatefulWidget {
   final String groupId;
@@ -28,11 +28,6 @@ class GroupHomeScreenState extends State<GroupHomeScreen> {
     imageUrl: 'assets/images/group_design_team.png', // Placeholder image
   );
 
-  static final IdiotGameInfo _idiotGameInfo = IdiotGameInfo(
-    currentIdiotName: 'Ben',
-    currentIdiotAvatar: 'assets/images/avatar_chris.png', // Placeholder
-  );
-
   static final ExpenseSummary _expenseSummary = ExpenseSummary(
     amountOwed: 15.50,
   );
@@ -40,8 +35,13 @@ class GroupHomeScreenState extends State<GroupHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<GroupDetailProvider>(
-      create: (_) =>
-          sl<GroupDetailProvider>(param1: widget.groupId)..fetchGroupDetails(),
+      create: (_) {
+        final provider = sl<GroupDetailProvider>(param1: widget.groupId);
+        provider.fetchGroupDetails();
+        // Also fetch games for this group
+        sl<IdiotGameProvider>().fetchGroupGamesData(widget.groupId);
+        return provider;
+      },
       child: Consumer<GroupDetailProvider>(
         builder: (context, groupDetailProvider, child) {
           if (groupDetailProvider.isLoading &&
@@ -187,110 +187,158 @@ class GroupHomeScreenState extends State<GroupHomeScreen> {
                     const SizedBox(height: 24),
 
                     // Idiot Game Section
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Idiot Game',
-                          style: Theme.of(context).textTheme.headlineSmall
-                              ?.copyWith(
-                                color: Theme.of(context).colorScheme.onSurface,
-                              ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            context.push('/idiot-game');
-                          },
-                          child: Text(
-                            'View Dashboard',
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.primary,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    Card(
-                      color: Theme.of(context).colorScheme.surface,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                    Consumer<IdiotGameProvider>(
+                      builder: (context, idiotGameProvider, child) {
+                        final games = idiotGameProvider.groupGames;
+                        final hasGames = games.isNotEmpty;
+                        final lastGame = hasGames ? games.first : null;
+                        // We need to find the loser of the last game.
+                        // The Game entity might not have participant details directly accessible in a simple way
+                        // if it's just a Game model. Let's check Game entity.
+                        // It seems Game entity doesn't have participants list in the domain entity based on previous views?
+                        // Wait, the repository returns List<Game>.
+                        // Let's check Game entity definition.
+                        // Assuming Game entity has a way to identify the loser or we need to fetch details.
+                        // For now, let's assume we can't easily get the loser name without fetching details
+                        // OR we update the Game entity to include 'loserName' or similar if the query joins it.
+                        // The remote data source fetches `*, idiot_game_participants(*)`.
+                        // So the GameModel likely has participants.
+                        // Let's assume for now we can get it. If not, we'll need to adjust.
+
+                        return Column(
                           children: [
-                            Text(
-                              'Current Idiot',
-                              style: Theme.of(context).textTheme.bodySmall
-                                  ?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurface
-                                        .withAlpha(178), // 0.7 * 255 = 178.5
-                                  ),
-                            ),
-                            const SizedBox(height: 8),
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                CircleAvatar(
-                                  backgroundImage: AssetImage(
-                                    _idiotGameInfo.currentIdiotAvatar,
-                                  ),
-                                  radius: 20,
-                                ),
-                                const SizedBox(width: 12),
                                 Text(
-                                  _idiotGameInfo.currentIdiotName,
-                                  style: Theme.of(context).textTheme.titleMedium
+                                  'Idiot Game',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineSmall
                                       ?.copyWith(
                                         color: Theme.of(
                                           context,
                                         ).colorScheme.onSurface,
                                       ),
                                 ),
-                                const Spacer(),
-                                Icon(
-                                  Icons.sentiment_dissatisfied,
-                                  color: Theme.of(context).colorScheme.error,
-                                  size: 30,
+                                TextButton(
+                                  onPressed: () {
+                                    context.push('/idiot-game');
+                                  },
+                                  child: Text(
+                                    'View Dashboard',
+                                    style: TextStyle(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
+                                      fontSize: 16,
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
                             const SizedBox(height: 16),
-                            SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  // TODO: Implement Log New Game
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Theme.of(
-                                    context,
-                                  ).colorScheme.primary,
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 12,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                                child: Text(
-                                  'Log New Game',
-                                  style: Theme.of(context).textTheme.labelLarge
-                                      ?.copyWith(
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.onPrimary,
+                            Card(
+                              color: Theme.of(context).colorScheme.surface,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Current Idiot',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface
+                                                .withAlpha(
+                                                  178,
+                                                ), // 0.7 * 255 = 178.5
+                                          ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    if (hasGames)
+                                      Row(
+                                        children: [
+                                          const CircleAvatar(
+                                            child: Icon(Icons.person),
+                                            radius: 20,
+                                          ),
+                                          const SizedBox(width: 12),
+                                          Text(
+                                            // TODO: Fetch and display actual loser name.
+                                            // For now, we just show the date or a placeholder.
+                                            'Game on ${lastGame!.gameDate.toString().split(' ')[0]}',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium
+                                                ?.copyWith(
+                                                  color: Theme.of(
+                                                    context,
+                                                  ).colorScheme.onSurface,
+                                                ),
+                                          ),
+                                          const Spacer(),
+                                          Icon(
+                                            Icons.sentiment_dissatisfied,
+                                            color: Theme.of(
+                                              context,
+                                            ).colorScheme.error,
+                                            size: 30,
+                                          ),
+                                        ],
+                                      )
+                                    else
+                                      const Text('No games played yet.'),
+                                    const SizedBox(height: 16),
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          context.push(
+                                            '/idiot-game/new',
+                                            extra: widget.groupId,
+                                          );
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Theme.of(
+                                            context,
+                                          ).colorScheme.primary,
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 12,
+                                          ),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'Log New Game',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelLarge
+                                              ?.copyWith(
+                                                color: Theme.of(
+                                                  context,
+                                                ).colorScheme.onPrimary,
+                                              ),
+                                        ),
                                       ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
                           ],
-                        ),
-                      ),
+                        );
+                      },
                     ),
                     const SizedBox(height: 24),
 

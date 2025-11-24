@@ -60,6 +60,7 @@ import '../../features/profile/domain/repositories/profile_repository.dart';
 import '../../features/profile/domain/usecases/get_profile.dart';
 import '../../features/profile/domain/usecases/update_profile.dart';
 import '../../features/profile/domain/usecases/upload_avatar.dart';
+import '../../features/profile/domain/usecases/update_last_seen.dart';
 import '../../features/idiot_game/data/datasources/idiot_game_remote_data_source.dart';
 import '../../features/idiot_game/data/datasources/idiot_game_remote_data_source_impl.dart';
 import '../../features/idiot_game/data/repositories/idiot_game_repository_impl.dart';
@@ -71,12 +72,18 @@ import '../../features/idiot_game/domain/usecases/get_potential_players.dart';
 import '../../features/idiot_game/domain/usecases/get_recent_games.dart';
 import 'package:app/features/idiot_game/domain/usecases/get_user_achievements.dart';
 import 'package:app/features/idiot_game/domain/usecases/get_user_stats.dart';
+import 'package:app/features/idiot_game/domain/usecases/get_group_games.dart';
 import '../../features/idiot_game/presentation/providers/idiot_game_provider.dart';
 import '../../features/profile/presentation/providers/profile_provider.dart';
+import '../../features/profile/presentation/providers/user_profile_provider.dart';
 import '../../features/events/presentation/providers/event_provider.dart';
 import '../../features/contacts/data/repositories/contact_repository_impl.dart';
 import '../../features/contacts/domain/repositories/contact_repository.dart';
 import '../../features/contacts/presentation/notifiers/contact_list_notifier.dart';
+import '../../features/home/data/repositories/friend_status_repository_impl.dart';
+import '../../features/home/domain/repositories/friend_status_repository.dart';
+import '../../features/home/domain/usecases/get_friend_statuses.dart';
+import '../../features/home/presentation/providers/friend_status_provider.dart';
 
 final GetIt sl = GetIt.instance;
 
@@ -131,6 +138,7 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<UpdateProfile>(() => UpdateProfile(sl()));
   sl.registerLazySingleton<GetProfile>(() => GetProfile(sl()));
   sl.registerLazySingleton<UploadAvatar>(() => UploadAvatar(sl()));
+  sl.registerLazySingleton<UpdateLastSeen>(() => UpdateLastSeen(sl()));
   sl.registerLazySingleton<GetChats>(() => GetChats(sl()));
   sl.registerLazySingleton<CreateChat>(() => CreateChat(sl()));
   sl.registerLazySingleton<GetMessages>(() => GetMessages(sl()));
@@ -151,6 +159,7 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton(() => GetGameDetails(sl()));
   sl.registerLazySingleton(() => GetUserStats(sl()));
   sl.registerLazySingleton(() => GetUserAchievements(sl()));
+  sl.registerLazySingleton(() => GetGroupGames(sl()));
   // Events
   sl.registerLazySingleton<EventsRemoteDataSource>(
     () => EventsRemoteDataSourceImpl(client: sl<SupabaseClient>()),
@@ -169,7 +178,7 @@ Future<void> setupServiceLocator() async {
 
   // Notifiers
   sl.registerFactory<UserProvider>(
-    () => UserProvider(sl(), sl(), sl(), sl(), sl()),
+    () => UserProvider(sl(), sl(), sl(), sl(), sl(), sl()),
   );
   sl.registerFactory<ChatProvider>(() => ChatProvider(sl(), sl()));
   sl.registerFactory<GroupProvider>(() => GroupProvider(sl()));
@@ -198,12 +207,14 @@ Future<void> setupServiceLocator() async {
       getGameDetails: sl(),
       getUserStats: sl(),
       getUserAchievements: sl(),
+      getGroupGames: sl(),
     ),
   );
 
   sl.registerFactory<ProfileProvider>(
     () => ProfileProvider(uploadAvatar: sl(), userProvider: sl()),
   );
+  sl.registerFactory(() => UserProfileProvider(getProfile: sl()));
 
   sl.registerFactory<EventProvider>(
     () => EventProvider(
@@ -226,6 +237,13 @@ Future<void> setupServiceLocator() async {
     () => ContactRepositoryImpl(supabaseClient: sl()),
   );
   sl.registerFactory<ContactListNotifier>(() => ContactListNotifier(sl()));
+
+  // Friend Statuses
+  sl.registerLazySingleton<FriendStatusRepository>(
+    () => FriendStatusRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton(() => GetFriendStatuses(sl()));
+  sl.registerFactory<FriendStatusProvider>(() => FriendStatusProvider(sl()));
 
   // External
   sl.registerLazySingleton<Uuid>(() => const Uuid());

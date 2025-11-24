@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class NewGameScreen extends StatefulWidget {
-  const NewGameScreen({super.key});
+  final String groupId;
+
+  const NewGameScreen({super.key, required this.groupId});
 
   @override
   State<NewGameScreen> createState() => _NewGameScreenState();
@@ -63,10 +65,11 @@ class _NewGameScreenState extends State<NewGameScreen> {
     // Create the game
     await provider.createNewGame(
       _selectedPlayerIds.toList(),
-      _loserId!,
       _descriptionController.text.isEmpty
           ? 'Game on ${DateTime.now().toString().split(' ')[0]}'
           : _descriptionController.text,
+      _loserId!,
+      widget.groupId,
     );
 
     if (provider.errorMessage == null && mounted) {

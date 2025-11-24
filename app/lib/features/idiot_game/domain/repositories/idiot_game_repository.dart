@@ -12,8 +12,10 @@ abstract class IdiotGameRepository {
     List<String> userIds,
     String description,
     String loserId,
+    String groupId,
   );
   Future<Either<Failure, List<Game>>> getRecentGames();
+  Future<Either<Failure, List<Game>>> getGroupGames(String groupId);
   Future<Either<Failure, List<Game>>> getGameHistory();
   Future<Either<Failure, GameWithDetails>> getGameDetails(String gameId);
   Future<Either<Failure, UserStats>> getUserStats(String userId);

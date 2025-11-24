@@ -6,6 +6,7 @@ import 'package:app/features/idiot_game/domain/entities/user_stats.dart';
 import 'package:app/features/idiot_game/domain/usecases/create_game.dart';
 import 'package:app/features/idiot_game/domain/usecases/get_game_details.dart';
 import 'package:app/features/idiot_game/domain/usecases/get_game_history.dart';
+import 'package:app/features/idiot_game/domain/usecases/get_group_games.dart';
 import 'package:app/features/idiot_game/domain/usecases/get_potential_players.dart';
 import 'package:app/features/idiot_game/domain/usecases/get_recent_games.dart';
 import 'package:app/features/idiot_game/domain/usecases/get_user_achievements.dart';
@@ -22,6 +23,8 @@ class IdiotGameProvider with ChangeNotifier {
   final GetUserStats getUserStats;
   final GetUserAchievements getUserAchievements;
 
+  final GetGroupGames getGroupGames;
+
   IdiotGameProvider({
     required this.getPotentialPlayers,
     required this.createGame,
@@ -30,6 +33,7 @@ class IdiotGameProvider with ChangeNotifier {
     required this.getGameDetails,
     required this.getUserStats,
     required this.getUserAchievements,
+    required this.getGroupGames,
   });
 
   List<UserProfile> _potentialPlayers = [];
@@ -74,6 +78,7 @@ class IdiotGameProvider with ChangeNotifier {
     List<String> userIds,
     String description,
     String loserId,
+    String groupId,
   ) async {
     _isLoading = true;
     _errorMessage = null;
@@ -83,6 +88,7 @@ class IdiotGameProvider with ChangeNotifier {
       userIds: userIds,
       description: description,
       loserId: loserId,
+      groupId: groupId,
     );
     final failureOrGame = await createGame(params);
 
@@ -93,6 +99,8 @@ class IdiotGameProvider with ChangeNotifier {
       (game) {
         // Refresh recent games after creating a new one
         fetchRecentGamesData();
+        // Refresh group games if we have a group context
+        fetchGroupGamesData(groupId);
         // We need the current user ID to fetch stats.
         // Assuming `loserId` is the current user's ID for simplicity here,
         // or this should be passed from a user session.
@@ -117,6 +125,30 @@ class IdiotGameProvider with ChangeNotifier {
       },
       (games) {
         _recentGames = games;
+      },
+    );
+
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  List<Game> _groupGames = [];
+  List<Game> get groupGames => _groupGames;
+
+  Future<void> fetchGroupGamesData(String groupId) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    final params = GetGroupGamesParams(groupId: groupId);
+    final failureOrGames = await getGroupGames(params);
+
+    failureOrGames.fold(
+      (failure) {
+        _errorMessage = 'Failed to fetch group games';
+      },
+      (games) {
+        _groupGames = games;
       },
     );
 

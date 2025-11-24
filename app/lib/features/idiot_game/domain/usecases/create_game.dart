@@ -14,8 +14,9 @@ class CreateGame implements UseCase<Game, CreateGameParams> {
   Future<Either<Failure, Game>> call(CreateGameParams params) async {
     return await repository.createGame(
       params.userIds,
-      params.loserId,
       params.description,
+      params.loserId,
+      params.groupId,
     );
   }
 }
@@ -24,13 +25,15 @@ class CreateGameParams extends Equatable {
   final List<String> userIds;
   final String loserId;
   final String description;
+  final String groupId;
 
   const CreateGameParams({
     required this.userIds,
     required this.loserId,
     required this.description,
+    required this.groupId,
   });
 
   @override
-  List<Object> get props => [userIds, loserId, description];
+  List<Object> get props => [userIds, loserId, description, groupId];
 }

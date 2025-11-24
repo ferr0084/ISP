@@ -9,12 +9,15 @@ import '../../domain/usecases/login_with_email_and_password.dart';
 import '../../domain/usecases/logout.dart';
 import '../../domain/usecases/sign_up.dart';
 
-class UserProvider extends ChangeNotifier {
+import 'package:app/features/profile/domain/usecases/update_last_seen.dart';
+
+class UserProvider extends ChangeNotifier with WidgetsBindingObserver {
   final SignUp _signUp;
   final LoginWithEmailAndPassword _signIn;
   final Logout _signOut;
   final UpdateProfile _updateProfile;
   final GetProfile _getProfile;
+  final UpdateLastSeen _updateLastSeen;
 
   User? _user;
   Profile? _profile;
@@ -25,10 +28,13 @@ class UserProvider extends ChangeNotifier {
     this._signOut,
     this._updateProfile,
     this._getProfile,
+    this._updateLastSeen,
   ) {
+    WidgetsBinding.instance.addObserver(this);
     Supabase.instance.client.auth.onAuthStateChange.listen((data) async {
       _user = data.session?.user;
       if (_user != null) {
+        _updateLastSeen(_user!.id);
         final result = await _getProfile(_user!.id);
         result.fold(
           (failure) => _profile = null,
@@ -39,6 +45,19 @@ class UserProvider extends ChangeNotifier {
       }
       notifyListeners();
     });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && _user != null) {
+      _updateLastSeen(_user!.id);
+    }
   }
 
   User? get user => _user;

@@ -30,6 +30,7 @@ class IdiotGameRemoteDataSourceImpl implements IdiotGameRemoteDataSource {
     List<String> userIds,
     String description,
     String loserId,
+    String groupId,
   ) async {
     try {
       // 1. Create the game
@@ -38,6 +39,7 @@ class IdiotGameRemoteDataSourceImpl implements IdiotGameRemoteDataSource {
           .insert({
             'description': description,
             'created_by': supabaseClient.auth.currentUser!.id,
+            'group_id': groupId,
           })
           .select()
           .single();
@@ -76,6 +78,24 @@ class IdiotGameRemoteDataSourceImpl implements IdiotGameRemoteDataSource {
 
       // Note: This assumes GameModel.fromJson can handle the nested participants
       // If not, we might need to adjust GameModel or manual parsing
+      return (response as List)
+          .map((game) => GameModel.fromJson(game))
+          .toList();
+    } catch (e) {
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<List<GameModel>> getGroupGames(String groupId) async {
+    try {
+      final response = await supabaseClient
+          .from('idiot_games')
+          .select('*, idiot_game_participants(*)')
+          .eq('group_id', groupId)
+          .order('game_date', ascending: false)
+          .limit(10);
+
       return (response as List)
           .map((game) => GameModel.fromJson(game))
           .toList();

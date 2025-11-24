@@ -21,6 +21,7 @@ import '../../features/groups/presentation/screens/group_members_screen.dart';
 import '../../features/groups/presentation/screens/invite_accept_screen.dart';
 import '../../features/groups/presentation/screens/my_groups_overview_screen.dart';
 import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/home/presentation/pages/friend_status_screen.dart';
 import '../../features/idiot_game/presentation/providers/idiot_game_provider.dart';
 import '../../features/idiot_game/presentation/screens/idiot_game_dashboard_screen.dart';
 import '../../features/idiot_game/presentation/screens/achievements_stats_screen.dart';
@@ -32,6 +33,8 @@ import '../../features/notifications/presentation/screens/notifications_screen.d
 import '../../features/profile/presentation/screens/profile_editing_screen.dart';
 import '../../features/profile/presentation/screens/profile_stats_screen.dart';
 import '../../features/profile/presentation/screens/profile_view_screen.dart';
+import '../../features/profile/presentation/screens/user_profile_screen.dart';
+import '../../features/profile/presentation/providers/user_profile_provider.dart';
 
 class AppRouter {
   final UserProvider _userProvider;
@@ -51,6 +54,10 @@ class AppRouter {
         builder: (context, state) => const LoginCallbackScreen(),
       ),
       GoRoute(path: '/home', builder: (context, state) => const HomePage()),
+      GoRoute(
+        path: '/friend-statuses',
+        builder: (context, state) => const FriendStatusScreen(),
+      ),
       GoRoute(
         path: '/chats',
         builder: (context, state) => const ChatListScreen(),
@@ -155,7 +162,10 @@ class AppRouter {
             routes: [
               GoRoute(
                 path: 'new',
-                builder: (context, state) => const NewGameScreen(),
+                builder: (context, state) {
+                  final groupId = state.extra as String;
+                  return NewGameScreen(groupId: groupId);
+                },
               ),
               GoRoute(
                 path: 'history',
@@ -202,6 +212,16 @@ class AppRouter {
             builder: (context, state) => const ProfileStatsScreen(),
           ),
         ],
+      ),
+      GoRoute(
+        path: '/users/:userId',
+        builder: (context, state) {
+          final userId = state.pathParameters['userId']!;
+          return ChangeNotifierProvider(
+            create: (_) => sl<UserProfileProvider>(),
+            child: UserProfileScreen(userId: userId),
+          );
+        },
       ),
       ShellRoute(
         builder: (context, state, child) {

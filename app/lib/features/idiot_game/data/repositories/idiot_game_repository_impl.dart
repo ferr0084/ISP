@@ -29,12 +29,14 @@ class IdiotGameRepositoryImpl implements IdiotGameRepository {
     List<String> userIds,
     String description,
     String loserId,
+    String groupId,
   ) async {
     try {
       final game = await remoteDataSource.createGame(
         userIds,
         description,
         loserId,
+        groupId,
       );
       return Right(game);
     } on ServerException {
@@ -46,6 +48,16 @@ class IdiotGameRepositoryImpl implements IdiotGameRepository {
   Future<Either<Failure, List<Game>>> getRecentGames() async {
     try {
       final remoteGames = await remoteDataSource.getRecentGames();
+      return Right(remoteGames);
+    } on ServerException {
+      return Left(ServerFailure('Server Error'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Game>>> getGroupGames(String groupId) async {
+    try {
+      final remoteGames = await remoteDataSource.getGroupGames(groupId);
       return Right(remoteGames);
     } on ServerException {
       return Left(ServerFailure('Server Error'));

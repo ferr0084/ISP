@@ -1,7 +1,7 @@
 import 'package:app/core/widgets/main_drawer.dart';
 import 'package:app/features/events/presentation/providers/event_provider.dart';
 import 'package:app/features/home/domain/entities/expense.dart';
-import 'package:app/features/home/domain/entities/friend_status.dart';
+
 import 'package:app/features/home/presentation/providers/recent_chats_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -12,6 +12,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../groups/presentation/providers/group_provider.dart';
 import '../../../notifications/presentation/providers/notification_provider.dart';
 import '../widgets/my_groups_list.dart';
+import '../widgets/friend_status_list.dart';
+import '../providers/friend_status_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -41,27 +43,17 @@ class _HomePageState extends State<HomePage> {
       // If we want to be sure, we can't easily trigger a reload without exposing a public method.
       // But since it's a singleton/provider, it should be alive.
       // Let's just rely on the provider's state for now.
+      Provider.of<FriendStatusProvider>(
+        context,
+        listen: false,
+      ).fetchFriendStatuses();
     });
   }
 
   @override
   Widget build(BuildContext context) {
     // Dummy Data (will be replaced by actual data from domain layer)
-    final List<FriendStatus> friendStatuses = [
-      FriendStatus(
-        name: 'Maria',
-        avatarUrl: 'assets/images/avatar_maria.png',
-        isOnline: true,
-      ),
-      FriendStatus(name: 'David', avatarUrl: 'assets/images/avatar_david.png'),
-      FriendStatus(
-        name: 'Jessica',
-        avatarUrl: 'assets/images/avatar_jessica.png',
-        isOnline: true,
-      ),
-      FriendStatus(name: 'Chris', avatarUrl: 'assets/images/avatar_chris.png'),
-      FriendStatus(name: 'S', avatarUrl: 'assets/images/avatar_s.png'),
-    ];
+    // Dummy Data removed - using FriendStatusList widget which uses provider
 
     // Real Events Logic
     final eventProvider = context.watch<EventProvider>();
@@ -160,59 +152,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildSectionHeader(context, 'Friend Statuses', () {
-              context.go('/contacts');
-            }),
-            const SizedBox(height: 16.0),
-            SizedBox(
-              height: 100,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: friendStatuses.length,
-                itemBuilder: (context, index) {
-                  final status = friendStatuses[index];
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 16.0),
-                    child: Column(
-                      children: [
-                        Stack(
-                          children: [
-                            CircleAvatar(
-                              radius: 30,
-                              backgroundImage: AssetImage(status.avatarUrl),
-                            ),
-                            if (status.isOnline)
-                              Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: Container(
-                                  width: 12,
-                                  height: 12,
-                                  decoration: BoxDecoration(
-                                    color: Colors.green,
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: Theme.of(
-                                        context,
-                                      ).scaffoldBackgroundColor,
-                                      width: 2,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
-                        const SizedBox(height: 8.0),
-                        Text(
-                          status.name,
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
+            const FriendStatusList(),
             const SizedBox(height: 24.0),
             const MyGroupsList(),
             const SizedBox(height: 24.0),
@@ -306,6 +246,13 @@ class _HomePageState extends State<HomePage> {
               separatorBuilder: (context, index) => const Divider(height: 24.0),
               itemBuilder: (context, index) {
                 final event = displayEvents[index];
+                final group = event.groupId != null
+                    ? Provider.of<GroupProvider>(
+                        context,
+                        listen: false,
+                      ).getGroup(event.groupId!)
+                    : null;
+
                 return ListTile(
                   leading: Container(
                     width: 60,
@@ -342,9 +289,39 @@ class _HomePageState extends State<HomePage> {
                     event.name,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
-                  subtitle: Text(
-                    '${DateFormat.jm().format(event.date)} - ${event.location}',
-                    style: Theme.of(context).textTheme.bodySmall,
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${DateFormat.jm().format(event.date)} - ${event.location}',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      if (group != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4.0),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6.0,
+                              vertical: 2.0,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.secondaryContainer,
+                              borderRadius: BorderRadius.circular(4.0),
+                            ),
+                            child: Text(
+                              group.name,
+                              style: Theme.of(context).textTheme.labelSmall
+                                  ?.copyWith(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSecondaryContainer,
+                                  ),
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                   onTap: () {
                     context.go('/events/${event.id}');

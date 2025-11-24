@@ -10,4 +10,5 @@ abstract class ProfileRepository {
   Future<Either<Failure, Profile>> getProfile(String id);
   Future<Either<Failure, void>> updateProfile(Profile profile);
   Future<Either<Failure, String>> uploadAvatar(File file);
+  Future<Either<Failure, void>> updateLastSeen(String userId);
 }

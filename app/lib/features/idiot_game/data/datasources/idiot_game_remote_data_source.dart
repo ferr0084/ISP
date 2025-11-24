@@ -10,8 +10,10 @@ abstract class IdiotGameRemoteDataSource {
     List<String> userIds,
     String description,
     String loserId,
+    String groupId,
   );
   Future<List<GameModel>> getRecentGames();
+  Future<List<GameModel>> getGroupGames(String groupId);
   Future<List<GameModel>> getGameHistory();
   Future<GameWithDetailsModel> getGameDetails(String gameId);
   Future<UserStatsModel> getUserStats(String userId);
