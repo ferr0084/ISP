@@ -4,9 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class NewGameScreen extends StatefulWidget {
-  final String groupId;
+  final String? groupId;
 
-  const NewGameScreen({super.key, required this.groupId});
+  const NewGameScreen({super.key, this.groupId});
 
   @override
   State<NewGameScreen> createState() => _NewGameScreenState();
@@ -69,7 +69,7 @@ class _NewGameScreenState extends State<NewGameScreen> {
           ? 'Game on ${DateTime.now().toString().split(' ')[0]}'
           : _descriptionController.text,
       _loserId!,
-      widget.groupId,
+      widget.groupId, // Pass null if no group context
     );
 
     if (provider.errorMessage == null && mounted) {

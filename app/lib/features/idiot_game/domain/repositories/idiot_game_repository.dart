@@ -12,7 +12,7 @@ abstract class IdiotGameRepository {
     List<String> userIds,
     String description,
     String loserId,
-    String groupId,
+    String? groupId,
   );
   Future<Either<Failure, List<Game>>> getRecentGames();
   Future<Either<Failure, List<Game>>> getGroupGames(String groupId);

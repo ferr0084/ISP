@@ -78,7 +78,7 @@ class IdiotGameProvider with ChangeNotifier {
     List<String> userIds,
     String description,
     String loserId,
-    String groupId,
+    String? groupId,
   ) async {
     _isLoading = true;
     _errorMessage = null;
@@ -100,7 +100,9 @@ class IdiotGameProvider with ChangeNotifier {
         // Refresh recent games after creating a new one
         fetchRecentGamesData();
         // Refresh group games if we have a group context
-        fetchGroupGamesData(groupId);
+        if (groupId != null) {
+          fetchGroupGamesData(groupId);
+        }
         // We need the current user ID to fetch stats.
         // Assuming `loserId` is the current user's ID for simplicity here,
         // or this should be passed from a user session.

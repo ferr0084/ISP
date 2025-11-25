@@ -25,15 +25,15 @@ class CreateGameParams extends Equatable {
   final List<String> userIds;
   final String loserId;
   final String description;
-  final String groupId;
+  final String? groupId;
 
   const CreateGameParams({
     required this.userIds,
     required this.loserId,
     required this.description,
-    required this.groupId,
+    this.groupId,
   });
 
   @override
-  List<Object> get props => [userIds, loserId, description, groupId];
+  List<Object?> get props => [userIds, loserId, description, groupId];
 }

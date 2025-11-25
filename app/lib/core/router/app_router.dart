@@ -163,7 +163,7 @@ class AppRouter {
               GoRoute(
                 path: 'new',
                 builder: (context, state) {
-                  final groupId = state.extra as String;
+                  final groupId = state.extra as String?;
                   return NewGameScreen(groupId: groupId);
                 },
               ),

@@ -30,7 +30,7 @@ class IdiotGameRemoteDataSourceImpl implements IdiotGameRemoteDataSource {
     List<String> userIds,
     String description,
     String loserId,
-    String groupId,
+    String? groupId,
   ) async {
     try {
       // 1. Create the game

@@ -29,7 +29,7 @@ class IdiotGameRepositoryImpl implements IdiotGameRepository {
     List<String> userIds,
     String description,
     String loserId,
-    String groupId,
+    String? groupId,
   ) async {
     try {
       final game = await remoteDataSource.createGame(
