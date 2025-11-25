@@ -7,6 +7,9 @@ import '../../../../core/di/service_locator.dart';
 import '../../domain/entities/event_invitation.dart';
 import '../providers/event_provider.dart';
 import 'edit_event_screen.dart';
+import 'event_expenses_screen.dart';
+import '../providers/event_expense_provider.dart';
+import 'add_expense_screen.dart';
 
 class EventDetailsScreen extends StatefulWidget {
   final String eventId;
@@ -154,6 +157,18 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       appBar: AppBar(
         title: const Text('Event Details'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.attach_money),
+            tooltip: 'Expenses',
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) =>
+                      EventExpensesScreen(eventId: widget.eventId),
+                ),
+              );
+            },
+          ),
           if (event?.creatorId == currentUserId) ...[
             IconButton(
               icon: const Icon(Icons.edit),
@@ -356,6 +371,278 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                       (inv) => inv.status == InvitationStatus.declined,
                     ),
                     eventProvider,
+                  ),
+
+                  // Expenses Section
+                  const SizedBox(height: 32),
+                  Text(
+                    'Expenses',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(height: 16),
+                  ChangeNotifierProvider(
+                    create: (_) =>
+                        sl<EventExpenseProvider>()
+                          ..loadExpenses(widget.eventId),
+                    child: Consumer<EventExpenseProvider>(
+                      builder: (context, expenseProvider, child) {
+                        if (expenseProvider.isLoading) {
+                          return const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        }
+
+                        final expenses = expenseProvider.expenses;
+                        final hasExpenses = expenses.isNotEmpty;
+
+                        return Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (!hasExpenses)
+                                  const Text('No expenses yet')
+                                else ...[
+                                  ...expenses.take(3).map((expense) {
+                                    // Check if current user owes money on this expense
+                                    final userParticipant = expense.participants
+                                        ?.where(
+                                          (p) => p.userId == currentUserId,
+                                        )
+                                        .firstOrNull;
+                                    final userOwes = userParticipant != null;
+                                    final userIsPayer =
+                                        expense.payerId == currentUserId;
+
+                                    return Card(
+                                      margin: const EdgeInsets.only(
+                                        bottom: 8.0,
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(12.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Expanded(
+                                                  child: Text(
+                                                    expense.description,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium
+                                                        ?.copyWith(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
+                                                  ),
+                                                ),
+                                                Text(
+                                                  '\$${expense.amount.toStringAsFixed(2)}',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium
+                                                      ?.copyWith(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                ),
+                                              ],
+                                            ),
+                                            if (userOwes && !userIsPayer) ...[
+                                              const SizedBox(height: 8),
+                                              Text(
+                                                'You owe: \$${userParticipant.amountOwed.toStringAsFixed(2)}',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodySmall
+                                                    ?.copyWith(
+                                                      color: Colors.orange,
+                                                    ),
+                                              ),
+                                              const SizedBox(height: 8),
+                                              Row(
+                                                children: [
+                                                  Expanded(
+                                                    child: OutlinedButton.icon(
+                                                      onPressed: () async {
+                                                        // Create settlement for this user's share
+                                                        try {
+                                                          await expenseProvider.settleUp(
+                                                            eventId:
+                                                                widget.eventId,
+                                                            payerId:
+                                                                currentUserId,
+                                                            payeeId:
+                                                                expense.payerId,
+                                                            amount:
+                                                                userParticipant
+                                                                    .amountOwed,
+                                                          );
+                                                          if (context.mounted) {
+                                                            ScaffoldMessenger.of(
+                                                              context,
+                                                            ).showSnackBar(
+                                                              const SnackBar(
+                                                                content: Text(
+                                                                  'Payment recorded!',
+                                                                ),
+                                                              ),
+                                                            );
+                                                          }
+                                                        } catch (e) {
+                                                          if (context.mounted) {
+                                                            ScaffoldMessenger.of(
+                                                              context,
+                                                            ).showSnackBar(
+                                                              SnackBar(
+                                                                content: Text(
+                                                                  'Error: $e',
+                                                                ),
+                                                              ),
+                                                            );
+                                                          }
+                                                        }
+                                                      },
+                                                      icon: const Icon(
+                                                        Icons.payment,
+                                                        size: 16,
+                                                      ),
+                                                      label: const Text(
+                                                        'Pay My Share',
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                        ),
+                                                      ),
+                                                      style: OutlinedButton.styleFrom(
+                                                        padding:
+                                                            const EdgeInsets.symmetric(
+                                                              horizontal: 8,
+                                                              vertical: 4,
+                                                            ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 8),
+                                                  OutlinedButton.icon(
+                                                    onPressed: () {
+                                                      showDialog(
+                                                        context: context,
+                                                        builder: (context) => AlertDialog(
+                                                          title: const Text(
+                                                            'Report Issue',
+                                                          ),
+                                                          content: const Text(
+                                                            'This feature is coming soon. You\'ll be able to report issues with expenses.',
+                                                          ),
+                                                          actions: [
+                                                            TextButton(
+                                                              onPressed: () =>
+                                                                  Navigator.pop(
+                                                                    context,
+                                                                  ),
+                                                              child: const Text(
+                                                                'OK',
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      );
+                                                    },
+                                                    icon: const Icon(
+                                                      Icons.flag,
+                                                      size: 16,
+                                                    ),
+                                                    label: const Text(
+                                                      'Dispute',
+                                                      style: TextStyle(
+                                                        fontSize: 12,
+                                                      ),
+                                                    ),
+                                                    style: OutlinedButton.styleFrom(
+                                                      foregroundColor:
+                                                          Colors.red,
+                                                      padding:
+                                                          const EdgeInsets.symmetric(
+                                                            horizontal: 8,
+                                                            vertical: 4,
+                                                          ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                  if (expenses.length > 3) ...[
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      '+ ${expenses.length - 3} more',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(color: Colors.grey),
+                                    ),
+                                  ],
+                                ],
+                                const SizedBox(height: 16),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: OutlinedButton(
+                                        onPressed: () {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ChangeNotifierProvider.value(
+                                                    value: expenseProvider,
+                                                    child: AddExpenseScreen(
+                                                      eventId: widget.eventId,
+                                                    ),
+                                                  ),
+                                            ),
+                                          );
+                                        },
+                                        child: const Text('Add Expense'),
+                                      ),
+                                    ),
+                                    if (hasExpenses) ...[
+                                      const SizedBox(width: 8),
+                                      Expanded(
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EventExpensesScreen(
+                                                      eventId: widget.eventId,
+                                                    ),
+                                              ),
+                                            );
+                                          },
+                                          child: const Text('View All'),
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                   ),
 
                   // Host Message (if user is creator)

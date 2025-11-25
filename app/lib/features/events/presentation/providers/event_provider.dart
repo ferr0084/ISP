@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/di/service_locator.dart';
+import '../../../contacts/domain/entities/contact.dart';
 import '../../../contacts/domain/repositories/contact_repository.dart';
 import '../../../groups/domain/repositories/group_repository.dart';
 import '../../../notifications/domain/entities/notification.dart' as notif;
@@ -71,18 +72,25 @@ class EventProvider extends ChangeNotifier {
   String? _error;
   String? get error => _error;
 
-  final Map<String, String> _userNames = {};
+  final Map<String, Contact> _contacts = {};
   final Map<String, String> _groupNames = {};
 
-  String? getUserName(String userId) => _userNames[userId];
+  String? getUserName(String userId) {
+    final contact = _contacts[userId];
+    if (contact == null) return null;
+    return contact.nickname?.isNotEmpty == true
+        ? contact.nickname
+        : contact.name;
+  }
+
   String? getGroupName(String groupId) => _groupNames[groupId];
 
   Future<void> fetchUserName(String userId) async {
-    if (_userNames.containsKey(userId)) return;
+    if (_contacts.containsKey(userId)) return;
 
     try {
       final contact = await contactRepository.getContact(userId);
-      _userNames[userId] = contact.name;
+      _contacts[userId] = contact;
       notifyListeners();
     } catch (e) {
       // Ignore error

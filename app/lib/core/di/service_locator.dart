@@ -40,6 +40,14 @@ import '../../features/events/domain/usecases/get_my_invitations.dart';
 import '../../features/events/domain/usecases/respond_to_invitation.dart';
 import '../../features/events/domain/usecases/send_event_invitations.dart';
 import '../../features/events/domain/usecases/update_event.dart';
+import '../../features/events/data/datasources/event_expense_remote_data_source.dart';
+
+import '../../features/events/data/repositories/event_expense_repository_impl.dart';
+import '../../features/events/domain/repositories/event_expense_repository.dart';
+import '../../features/events/domain/usecases/create_expense.dart';
+import '../../features/events/domain/usecases/create_settlement.dart';
+import '../../features/events/domain/usecases/get_event_expenses.dart';
+import '../../features/events/presentation/providers/event_expense_provider.dart';
 import '../../features/events/presentation/providers/event_provider.dart';
 import '../../features/groups/data/datasources/group_members_remote_data_source.dart';
 import '../../features/groups/data/datasources/group_members_remote_data_source_impl.dart';
@@ -178,6 +186,17 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton(() => RespondToInvitation(sl<EventRepository>()));
   sl.registerLazySingleton(() => GetMyInvitations(sl<EventRepository>()));
 
+  // Event Expenses
+  sl.registerLazySingleton<EventExpenseRemoteDataSource>(
+    () => EventExpenseRemoteDataSourceImpl(sl()),
+  );
+  sl.registerLazySingleton<EventExpenseRepository>(
+    () => EventExpenseRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton(() => CreateExpense(sl()));
+  sl.registerLazySingleton(() => GetEventExpenses(sl()));
+  sl.registerLazySingleton(() => CreateSettlement(sl()));
+
   // Notifiers
   sl.registerFactory<UserProvider>(
     () => UserProvider(sl(), sl(), sl(), sl(), sl(), sl()),
@@ -232,6 +251,15 @@ Future<void> setupServiceLocator() async {
       contactRepository: sl(),
       groupRepository: sl(),
       getMyInvitations: sl(),
+    ),
+  );
+
+  sl.registerFactory<EventExpenseProvider>(
+    () => EventExpenseProvider(
+      getEventExpenses: sl(),
+      createExpense: sl(),
+      createSettlement: sl(),
+      contactRepository: sl(),
     ),
   );
 
