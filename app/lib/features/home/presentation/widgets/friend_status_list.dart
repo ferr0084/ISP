@@ -83,19 +83,18 @@ class FriendStatusList extends StatelessWidget {
                             children: [
                               CircleAvatar(
                                 radius: 30,
-                                backgroundImage:
+                                foregroundImage:
                                     friend.avatarUrl != null &&
                                         friend.avatarUrl!.isNotEmpty
                                     ? NetworkImage(friend.avatarUrl!)
-                                    : const AssetImage(
-                                            'assets/images/avatar_placeholder.png',
-                                          )
-                                          as ImageProvider,
-                                child:
-                                    friend.avatarUrl == null ||
-                                        friend.avatarUrl!.isEmpty
-                                    ? const Icon(Icons.person)
                                     : null,
+                                child: Text(
+                                  friend.name.isNotEmpty
+                                      ? friend.name
+                                            .substring(0, 1)
+                                            .toUpperCase()
+                                      : '?',
+                                ),
                               ),
                               if (friend.isOnline)
                                 Positioned(
