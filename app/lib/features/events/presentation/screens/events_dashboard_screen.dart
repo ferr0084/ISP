@@ -229,7 +229,7 @@ class _EventCardState extends State<_EventCard> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final provider = context.read<EventProvider>();
-      provider.fetchCreatorName(widget.event.creatorId);
+      provider.fetchUserName(widget.event.creatorId);
       if (widget.event.groupId != null) {
         provider.fetchGroupName(widget.event.groupId!);
       }
@@ -239,7 +239,7 @@ class _EventCardState extends State<_EventCard> {
   @override
   Widget build(BuildContext context) {
     final eventProvider = context.watch<EventProvider>();
-    final creatorName = eventProvider.getCreatorName(widget.event.creatorId);
+    final creatorName = eventProvider.getUserName(widget.event.creatorId);
     final groupName = widget.event.groupId != null
         ? eventProvider.getGroupName(widget.event.groupId!)
         : null;

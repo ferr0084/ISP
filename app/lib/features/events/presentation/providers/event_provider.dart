@@ -1,19 +1,24 @@
-import 'package:flutter/material.dart';
-import '../../domain/entities/event.dart';
-import '../../domain/entities/event_invitation.dart';
-import '../../domain/usecases/get_events.dart';
-import '../../domain/usecases/get_event.dart';
-import '../../domain/usecases/create_event.dart';
-import '../../domain/usecases/update_event.dart';
-import '../../domain/usecases/delete_event.dart';
-import '../../domain/usecases/get_event_invitations.dart';
-import '../../domain/usecases/send_event_invitations.dart';
-import '../../domain/usecases/respond_to_invitation.dart';
-import '../../../notifications/domain/usecases/create_notification.dart';
-import '../../../notifications/domain/entities/notification.dart' as notif;
+import 'dart:async';
 
+import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../../../../core/di/service_locator.dart';
 import '../../../contacts/domain/repositories/contact_repository.dart';
 import '../../../groups/domain/repositories/group_repository.dart';
+import '../../../notifications/domain/entities/notification.dart' as notif;
+import '../../../notifications/domain/usecases/create_notification.dart';
+import '../../domain/entities/event.dart';
+import '../../domain/entities/event_invitation.dart';
+import '../../domain/usecases/create_event.dart';
+import '../../domain/usecases/delete_event.dart';
+import '../../domain/usecases/get_event.dart';
+import '../../domain/usecases/get_event_invitations.dart';
+import '../../domain/usecases/get_events.dart';
+import '../../domain/usecases/get_my_invitations.dart';
+import '../../domain/usecases/respond_to_invitation.dart';
+import '../../domain/usecases/send_event_invitations.dart';
+import '../../domain/usecases/update_event.dart';
 
 class EventProvider extends ChangeNotifier {
   final GetEvents getEvents;
@@ -27,6 +32,12 @@ class EventProvider extends ChangeNotifier {
   final CreateNotification createNotification;
   final ContactRepository contactRepository;
   final GroupRepository groupRepository;
+  final GetMyInvitations getMyInvitations;
+
+  StreamSubscription? _eventsSubscription;
+  StreamSubscription? _invitationsSubscription;
+  List<Event> _allEvents = [];
+  List<EventInvitation> _myInvitations = [];
 
   EventProvider({
     required this.getEvents,
@@ -40,6 +51,7 @@ class EventProvider extends ChangeNotifier {
     required this.createNotification,
     required this.contactRepository,
     required this.groupRepository,
+    required this.getMyInvitations,
   }) {
     _loadEvents();
   }
@@ -59,18 +71,18 @@ class EventProvider extends ChangeNotifier {
   String? _error;
   String? get error => _error;
 
-  final Map<String, String> _creatorNames = {};
+  final Map<String, String> _userNames = {};
   final Map<String, String> _groupNames = {};
 
-  String? getCreatorName(String creatorId) => _creatorNames[creatorId];
+  String? getUserName(String userId) => _userNames[userId];
   String? getGroupName(String groupId) => _groupNames[groupId];
 
-  Future<void> fetchCreatorName(String creatorId) async {
-    if (_creatorNames.containsKey(creatorId)) return;
+  Future<void> fetchUserName(String userId) async {
+    if (_userNames.containsKey(userId)) return;
 
     try {
-      final contact = await contactRepository.getContact(creatorId);
-      _creatorNames[creatorId] = contact.name;
+      final contact = await contactRepository.getContact(userId);
+      _userNames[userId] = contact.name;
       notifyListeners();
     } catch (e) {
       // Ignore error
@@ -94,12 +106,15 @@ class EventProvider extends ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    getEvents().listen(
+    // Cancel existing subscriptions
+    _eventsSubscription?.cancel();
+    _invitationsSubscription?.cancel();
+
+    // Listen to events
+    _eventsSubscription = getEvents().listen(
       (events) {
-        _events = events;
-        _isLoading = false;
-        _error = null;
-        notifyListeners();
+        _allEvents = events;
+        _mergeEventsAndInvitations();
       },
       onError: (error) {
         _error = error.toString();
@@ -107,6 +122,55 @@ class EventProvider extends ChangeNotifier {
         notifyListeners();
       },
     );
+
+    // Listen to my invitations
+    final currentUserId = sl<SupabaseClient>().auth.currentUser?.id;
+    if (currentUserId != null) {
+      _invitationsSubscription = getMyInvitations(currentUserId).listen(
+        (invitations) {
+          _myInvitations = invitations;
+          _mergeEventsAndInvitations();
+        },
+        onError: (error) {
+          // Log error but don't block events
+          debugPrint('Error fetching invitations: $error');
+        },
+      );
+    }
+  }
+
+  void _mergeEventsAndInvitations() {
+    final currentUserId = sl<SupabaseClient>().auth.currentUser?.id;
+    if (currentUserId == null) return;
+
+    _events = _allEvents.map((event) {
+      // Find my invitation for this event
+      final myInvitation = _myInvitations
+          .where((inv) => inv.eventId == event.id)
+          .firstOrNull;
+
+      // If I created the event, I don't necessarily have an invitation record in the DB
+      // (depending on implementation), but the UI handles "Host" status separately.
+      // However, if we want to attach the invitation to the event object:
+      if (myInvitation != null) {
+        // If the event already has invitations (from getEvents, though we know it doesn't),
+        // we should merge or replace. Since getEvents doesn't return invitations,
+        // we can just add this one to a list.
+        return event.copyWith(invitations: [myInvitation]);
+      }
+      return event;
+    }).toList();
+
+    _isLoading = false;
+    _error = null;
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _eventsSubscription?.cancel();
+    _invitationsSubscription?.cancel();
+    super.dispose();
   }
 
   Future<void> loadEventDetails(String eventId) async {
@@ -120,6 +184,19 @@ class EventProvider extends ChangeNotifier {
       _currentEvent = event.copyWith(invitations: invitations);
       _currentEventInvitations = invitations;
       _error = null;
+
+      // Fetch creator name
+      fetchUserName(event.creatorId);
+
+      // Fetch group name if applicable
+      if (event.groupId != null) {
+        fetchGroupName(event.groupId!);
+      }
+
+      // Fetch attendee names
+      for (final invitation in invitations) {
+        fetchUserName(invitation.inviteeId);
+      }
     } catch (e) {
       _error = e.toString();
     } finally {
@@ -213,6 +290,11 @@ class EventProvider extends ChangeNotifier {
 
     try {
       await deleteEvent(eventId);
+
+      // Manually remove from local state to ensure immediate UI update
+      _allEvents.removeWhere((e) => e.id == eventId);
+      _mergeEventsAndInvitations();
+
       _error = null;
       _isLoading = false;
       notifyListeners();

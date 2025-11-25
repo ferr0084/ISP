@@ -16,4 +16,6 @@ abstract class EventRepository {
     InvitationStatus status, {
     DateTime? suggestedDate,
   });
+
+  Stream<List<EventInvitation>> getMyInvitations(String userId);
 }

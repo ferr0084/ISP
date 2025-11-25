@@ -105,4 +105,15 @@ class EventsRemoteDataSourceImpl implements EventsRemoteDataSource {
         .update(updateData)
         .eq('id', invitationId);
   }
+
+  @override
+  Stream<List<EventInvitation>> getMyInvitations(String userId) {
+    return _client
+        .from('event_invitations')
+        .stream(primaryKey: ['id'])
+        .eq('invitee_id', userId)
+        .map(
+          (list) => list.map((json) => EventInvitation.fromJson(json)).toList(),
+        );
+  }
 }

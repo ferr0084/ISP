@@ -16,4 +16,6 @@ abstract class EventsRemoteDataSource {
     InvitationStatus status, {
     DateTime? suggestedDate,
   });
+
+  Stream<List<EventInvitation>> getMyInvitations(String userId);
 }

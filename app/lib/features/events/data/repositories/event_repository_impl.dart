@@ -43,4 +43,8 @@ class EventRepositoryImpl implements EventRepository {
     status,
     suggestedDate: suggestedDate,
   );
+
+  @override
+  Stream<List<EventInvitation>> getMyInvitations(String userId) =>
+      remote.getMyInvitations(userId);
 }

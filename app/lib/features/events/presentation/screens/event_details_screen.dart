@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../../../../core/di/service_locator.dart';
 import '../../domain/entities/event_invitation.dart';
 import '../providers/event_provider.dart';
-import '../../../../core/di/service_locator.dart';
-import '../../../contacts/domain/repositories/contact_repository.dart';
+import 'edit_event_screen.dart';
 
 class EventDetailsScreen extends StatefulWidget {
   final String eventId;
@@ -16,8 +18,6 @@ class EventDetailsScreen extends StatefulWidget {
 }
 
 class _EventDetailsScreenState extends State<EventDetailsScreen> {
-  Map<String, String> _attendeeNames = {};
-
   @override
   void initState() {
     super.initState();
@@ -25,68 +25,6 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<EventProvider>().loadEventDetails(widget.eventId);
     });
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _fetchAttendeeNames();
-  }
-
-  Future<void> _fetchAttendeeNames() async {
-    final eventProvider = context.watch<EventProvider>();
-    final invitations = eventProvider.currentEventInvitations;
-
-    if (invitations.isEmpty) return;
-
-    final contactRepo = sl<ContactRepository>();
-    final newNames = <String, String>{};
-
-    for (final invitation in invitations) {
-      if (!_attendeeNames.containsKey(invitation.inviteeId)) {
-        try {
-          final contact = await contactRepo.getContact(invitation.inviteeId);
-          newNames[invitation.inviteeId] = contact.name;
-        } catch (e) {
-          // Ignore error, keep ID or default
-        }
-      }
-    }
-
-    if (newNames.isNotEmpty && mounted) {
-      setState(() {
-        _attendeeNames.addAll(newNames);
-      });
-    }
-
-    // Also fetch creator name
-    if (eventProvider.currentEvent != null) {
-      final creatorId = eventProvider.currentEvent!.creatorId;
-      if (!_attendeeNames.containsKey(creatorId)) {
-        try {
-          final contact = await contactRepo.getContact(creatorId);
-          if (mounted) {
-            setState(() {
-              _attendeeNames[creatorId] = contact.name;
-            });
-          }
-        } catch (e) {
-          // Ignore
-        }
-      }
-    }
-
-    // Fetch group name
-    if (eventProvider.currentEvent != null &&
-        eventProvider.currentEvent!.groupId != null) {
-      final groupId = eventProvider.currentEvent!.groupId!;
-      if (!_attendeeNames.containsKey(groupId)) {
-        // Reusing map for group name for simplicity, or add new state var
-        // Actually better to use provider's method or add a local state var
-        // Let's use the provider's method since we added it
-        eventProvider.fetchGroupName(groupId);
-      }
-    }
   }
 
   Future<void> _respondToInvitation(
@@ -155,6 +93,50 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     }
   }
 
+  Future<void> _confirmDelete(BuildContext context, String eventId) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Event'),
+        content: const Text(
+          'Are you sure you want to delete this event? This action cannot be undone.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && mounted) {
+      final success = await context.read<EventProvider>().deleteExistingEvent(
+        eventId,
+      );
+
+      if (success && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Event deleted successfully')),
+        );
+        context.pop(); // Go back to previous screen
+      } else if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              context.read<EventProvider>().error ?? 'Failed to delete',
+            ),
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final eventProvider = context.watch<EventProvider>();
@@ -172,13 +154,22 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       appBar: AppBar(
         title: const Text('Event Details'),
         actions: [
-          if (event?.creatorId == currentUserId)
+          if (event?.creatorId == currentUserId) ...[
             IconButton(
               icon: const Icon(Icons.edit),
               onPressed: () {
-                // TODO: Navigate to edit event screen
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => EditEventScreen(event: event!),
+                  ),
+                );
               },
             ),
+            IconButton(
+              icon: const Icon(Icons.delete),
+              onPressed: () => _confirmDelete(context, event!.id),
+            ),
+          ],
         ],
       ),
       body: eventProvider.isLoading
@@ -302,14 +293,15 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                             child: ListTile(
                               leading: CircleAvatar(
                                 child: Text(
-                                  _attendeeNames[creatorId]
+                                  eventProvider
+                                          .getUserName(creatorId)
                                           ?.substring(0, 1)
                                           .toUpperCase() ??
                                       '?',
                                 ),
                               ),
                               title: Text(
-                                '${_attendeeNames[creatorId] ?? 'User $creatorId'} (Host)',
+                                '${eventProvider.getUserName(creatorId) ?? 'User $creatorId'} (Host)',
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -321,14 +313,17 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                               child: ListTile(
                                 leading: CircleAvatar(
                                   child: Text(
-                                    _attendeeNames[invitation.inviteeId]
+                                    eventProvider
+                                            .getUserName(invitation.inviteeId)
                                             ?.substring(0, 1)
                                             .toUpperCase() ??
                                         '?',
                                   ),
                                 ),
                                 title: Text(
-                                  _attendeeNames[invitation.inviteeId] ??
+                                  eventProvider.getUserName(
+                                        invitation.inviteeId,
+                                      ) ??
                                       'User ${invitation.inviteeId}',
                                 ),
                                 subtitle: invitation.suggestedDate != null
@@ -351,6 +346,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                     invitations.where(
                       (inv) => inv.status == InvitationStatus.pending,
                     ),
+                    eventProvider,
                   ),
 
                   // Declined
@@ -359,6 +355,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                     invitations.where(
                       (inv) => inv.status == InvitationStatus.declined,
                     ),
+                    eventProvider,
                   ),
 
                   // Host Message (if user is creator)
@@ -483,6 +480,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   List<Widget> _buildAttendeeSection(
     String title,
     Iterable<EventInvitation> attendees,
+    EventProvider eventProvider,
   ) {
     if (attendees.isEmpty) return [];
 
@@ -499,14 +497,15 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           child: ListTile(
             leading: CircleAvatar(
               child: Text(
-                _attendeeNames[invitation.inviteeId]
+                eventProvider
+                        .getUserName(invitation.inviteeId)
                         ?.substring(0, 1)
                         .toUpperCase() ??
                     '?',
               ),
             ),
             title: Text(
-              _attendeeNames[invitation.inviteeId] ??
+              eventProvider.getUserName(invitation.inviteeId) ??
                   'User ${invitation.inviteeId}',
             ),
             subtitle: invitation.suggestedDate != null

@@ -1,3 +1,6 @@
+import 'package:app/features/idiot_game/domain/usecases/get_group_games.dart';
+import 'package:app/features/idiot_game/domain/usecases/get_user_achievements.dart';
+import 'package:app/features/idiot_game/domain/usecases/get_user_stats.dart';
 import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
@@ -21,6 +24,23 @@ import '../../features/chats/domain/usecases/get_recent_chats.dart';
 import '../../features/chats/domain/usecases/send_message.dart';
 import '../../features/chats/presentation/providers/chat_provider.dart';
 import '../../features/chats/presentation/providers/message_provider.dart';
+import '../../features/contacts/data/repositories/contact_repository_impl.dart';
+import '../../features/contacts/domain/repositories/contact_repository.dart';
+import '../../features/contacts/presentation/notifiers/contact_list_notifier.dart';
+import '../../features/events/data/datasources/events_remote_data_source.dart';
+import '../../features/events/data/datasources/events_remote_data_source_impl.dart';
+import '../../features/events/data/repositories/event_repository_impl.dart';
+import '../../features/events/domain/repositories/event_repository.dart';
+import '../../features/events/domain/usecases/create_event.dart';
+import '../../features/events/domain/usecases/delete_event.dart';
+import '../../features/events/domain/usecases/get_event.dart';
+import '../../features/events/domain/usecases/get_event_invitations.dart';
+import '../../features/events/domain/usecases/get_events.dart';
+import '../../features/events/domain/usecases/get_my_invitations.dart';
+import '../../features/events/domain/usecases/respond_to_invitation.dart';
+import '../../features/events/domain/usecases/send_event_invitations.dart';
+import '../../features/events/domain/usecases/update_event.dart';
+import '../../features/events/presentation/providers/event_provider.dart';
 import '../../features/groups/data/datasources/group_members_remote_data_source.dart';
 import '../../features/groups/data/datasources/group_members_remote_data_source_impl.dart';
 import '../../features/groups/data/repositories/group_members_repository_impl.dart';
@@ -28,18 +48,6 @@ import '../../features/groups/data/repositories/group_repository_impl.dart';
 import '../../features/groups/data/repositories/invitation_repository_impl.dart';
 import '../../features/groups/domain/repositories/group_members_repository.dart';
 import '../../features/groups/domain/repositories/group_repository.dart';
-import '../../features/events/data/datasources/events_remote_data_source.dart';
-import '../../features/events/data/datasources/events_remote_data_source_impl.dart';
-import '../../features/events/data/repositories/event_repository_impl.dart';
-import '../../features/events/domain/repositories/event_repository.dart';
-import '../../features/events/domain/usecases/get_events.dart';
-import '../../features/events/domain/usecases/get_event.dart';
-import '../../features/events/domain/usecases/create_event.dart';
-import '../../features/events/domain/usecases/update_event.dart';
-import '../../features/events/domain/usecases/delete_event.dart';
-import '../../features/events/domain/usecases/get_event_invitations.dart';
-import '../../features/events/domain/usecases/send_event_invitations.dart';
-import '../../features/events/domain/usecases/respond_to_invitation.dart';
 import '../../features/groups/domain/repositories/invitation_repository.dart';
 import '../../features/groups/domain/usecases/get_group_members.dart';
 import '../../features/groups/domain/usecases/search_users_not_in_group.dart';
@@ -47,7 +55,21 @@ import '../../features/groups/domain/usecases/send_group_invite.dart';
 import '../../features/groups/presentation/notifiers/group_invite_notifier.dart';
 import '../../features/groups/presentation/providers/group_detail_provider.dart';
 import '../../features/groups/presentation/providers/group_provider.dart';
+import '../../features/home/data/repositories/friend_status_repository_impl.dart';
+import '../../features/home/domain/repositories/friend_status_repository.dart';
+import '../../features/home/domain/usecases/get_friend_statuses.dart';
+import '../../features/home/presentation/providers/friend_status_provider.dart';
 import '../../features/home/presentation/providers/recent_chats_provider.dart';
+import '../../features/idiot_game/data/datasources/idiot_game_remote_data_source.dart';
+import '../../features/idiot_game/data/datasources/idiot_game_remote_data_source_impl.dart';
+import '../../features/idiot_game/data/repositories/idiot_game_repository_impl.dart';
+import '../../features/idiot_game/domain/repositories/idiot_game_repository.dart';
+import '../../features/idiot_game/domain/usecases/create_game.dart';
+import '../../features/idiot_game/domain/usecases/get_game_details.dart';
+import '../../features/idiot_game/domain/usecases/get_game_history.dart';
+import '../../features/idiot_game/domain/usecases/get_potential_players.dart';
+import '../../features/idiot_game/domain/usecases/get_recent_games.dart';
+import '../../features/idiot_game/presentation/providers/idiot_game_provider.dart';
 import '../../features/notifications/data/datasources/notification_remote_data_source.dart';
 import '../../features/notifications/data/repositories/notification_repository_impl.dart';
 import '../../features/notifications/domain/repositories/notification_repository.dart';
@@ -58,32 +80,11 @@ import '../../features/profile/data/datasources/profile_remote_data_source_impl.
 import '../../features/profile/data/repositories/profile_repository_impl.dart';
 import '../../features/profile/domain/repositories/profile_repository.dart';
 import '../../features/profile/domain/usecases/get_profile.dart';
+import '../../features/profile/domain/usecases/update_last_seen.dart';
 import '../../features/profile/domain/usecases/update_profile.dart';
 import '../../features/profile/domain/usecases/upload_avatar.dart';
-import '../../features/profile/domain/usecases/update_last_seen.dart';
-import '../../features/idiot_game/data/datasources/idiot_game_remote_data_source.dart';
-import '../../features/idiot_game/data/datasources/idiot_game_remote_data_source_impl.dart';
-import '../../features/idiot_game/data/repositories/idiot_game_repository_impl.dart';
-import '../../features/idiot_game/domain/repositories/idiot_game_repository.dart';
-import '../../features/idiot_game/domain/usecases/create_game.dart';
-import '../../features/idiot_game/domain/usecases/get_game_details.dart';
-import '../../features/idiot_game/domain/usecases/get_game_history.dart';
-import '../../features/idiot_game/domain/usecases/get_potential_players.dart';
-import '../../features/idiot_game/domain/usecases/get_recent_games.dart';
-import 'package:app/features/idiot_game/domain/usecases/get_user_achievements.dart';
-import 'package:app/features/idiot_game/domain/usecases/get_user_stats.dart';
-import 'package:app/features/idiot_game/domain/usecases/get_group_games.dart';
-import '../../features/idiot_game/presentation/providers/idiot_game_provider.dart';
 import '../../features/profile/presentation/providers/profile_provider.dart';
 import '../../features/profile/presentation/providers/user_profile_provider.dart';
-import '../../features/events/presentation/providers/event_provider.dart';
-import '../../features/contacts/data/repositories/contact_repository_impl.dart';
-import '../../features/contacts/domain/repositories/contact_repository.dart';
-import '../../features/contacts/presentation/notifiers/contact_list_notifier.dart';
-import '../../features/home/data/repositories/friend_status_repository_impl.dart';
-import '../../features/home/domain/repositories/friend_status_repository.dart';
-import '../../features/home/domain/usecases/get_friend_statuses.dart';
-import '../../features/home/presentation/providers/friend_status_provider.dart';
 
 final GetIt sl = GetIt.instance;
 
@@ -175,6 +176,7 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton(() => GetEventInvitations(sl<EventRepository>()));
   sl.registerLazySingleton(() => SendEventInvitations(sl<EventRepository>()));
   sl.registerLazySingleton(() => RespondToInvitation(sl<EventRepository>()));
+  sl.registerLazySingleton(() => GetMyInvitations(sl<EventRepository>()));
 
   // Notifiers
   sl.registerFactory<UserProvider>(
@@ -229,6 +231,7 @@ Future<void> setupServiceLocator() async {
       createNotification: sl(),
       contactRepository: sl(),
       groupRepository: sl(),
+      getMyInvitations: sl(),
     ),
   );
 

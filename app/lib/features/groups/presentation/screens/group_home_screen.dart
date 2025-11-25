@@ -1,15 +1,15 @@
 import 'package:app/core/di/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import '../../domain/entities/announcement.dart';
-import '../../../events/domain/entities/event.dart';
+import 'package:provider/provider.dart';
+
 import '../../../events/presentation/providers/event_provider.dart';
+import '../../../idiot_game/presentation/providers/idiot_game_provider.dart';
+import '../../domain/entities/announcement.dart';
 import '../../domain/entities/expense_summary.dart';
 import '../providers/group_detail_provider.dart';
 import '../providers/group_provider.dart';
-import '../../../idiot_game/presentation/providers/idiot_game_provider.dart';
 import '../widgets/group_avatar.dart';
 
 class GroupHomeScreen extends StatefulWidget {
