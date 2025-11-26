@@ -81,4 +81,17 @@ class MockProfileRepository extends _i1.Mock implements _i3.ProfileRepository {
             ),
           )
           as _i4.Future<_i2.Either<_i5.Failure, String>>);
+
+  @override
+  _i4.Future<_i2.Either<_i5.Failure, void>> updateLastSeen(String? userId) =>
+      (super.noSuchMethod(
+            Invocation.method(#updateLastSeen, [userId]),
+            returnValue: _i4.Future<_i2.Either<_i5.Failure, void>>.value(
+              _FakeEither_0<_i5.Failure, void>(
+                this,
+                Invocation.method(#updateLastSeen, [userId]),
+              ),
+            ),
+          )
+          as _i4.Future<_i2.Either<_i5.Failure, void>>);
 }

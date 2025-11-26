@@ -6,11 +6,13 @@
 import 'dart:async' as _i4;
 
 import 'package:app/core/error/failures.dart' as _i5;
-import 'package:app/features/chats/domain/entities/chat.dart' as _i6;
-import 'package:app/features/chats/domain/entities/chat_member.dart' as _i9;
-import 'package:app/features/chats/domain/entities/message.dart' as _i7;
+import 'package:app/features/chats/domain/entities/chat.dart' as _i7;
+import 'package:app/features/chats/domain/entities/chat_member.dart' as _i10;
+import 'package:app/features/chats/domain/entities/chat_with_last_message.dart'
+    as _i6;
+import 'package:app/features/chats/domain/entities/message.dart' as _i8;
 import 'package:app/features/chats/domain/entities/message_with_sender.dart'
-    as _i8;
+    as _i9;
 import 'package:app/features/chats/domain/repositories/chat_repository.dart'
     as _i3;
 import 'package:dartz/dartz.dart' as _i2;
@@ -45,45 +47,59 @@ class MockChatRepository extends _i1.Mock implements _i3.ChatRepository {
   }
 
   @override
-  _i4.Stream<_i2.Either<_i5.Failure, List<_i6.Chat>>> getChats() =>
+  _i4.Stream<_i2.Either<_i5.Failure, List<_i6.ChatWithLastMessage>>>
+  getRecentChats() =>
+      (super.noSuchMethod(
+            Invocation.method(#getRecentChats, []),
+            returnValue:
+                _i4.Stream<
+                  _i2.Either<_i5.Failure, List<_i6.ChatWithLastMessage>>
+                >.empty(),
+          )
+          as _i4.Stream<
+            _i2.Either<_i5.Failure, List<_i6.ChatWithLastMessage>>
+          >);
+
+  @override
+  _i4.Stream<_i2.Either<_i5.Failure, List<_i7.Chat>>> getChats() =>
       (super.noSuchMethod(
             Invocation.method(#getChats, []),
             returnValue:
-                _i4.Stream<_i2.Either<_i5.Failure, List<_i6.Chat>>>.empty(),
+                _i4.Stream<_i2.Either<_i5.Failure, List<_i7.Chat>>>.empty(),
           )
-          as _i4.Stream<_i2.Either<_i5.Failure, List<_i6.Chat>>>);
+          as _i4.Stream<_i2.Either<_i5.Failure, List<_i7.Chat>>>);
 
   @override
-  _i4.Future<_i2.Either<_i5.Failure, _i6.Chat>> getChat(String? id) =>
+  _i4.Future<_i2.Either<_i5.Failure, _i7.Chat>> getChat(String? id) =>
       (super.noSuchMethod(
             Invocation.method(#getChat, [id]),
-            returnValue: _i4.Future<_i2.Either<_i5.Failure, _i6.Chat>>.value(
-              _FakeEither_0<_i5.Failure, _i6.Chat>(
+            returnValue: _i4.Future<_i2.Either<_i5.Failure, _i7.Chat>>.value(
+              _FakeEither_0<_i5.Failure, _i7.Chat>(
                 this,
                 Invocation.method(#getChat, [id]),
               ),
             ),
           )
-          as _i4.Future<_i2.Either<_i5.Failure, _i6.Chat>>);
+          as _i4.Future<_i2.Either<_i5.Failure, _i7.Chat>>);
 
   @override
-  _i4.Future<_i2.Either<_i5.Failure, _i6.Chat>> createChat(
+  _i4.Future<_i2.Either<_i5.Failure, _i7.Chat>> createChat(
     String? name,
     List<String>? memberIds,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#createChat, [name, memberIds]),
-            returnValue: _i4.Future<_i2.Either<_i5.Failure, _i6.Chat>>.value(
-              _FakeEither_0<_i5.Failure, _i6.Chat>(
+            returnValue: _i4.Future<_i2.Either<_i5.Failure, _i7.Chat>>.value(
+              _FakeEither_0<_i5.Failure, _i7.Chat>(
                 this,
                 Invocation.method(#createChat, [name, memberIds]),
               ),
             ),
           )
-          as _i4.Future<_i2.Either<_i5.Failure, _i6.Chat>>);
+          as _i4.Future<_i2.Either<_i5.Failure, _i7.Chat>>);
 
   @override
-  _i4.Future<_i2.Either<_i5.Failure, _i2.Unit>> updateChat(_i6.Chat? chat) =>
+  _i4.Future<_i2.Either<_i5.Failure, _i2.Unit>> updateChat(_i7.Chat? chat) =>
       (super.noSuchMethod(
             Invocation.method(#updateChat, [chat]),
             returnValue: _i4.Future<_i2.Either<_i5.Failure, _i2.Unit>>.value(
@@ -109,32 +125,32 @@ class MockChatRepository extends _i1.Mock implements _i3.ChatRepository {
           as _i4.Future<_i2.Either<_i5.Failure, _i2.Unit>>);
 
   @override
-  _i4.Stream<_i2.Either<_i5.Failure, List<_i7.Message>>> getMessages(
+  _i4.Stream<_i2.Either<_i5.Failure, List<_i8.Message>>> getMessages(
     String? chatId,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#getMessages, [chatId]),
             returnValue:
-                _i4.Stream<_i2.Either<_i5.Failure, List<_i7.Message>>>.empty(),
+                _i4.Stream<_i2.Either<_i5.Failure, List<_i8.Message>>>.empty(),
           )
-          as _i4.Stream<_i2.Either<_i5.Failure, List<_i7.Message>>>);
+          as _i4.Stream<_i2.Either<_i5.Failure, List<_i8.Message>>>);
 
   @override
-  _i4.Future<_i2.Either<_i5.Failure, List<_i8.MessageWithSender>>>
+  _i4.Future<_i2.Either<_i5.Failure, List<_i9.MessageWithSender>>>
   getLatestMessages(String? chatId) =>
       (super.noSuchMethod(
             Invocation.method(#getLatestMessages, [chatId]),
             returnValue:
                 _i4.Future<
-                  _i2.Either<_i5.Failure, List<_i8.MessageWithSender>>
+                  _i2.Either<_i5.Failure, List<_i9.MessageWithSender>>
                 >.value(
-                  _FakeEither_0<_i5.Failure, List<_i8.MessageWithSender>>(
+                  _FakeEither_0<_i5.Failure, List<_i9.MessageWithSender>>(
                     this,
                     Invocation.method(#getLatestMessages, [chatId]),
                   ),
                 ),
           )
-          as _i4.Future<_i2.Either<_i5.Failure, List<_i8.MessageWithSender>>>);
+          as _i4.Future<_i2.Either<_i5.Failure, List<_i9.MessageWithSender>>>);
 
   @override
   _i4.Future<_i2.Either<_i5.Failure, _i2.Unit>> sendMessage(
@@ -153,20 +169,22 @@ class MockChatRepository extends _i1.Mock implements _i3.ChatRepository {
           as _i4.Future<_i2.Either<_i5.Failure, _i2.Unit>>);
 
   @override
-  _i4.Future<_i2.Either<_i5.Failure, List<_i9.ChatMember>>> getChatMembers(
+  _i4.Future<_i2.Either<_i5.Failure, List<_i10.ChatMember>>> getChatMembers(
     String? chatId,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#getChatMembers, [chatId]),
             returnValue:
-                _i4.Future<_i2.Either<_i5.Failure, List<_i9.ChatMember>>>.value(
-                  _FakeEither_0<_i5.Failure, List<_i9.ChatMember>>(
+                _i4.Future<
+                  _i2.Either<_i5.Failure, List<_i10.ChatMember>>
+                >.value(
+                  _FakeEither_0<_i5.Failure, List<_i10.ChatMember>>(
                     this,
                     Invocation.method(#getChatMembers, [chatId]),
                   ),
                 ),
           )
-          as _i4.Future<_i2.Either<_i5.Failure, List<_i9.ChatMember>>>);
+          as _i4.Future<_i2.Either<_i5.Failure, List<_i10.ChatMember>>>);
 
   @override
   _i4.Future<_i2.Either<_i5.Failure, _i2.Unit>> addChatMember(
