@@ -13,6 +13,7 @@ import '../../features/events/presentation/screens/event_details_screen.dart';
 import '../../features/events/presentation/screens/events_dashboard_screen.dart';
 import '../../features/expenses/presentation/screens/expenses_home_screen.dart';
 import '../../features/expenses/presentation/providers/expense_transaction_provider.dart';
+import '../../features/events/presentation/providers/expense_summary_provider.dart';
 import '../../features/groups/presentation/providers/group_detail_provider.dart';
 import '../../features/groups/presentation/screens/create_group_screen.dart';
 import '../../features/groups/presentation/screens/edit_group_screen.dart';
@@ -151,8 +152,15 @@ class AppRouter {
       ),
       GoRoute(
         path: '/expenses',
-        builder: (context, state) => ChangeNotifierProvider(
-          create: (_) => sl<ExpenseTransactionProvider>(),
+        builder: (context, state) => MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+              create: (_) => sl<ExpenseTransactionProvider>(),
+            ),
+            ChangeNotifierProvider(
+              create: (_) => sl<ExpenseSummaryProvider>(),
+            ),
+          ],
           child: const ExpensesHomeScreen(),
         ),
       ),
@@ -196,8 +204,18 @@ class AppRouter {
       ),
 
       GoRoute(
-        path: '/settings',
-        builder: (context, state) => const SettingsPage(),
+        path: '/expenses',
+        builder: (context, state) => MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+              create: (_) => sl<ExpenseTransactionProvider>(),
+            ),
+            ChangeNotifierProvider(
+              create: (_) => sl<ExpenseSummaryProvider>(),
+            ),
+          ],
+          child: const ExpensesHomeScreen(),
+        ),
       ),
       GoRoute(
         path: '/invite-accept',
