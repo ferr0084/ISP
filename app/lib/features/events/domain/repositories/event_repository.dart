@@ -1,8 +1,10 @@
+import 'package:app/core/error/failures.dart';
 import 'package:app/features/events/domain/entities/event.dart';
 import 'package:app/features/events/domain/entities/event_invitation.dart';
+import 'package:dartz/dartz.dart';
 
 abstract class EventRepository {
-  Stream<List<Event>> getEvents();
+  Stream<Either<Failure, List<Event>>> getEvents();
   Future<Event> getEvent(String id);
   Future<Event> createEvent(Event event, {List<String> inviteeIds = const []});
   Future<void> updateEvent(Event event);
@@ -17,5 +19,5 @@ abstract class EventRepository {
     DateTime? suggestedDate,
   });
 
-  Stream<List<EventInvitation>> getMyInvitations(String userId);
+  Stream<Either<Failure, List<EventInvitation>>> getMyInvitations(String userId);
 }

@@ -1,3 +1,5 @@
+import 'package:app/core/error/failures.dart';
+import 'package:dartz/dartz.dart';
 import '../../domain/repositories/event_repository.dart';
 import '../../domain/entities/event.dart';
 import '../../domain/entities/event_invitation.dart';
@@ -8,7 +10,7 @@ class EventRepositoryImpl implements EventRepository {
   EventRepositoryImpl({required this.remote});
 
   @override
-  Stream<List<Event>> getEvents() => remote.getEvents();
+  Stream<Either<Failure, List<Event>>> getEvents() => remote.getEvents();
 
   @override
   Future<Event> getEvent(String id) => remote.getEvent(id);
@@ -45,6 +47,6 @@ class EventRepositoryImpl implements EventRepository {
   );
 
   @override
-  Stream<List<EventInvitation>> getMyInvitations(String userId) =>
+  Stream<Either<Failure, List<EventInvitation>>> getMyInvitations(String userId) =>
       remote.getMyInvitations(userId);
 }

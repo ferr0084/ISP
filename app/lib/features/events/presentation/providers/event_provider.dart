@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -120,14 +121,18 @@ class EventProvider extends ChangeNotifier {
 
     // Listen to events
     _eventsSubscription = getEvents().listen(
-      (events) {
-        _allEvents = events;
-        _mergeEventsAndInvitations();
-      },
-      onError: (error) {
-        _error = error.toString();
-        _isLoading = false;
-        notifyListeners();
+      (either) {
+        either.fold(
+          (failure) {
+            _error = failure.toString();
+            _isLoading = false;
+            notifyListeners();
+          },
+          (events) {
+            _allEvents = events;
+            _mergeEventsAndInvitations();
+          },
+        );
       },
     );
 
@@ -135,13 +140,17 @@ class EventProvider extends ChangeNotifier {
     final currentUserId = sl<SupabaseClient>().auth.currentUser?.id;
     if (currentUserId != null) {
       _invitationsSubscription = getMyInvitations(currentUserId).listen(
-        (invitations) {
-          _myInvitations = invitations;
-          _mergeEventsAndInvitations();
-        },
-        onError: (error) {
-          // Log error but don't block events
-          debugPrint('Error fetching invitations: $error');
+        (either) {
+          either.fold(
+            (failure) {
+              // Log error but don't block events
+              debugPrint('Error fetching invitations: $failure');
+            },
+            (invitations) {
+              _myInvitations = invitations;
+              _mergeEventsAndInvitations();
+            },
+          );
         },
       );
     }

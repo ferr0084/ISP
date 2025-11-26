@@ -1,3 +1,5 @@
+import 'package:app/core/error/failures.dart';
+import 'package:dartz/dartz.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../domain/entities/event.dart';
 import '../../domain/entities/event_invitation.dart';
@@ -9,12 +11,19 @@ class EventsRemoteDataSourceImpl implements EventsRemoteDataSource {
     : _client = client;
 
   @override
-  Stream<List<Event>> getEvents() {
+  Stream<Either<Failure, List<Event>>> getEvents() {
     return _client
         .from('events')
         .stream(primaryKey: ['id'])
         .order('date')
-        .map((list) => list.map((e) => Event.fromJson(e)).toList());
+        .map((list) {
+          try {
+            final events = list.map((e) => Event.fromJson(e)).toList();
+            return Right(events);
+          } catch (e) {
+            return Left(ServerFailure(e.toString()));
+          }
+        });
   }
 
   @override
@@ -107,13 +116,18 @@ class EventsRemoteDataSourceImpl implements EventsRemoteDataSource {
   }
 
   @override
-  Stream<List<EventInvitation>> getMyInvitations(String userId) {
+  Stream<Either<Failure, List<EventInvitation>>> getMyInvitations(String userId) {
     return _client
         .from('event_invitations')
         .stream(primaryKey: ['id'])
         .eq('invitee_id', userId)
-        .map(
-          (list) => list.map((json) => EventInvitation.fromJson(json)).toList(),
-        );
+        .map((list) {
+          try {
+            final invitations = list.map((json) => EventInvitation.fromJson(json)).toList();
+            return Right(invitations);
+          } catch (e) {
+            return Left(ServerFailure(e.toString()));
+          }
+        });
   }
 }
