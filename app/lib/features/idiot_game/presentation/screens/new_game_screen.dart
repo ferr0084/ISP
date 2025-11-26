@@ -23,12 +23,12 @@ class _NewGameScreenState extends State<NewGameScreen> {
   void initState() {
     super.initState();
     // Fetch players when the screen is first loaded
-    Future.microtask(
-      () => Provider.of<IdiotGameProvider>(
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<IdiotGameProvider>(
         context,
         listen: false,
-      ).fetchPotentialPlayersData(),
-    );
+      ).fetchPotentialPlayersData();
+    });
   }
 
   @override
@@ -94,7 +94,13 @@ class _NewGameScreenState extends State<NewGameScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Log New Game')),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.pop(),
+        ),
+        title: const Text('Log New Game'),
+      ),
       body: Consumer<IdiotGameProvider>(
         builder: (context, provider, child) {
           if (provider.isLoading && provider.potentialPlayers.isEmpty) {
@@ -154,7 +160,7 @@ class _NewGameScreenState extends State<NewGameScreen> {
                 ),
                 const SizedBox(height: 10),
                 DropdownButtonFormField<String>(
-                  value: _loserId,
+                  initialValue: _loserId,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: 'Select the loser',
