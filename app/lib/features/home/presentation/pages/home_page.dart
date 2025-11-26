@@ -1,5 +1,6 @@
 import 'package:app/core/widgets/main_drawer.dart';
 import 'package:app/features/events/presentation/providers/event_provider.dart';
+import 'package:app/features/events/presentation/providers/expense_summary_provider.dart';
 import 'package:app/features/home/domain/entities/expense.dart';
 
 import 'package:app/features/home/presentation/providers/recent_chats_provider.dart';
@@ -36,6 +37,10 @@ class _HomePageState extends State<HomePage> {
           context,
           listen: false,
         ).fetchNotifications(userId);
+        Provider.of<ExpenseSummaryProvider>(
+          context,
+          listen: false,
+        ).fetchUserPendingExpenses(userId);
       }
       Provider.of<GroupProvider>(context, listen: false).fetchGroups();
       // EventProvider loads events in its constructor, but we can trigger a refresh if needed.
@@ -64,26 +69,20 @@ class _HomePageState extends State<HomePage> {
 
     final displayEvents = upcomingEvents.take(3).toList();
 
-    final List<Expense> pendingExpenses = [
-      Expense(
-        type: ExpenseType.owedByYou,
-        description: 'You owe Maria',
-        forWhat: 'For "Team Lunch"',
-        amount: 15.50,
-      ),
-      Expense(
-        type: ExpenseType.owedToYou,
-        description: 'David owes you',
-        forWhat: 'For "Movie Tickets"',
-        amount: 25.00,
-      ),
-      Expense(
-        type: ExpenseType.owedByYou,
-        description: 'You owe Chris',
-        forWhat: 'For "Coffee Run"',
-        amount: 8.75,
-      ),
-    ];
+    // Get pending expenses from provider
+    final expenseProvider = context.watch<ExpenseSummaryProvider>();
+    final pendingExpenses = expenseProvider.isLoading
+        ? [] // Show empty while loading
+        : expenseProvider.pendingExpenses.map((summary) {
+            return Expense(
+              type: summary.netAmount > 0 ? ExpenseType.owedToYou : ExpenseType.owedByYou,
+              description: summary.netAmount > 0
+                  ? '${summary.otherUserName} owes you'
+                  : 'You owe ${summary.otherUserName}',
+              forWhat: 'For "${summary.expenseDescription}" in ${summary.eventName}',
+              amount: summary.netAmount.abs(),
+            );
+          }).toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -341,58 +340,74 @@ class _HomePageState extends State<HomePage> {
               context.go('/expenses');
             }),
             const SizedBox(height: 16.0),
-            ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: pendingExpenses.length,
-              separatorBuilder: (context, index) => const Divider(height: 24.0),
-              itemBuilder: (context, index) {
-                final expense = pendingExpenses[index];
-                return ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: expense.type == ExpenseType.owedByYou
-                        ? Colors.orange
-                        : Colors.blue,
-                    child: Icon(
-                      expense.type == ExpenseType.owedByYou
-                          ? Icons.arrow_downward
-                          : Icons.arrow_upward,
-                      color: Colors.white,
-                    ),
+            if (expenseProvider.isLoading)
+              const Center(child: CircularProgressIndicator())
+            else if (pendingExpenses.isEmpty)
+              Card(
+                color: Theme.of(context).colorScheme.surface,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Center(
+                    child: Text('No pending expenses'),
                   ),
-                  title: Text(
-                    expense.description,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  subtitle: Text(
-                    expense.forWhat,
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                  trailing: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12.0,
-                      vertical: 8.0,
-                    ),
-                    decoration: BoxDecoration(
-                      color: expense.type == ExpenseType.owedByYou
-                          ? Colors.orange.shade700
-                          : Colors.blue.shade700,
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    child: Text(
-                      '\$${expense.amount.toStringAsFixed(2)}',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                ),
+              )
+            else
+              ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: pendingExpenses.length,
+                separatorBuilder: (context, index) => const Divider(height: 24.0),
+                itemBuilder: (context, index) {
+                  final expense = pendingExpenses[index];
+                  return ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: expense.type == ExpenseType.owedByYou
+                          ? Colors.orange
+                          : Colors.blue,
+                      child: Icon(
+                        expense.type == ExpenseType.owedByYou
+                            ? Icons.arrow_downward
+                            : Icons.arrow_upward,
                         color: Colors.white,
-                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ),
-                  onTap: () {
-                    context.go('/expenses');
-                  },
-                );
-              },
-            ),
+                    title: Text(
+                      expense.description,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    subtitle: Text(
+                      expense.forWhat,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    trailing: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12.0,
+                        vertical: 8.0,
+                      ),
+                      decoration: BoxDecoration(
+                        color: expense.type == ExpenseType.owedByYou
+                            ? Colors.orange.shade700
+                            : Colors.blue.shade700,
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      child: Text(
+                        '\$${expense.amount.toStringAsFixed(2)}',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    onTap: () {
+                      context.go('/expenses');
+                    },
+                  );
+                },
+              ),
             const SizedBox(height: 32.0),
             Center(
               child: ElevatedButton(

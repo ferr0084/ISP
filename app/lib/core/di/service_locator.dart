@@ -41,14 +41,26 @@ import '../../features/events/domain/usecases/respond_to_invitation.dart';
 import '../../features/events/domain/usecases/send_event_invitations.dart';
 import '../../features/events/domain/usecases/update_event.dart';
 import '../../features/events/data/datasources/event_expense_remote_data_source.dart';
-
+import '../../features/events/data/datasources/expense_summary_remote_data_source.dart';
+import '../../features/events/data/datasources/expense_summary_remote_data_source_impl.dart';
 import '../../features/events/data/repositories/event_expense_repository_impl.dart';
+import '../../features/events/data/repositories/expense_summary_repository_impl.dart';
 import '../../features/events/domain/repositories/event_expense_repository.dart';
+import '../../features/events/domain/repositories/expense_summary_repository.dart';
 import '../../features/events/domain/usecases/create_expense.dart';
 import '../../features/events/domain/usecases/create_settlement.dart';
 import '../../features/events/domain/usecases/get_event_expenses.dart';
+import '../../features/events/domain/usecases/get_group_expense_summary.dart';
+import '../../features/events/domain/usecases/get_user_pending_expenses.dart';
 import '../../features/events/presentation/providers/event_expense_provider.dart';
+import '../../features/events/presentation/providers/expense_summary_provider.dart';
 import '../../features/events/presentation/providers/event_provider.dart';
+import '../../features/expenses/data/datasources/expense_remote_data_source.dart';
+import '../../features/expenses/data/datasources/expense_remote_data_source_impl.dart';
+import '../../features/expenses/data/repositories/expense_repository_impl.dart';
+import '../../features/expenses/domain/repositories/expense_repository.dart';
+import '../../features/expenses/domain/usecases/get_user_expense_transactions.dart';
+import '../../features/expenses/presentation/providers/expense_transaction_provider.dart';
 import '../../features/groups/data/datasources/group_members_remote_data_source.dart';
 import '../../features/groups/data/datasources/group_members_remote_data_source_impl.dart';
 import '../../features/groups/data/repositories/group_members_repository_impl.dart';
@@ -99,6 +111,11 @@ final GetIt sl = GetIt.instance;
 Future<void> setupServiceLocator() async {
   // Supabase Client
   sl.registerLazySingleton<SupabaseClient>(() => Supabase.instance.client);
+
+  // Early registrations
+  sl.registerFactory<ExpenseSummaryProvider>(
+    () => ExpenseSummaryProvider(sl()),
+  );
 
   // Repositories
   sl.registerLazySingleton<InvitationRepository>(
@@ -197,6 +214,25 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton(() => GetEventExpenses(sl()));
   sl.registerLazySingleton(() => CreateSettlement(sl()));
 
+  // Expense Summaries
+  sl.registerLazySingleton<ExpenseSummaryRemoteDataSource>(
+    () => ExpenseSummaryRemoteDataSourceImpl(sl()),
+  );
+  sl.registerLazySingleton<ExpenseSummaryRepository>(
+    () => ExpenseSummaryRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton(() => GetUserPendingExpenses(sl()));
+  sl.registerLazySingleton(() => GetGroupExpenseSummary(sl()));
+
+  // Expenses
+  sl.registerLazySingleton<ExpenseRemoteDataSource>(
+    () => ExpenseRemoteDataSourceImpl(sl()),
+  );
+  sl.registerLazySingleton<ExpenseRepository>(
+    () => ExpenseRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton(() => GetUserExpenseTransactions(sl()));
+
   // Notifiers
   sl.registerFactory<UserProvider>(
     () => UserProvider(sl(), sl(), sl(), sl(), sl(), sl()),
@@ -207,7 +243,7 @@ Future<void> setupServiceLocator() async {
     (chatId, _) => MessageProvider(sl(), sl(), chatId),
   );
   sl.registerFactoryParam<GroupDetailProvider, String, void>(
-    (groupId, _) => GroupDetailProvider(sl(), sl(), sl(), groupId),
+    (groupId, _) => GroupDetailProvider(sl(), sl(), sl(), sl(), groupId),
   );
   sl.registerFactory<GroupInviteNotifier>(
     () => GroupInviteNotifier(sl(), sl()),
@@ -261,6 +297,10 @@ Future<void> setupServiceLocator() async {
       createSettlement: sl(),
       contactRepository: sl(),
     ),
+  );
+
+  sl.registerFactory<ExpenseTransactionProvider>(
+    () => ExpenseTransactionProvider(sl()),
   );
 
   // Contacts

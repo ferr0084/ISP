@@ -3,22 +3,27 @@ import 'dart:async';
 import 'package:app/core/error/failures.dart'; // Import failures
 import 'package:app/features/chats/domain/entities/message_with_sender.dart';
 import 'package:app/features/chats/domain/usecases/get_latest_messages.dart';
+import 'package:app/features/events/domain/entities/group_expense_summary.dart';
+import 'package:app/features/events/domain/usecases/get_group_expense_summary.dart';
 import 'package:app/features/groups/domain/entities/group.dart';
 import 'package:app/features/groups/domain/entities/group_member.dart';
 import 'package:app/features/groups/domain/repositories/group_repository.dart';
 import 'package:app/features/groups/domain/usecases/get_group_members.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class GroupDetailProvider with ChangeNotifier {
   final GroupRepository _groupRepository;
   final GetLatestMessages _getLatestMessages;
   final GetGroupMembers _getGroupMembers;
+  final GetGroupExpenseSummary _getGroupExpenseSummary;
   final String groupId;
 
   GroupDetailProvider(
     this._groupRepository,
     this._getLatestMessages,
     this._getGroupMembers,
+    this._getGroupExpenseSummary,
     this.groupId,
   );
 
@@ -30,6 +35,9 @@ class GroupDetailProvider with ChangeNotifier {
 
   List<GroupMember> _members = [];
   List<GroupMember> get members => _members;
+
+  GroupExpenseSummary? _expenseSummary;
+  GroupExpenseSummary? get expenseSummary => _expenseSummary;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -71,6 +79,7 @@ class GroupDetailProvider with ChangeNotifier {
           _fetchLatestMessages(group.chatId!);
         }
         _fetchGroupMembers();
+        _fetchGroupExpenseSummary();
       },
     );
   }
@@ -109,5 +118,28 @@ class GroupDetailProvider with ChangeNotifier {
         notifyListeners();
       },
     );
+  }
+
+  void _fetchGroupExpenseSummary() async {
+    try {
+      final userId = Supabase.instance.client.auth.currentUser?.id;
+      if (userId != null) {
+        final failureOrSummary = await _getGroupExpenseSummary(
+          GetGroupExpenseSummaryParams(userId: userId, groupId: groupId),
+        );
+        failureOrSummary.fold(
+          (failure) {
+            // Don't set error for expense summary, just leave it null
+            _expenseSummary = null;
+          },
+          (summary) {
+            _expenseSummary = summary;
+            notifyListeners();
+          },
+        );
+      }
+    } catch (e) {
+      _expenseSummary = null;
+    }
   }
 }

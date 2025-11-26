@@ -12,6 +12,7 @@ import '../../features/events/presentation/screens/create_event_screen.dart';
 import '../../features/events/presentation/screens/event_details_screen.dart';
 import '../../features/events/presentation/screens/events_dashboard_screen.dart';
 import '../../features/expenses/presentation/screens/expenses_home_screen.dart';
+import '../../features/expenses/presentation/providers/expense_transaction_provider.dart';
 import '../../features/groups/presentation/providers/group_detail_provider.dart';
 import '../../features/groups/presentation/screens/create_group_screen.dart';
 import '../../features/groups/presentation/screens/edit_group_screen.dart';
@@ -35,6 +36,7 @@ import '../../features/profile/presentation/screens/profile_stats_screen.dart';
 import '../../features/profile/presentation/screens/profile_view_screen.dart';
 import '../../features/profile/presentation/screens/user_profile_screen.dart';
 import '../../features/profile/presentation/providers/user_profile_provider.dart';
+import '../../features/events/presentation/providers/expense_summary_provider.dart';
 
 class AppRouter {
   final UserProvider _userProvider;
@@ -53,7 +55,10 @@ class AppRouter {
         path: '/login-callback',
         builder: (context, state) => const LoginCallbackScreen(),
       ),
-      GoRoute(path: '/home', builder: (context, state) => const HomePage()),
+      GoRoute(path: '/home', builder: (context, state) => ChangeNotifierProvider(
+        create: (_) => sl<ExpenseSummaryProvider>(),
+        child: const HomePage(),
+      )),
       GoRoute(
         path: '/friend-statuses',
         builder: (context, state) => const FriendStatusScreen(),
@@ -146,7 +151,10 @@ class AppRouter {
       ),
       GoRoute(
         path: '/expenses',
-        builder: (context, state) => const ExpensesHomeScreen(),
+        builder: (context, state) => ChangeNotifierProvider(
+          create: (_) => sl<ExpenseTransactionProvider>(),
+          child: const ExpensesHomeScreen(),
+        ),
       ),
       ShellRoute(
         builder: (context, state, child) {

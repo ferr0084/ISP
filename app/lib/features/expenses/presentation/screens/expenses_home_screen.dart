@@ -1,75 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart'; // Added import
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-// Data Models
-class ExpenseSummary {
-  final double totalExpenses;
-  final double budget;
-  final String period;
+import '../providers/expense_transaction_provider.dart';
 
-  ExpenseSummary({
-    required this.totalExpenses,
-    required this.budget,
-    required this.period,
-  });
-}
-
-class Transaction {
-  final String description;
-  final String category;
-  final double amount;
-  final DateTime date;
-  final IconData categoryIcon;
-
-  Transaction({
-    required this.description,
-    required this.category,
-    required this.amount,
-    required this.date,
-    required this.categoryIcon,
-  });
-}
-
-class ExpensesHomeScreen extends StatelessWidget {
+class ExpensesHomeScreen extends StatefulWidget {
   const ExpensesHomeScreen({super.key});
 
-  // Dummy Data
-  static final ExpenseSummary _expenseSummary = ExpenseSummary(
-    totalExpenses: 750.50,
-    budget: 1200.00,
-    period: 'This Month',
-  );
+  @override
+  State<ExpensesHomeScreen> createState() => _ExpensesHomeScreenState();
+}
 
-  static final List<Transaction> _recentTransactions = [
-    Transaction(
-      description: 'Groceries',
-      category: 'Food',
-      amount: 75.20,
-      date: DateTime.now().subtract(const Duration(days: 1)),
-      categoryIcon: Icons.fastfood,
-    ),
-    Transaction(
-      description: 'Movie Tickets',
-      category: 'Entertainment',
-      amount: 25.00,
-      date: DateTime.now().subtract(const Duration(days: 2)),
-      categoryIcon: Icons.movie,
-    ),
-    Transaction(
-      description: 'Gas Refill',
-      category: 'Transport',
-      amount: 40.00,
-      date: DateTime.now().subtract(const Duration(days: 3)),
-      categoryIcon: Icons.directions_car,
-    ),
-    Transaction(
-      description: 'Dinner with friends',
-      category: 'Food',
-      amount: 60.00,
-      date: DateTime.now().subtract(const Duration(days: 4)),
-      categoryIcon: Icons.restaurant,
-    ),
-  ];
+class _ExpensesHomeScreenState extends State<ExpensesHomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final userId = Supabase.instance.client.auth.currentUser?.id;
+      if (userId != null) {
+        context.read<ExpenseTransactionProvider>().fetchUserExpenseTransactions(userId);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,153 +62,206 @@ class ExpensesHomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Expense Summary Card
-              Card(
-                color: Theme.of(context).cardTheme.color,
-                shape: Theme.of(context).cardTheme.shape,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        _expenseSummary.period,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface
-                              .withAlpha(178), // 0.7 * 255 = 178.5
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Consumer<ExpenseTransactionProvider>(
+        builder: (context, provider, child) {
+          if (provider.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (provider.error != null) {
+            return Center(
+              child: Text('Error: ${provider.error}'),
+            );
+          }
+
+          final totalExpenses = provider.totalExpenses;
+          final totalOwed = provider.totalOwed;
+          final netBalance = totalOwed - totalExpenses;
+
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Expense Summary Card
+                  Card(
+                    color: Theme.of(context).cardTheme.color,
+                    shape: Theme.of(context).cardTheme.shape,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '\$${_expenseSummary.totalExpenses.toStringAsFixed(2)}',
-                            style: Theme.of(context).textTheme.displayLarge
-                                ?.copyWith(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onSurface,
-                                ),
+                            'Expense Summary',
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface
+                                  .withAlpha(178), // 0.7 * 255 = 178.5
+                            ),
                           ),
-                          Text(
-                            'of \$${_expenseSummary.budget.toStringAsFixed(2)} Budget',
-                            style: Theme.of(context).textTheme.bodyLarge
-                                ?.copyWith(
-                                  color: Theme.of(context).colorScheme.onSurface
-                                      .withAlpha(178), // 0.7 * 255 = 178.5
-                                ),
+                          const SizedBox(height: 8),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Net Balance',
+                                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                      color: Theme.of(context).colorScheme.onSurface,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${netBalance >= 0 ? '+' : ''}\$${netBalance.toStringAsFixed(2)}',
+                                    style: Theme.of(context).textTheme.displayLarge
+                                        ?.copyWith(
+                                      color: netBalance >= 0
+                                          ? Colors.green
+                                          : Colors.red,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    'You owe: \$${totalExpenses.toStringAsFixed(2)}',
+                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                      color: Colors.red.withAlpha(178),
+                                    ),
+                                  ),
+                                  Text(
+                                    'Owed to you: \$${totalOwed.toStringAsFixed(2)}',
+                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                      color: Colors.green.withAlpha(178),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                      const SizedBox(height: 16),
-                      LinearProgressIndicator(
-                        value:
-                            _expenseSummary.totalExpenses /
-                            _expenseSummary.budget,
-                        backgroundColor: Theme.of(context).colorScheme.surface,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Recent Transactions Section
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Recent Transactions',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          // TODO: Navigate to all transactions
+                        },
+                        child: Text(
+                          'View All',
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                ),
-              ),
-              const SizedBox(height: 24),
-
-              // Recent Transactions Section
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Recent Transactions',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      // TODO: Navigate to all transactions
-                    },
-                    child: Text(
-                      'View All',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.primary,
+                  const SizedBox(height: 16),
+                  if (provider.transactions.isEmpty)
+                    Card(
+                      color: Theme.of(context).cardTheme.color,
+                      shape: Theme.of(context).cardTheme.shape,
+                      child: const Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Center(
+                          child: Text('No expense transactions found'),
+                        ),
+                      ),
+                    )
+                  else
+                    Card(
+                      color: Theme.of(context).cardTheme.color,
+                      shape: Theme.of(context).cardTheme.shape,
+                      child: Column(
+                        children: provider.transactions.take(10).map((transaction) {
+                          return ListTile(
+                            leading: Container(
+                              padding: const EdgeInsets.all(8.0),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.surface,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Icon(
+                                transaction.isOwed ? Icons.arrow_upward : Icons.arrow_downward,
+                                color: transaction.isOwed ? Colors.green : Colors.red,
+                              ),
+                            ),
+                            title: Text(
+                              transaction.expenseDescription,
+                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  transaction.eventName,
+                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: Theme.of(context).colorScheme.onSurface
+                                        .withAlpha(178),
+                                  ),
+                                ),
+                                Text(
+                                  transaction.isOwed
+                                      ? '${transaction.payerName} owes you'
+                                      : 'You owe ${transaction.payerName}',
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: transaction.isOwed ? Colors.green : Colors.red,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            trailing: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '${transaction.isOwed ? '+' : '-'}\$${transaction.amount.abs().toStringAsFixed(2)}',
+                                  style: TextStyle(
+                                    color: transaction.isOwed ? Colors.green : Colors.red,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  '${transaction.transactionDate.month}/${transaction.transactionDate.day}',
+                                  style: Theme.of(context).textTheme.labelSmall
+                                      ?.copyWith(
+                                    color: Theme.of(context).colorScheme.onSurface
+                                        .withAlpha(178),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            onTap: () {
+                              // TODO: View transaction details
+                            },
+                          );
+                        }).toList(),
                       ),
                     ),
-                  ),
                 ],
               ),
-              const SizedBox(height: 16),
-              Card(
-                color: Theme.of(context).cardTheme.color,
-                shape: Theme.of(context).cardTheme.shape,
-                child: Column(
-                  children: _recentTransactions.map((transaction) {
-                    return ListTile(
-                      leading: Container(
-                        padding: const EdgeInsets.all(8.0),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.surface,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Icon(
-                          transaction.categoryIcon,
-                          color: Theme.of(context).colorScheme.onSurface,
-                        ),
-                      ),
-                      title: Text(
-                        transaction.description,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface,
-                        ),
-                      ),
-                      subtitle: Text(
-                        transaction.category,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface
-                              .withAlpha(178), // 0.7 * 255 = 178.5
-                        ),
-                      ),
-                      trailing: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            '-\$${transaction.amount.toStringAsFixed(2)}',
-                            style: const TextStyle(
-                              color: Colors.red,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            '${transaction.date.month}/${transaction.date.day}',
-                            style: Theme.of(context).textTheme.labelSmall
-                                ?.copyWith(
-                                  color: Theme.of(context).colorScheme.onSurface
-                                      .withAlpha(178), // 0.7 * 255 = 178.5
-                                ),
-                          ),
-                        ],
-                      ),
-                      onTap: () {
-                        // TODO: View transaction details
-                      },
-                    );
-                  }).toList(),
-                ),
-              ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

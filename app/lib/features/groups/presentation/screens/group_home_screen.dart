@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import '../../../events/presentation/providers/event_provider.dart';
 import '../../../idiot_game/presentation/providers/idiot_game_provider.dart';
 import '../../domain/entities/announcement.dart';
-import '../../domain/entities/expense_summary.dart';
 import '../providers/group_detail_provider.dart';
 import '../providers/group_provider.dart';
 import '../widgets/group_avatar.dart';
@@ -27,10 +26,6 @@ class GroupHomeScreenState extends State<GroupHomeScreen> {
     title: 'Pinned Announcement',
     content: 'Project Deadline moved to Friday.',
     imageUrl: 'assets/images/group_design_team.png', // Placeholder image
-  );
-
-  static final ExpenseSummary _expenseSummary = ExpenseSummary(
-    amountOwed: 15.50,
   );
 
   @override
@@ -507,117 +502,126 @@ class GroupHomeScreenState extends State<GroupHomeScreen> {
                     ),
                     const SizedBox(height: 24),
 
-                    // Shared Expenses Section
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Shared Expenses',
-                          style: Theme.of(context).textTheme.headlineSmall
-                              ?.copyWith(
-                                color: Theme.of(context).colorScheme.onSurface,
-                              ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            context.push('/expenses');
-                          },
-                          child: Text(
-                            'View Details',
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.primary,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    Card(
-                      color: Theme.of(context).colorScheme.surface,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'You are owed',
-                              style: Theme.of(context).textTheme.bodySmall
-                                  ?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurface
-                                        .withAlpha(178), // 0.7 * 255 = 178.5
-                                  ),
-                            ),
-                            const SizedBox(height: 4),
-                            Row(
-                              children: [
-                                Text(
-                                  '\$${_expenseSummary.amountOwed.toStringAsFixed(2)}',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineMedium
-                                      ?.copyWith(
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.onSurface,
-                                      ),
-                                ),
-                                const Spacer(),
-                                Container(
-                                  padding: const EdgeInsets.all(8.0),
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .secondary, // Using secondary for a different accent
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Icon(
-                                    Icons.arrow_upward,
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.onSecondary,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 16),
-                            SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  // TODO: Settle Up
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Theme.of(
-                                    context,
-                                  ).colorScheme.primary,
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 12,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                                child: Text(
-                                  'Log New Game',
-                                  style: Theme.of(context).textTheme.labelLarge
-                                      ?.copyWith(
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.onPrimary,
-                                      ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                     // Shared Expenses Section
+                     Row(
+                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                       children: [
+                         Text(
+                           'Shared Expenses',
+                           style: Theme.of(context).textTheme.headlineSmall
+                               ?.copyWith(
+                                 color: Theme.of(context).colorScheme.onSurface,
+                               ),
+                         ),
+                         TextButton(
+                           onPressed: () {
+                             context.push('/expenses');
+                           },
+                           child: Text(
+                             'View Details',
+                             style: TextStyle(
+                               color: Theme.of(context).colorScheme.primary,
+                               fontSize: 16,
+                             ),
+                           ),
+                         ),
+                       ],
+                     ),
+                     const SizedBox(height: 16),
+                     Card(
+                       color: Theme.of(context).colorScheme.surface,
+                       shape: RoundedRectangleBorder(
+                         borderRadius: BorderRadius.circular(12),
+                       ),
+                       child: Padding(
+                         padding: const EdgeInsets.all(16.0),
+                         child: Column(
+                           crossAxisAlignment: CrossAxisAlignment.start,
+                           children: [
+                             Text(
+                               groupDetailProvider.expenseSummary != null
+                                   ? (groupDetailProvider.expenseSummary!.netAmount >= 0
+                                       ? 'You are owed'
+                                       : 'You owe')
+                                   : 'Shared Expenses',
+                               style: Theme.of(context).textTheme.bodySmall
+                                   ?.copyWith(
+                                     color: Theme.of(context)
+                                         .colorScheme
+                                         .onSurface
+                                         .withAlpha(178), // 0.7 * 255 = 178.5
+                                   ),
+                             ),
+                             const SizedBox(height: 4),
+                             Row(
+                               children: [
+                                 Text(
+                                   groupDetailProvider.expenseSummary != null
+                                       ? '\$${groupDetailProvider.expenseSummary!.netAmount.abs().toStringAsFixed(2)}'
+                                       : '\$0.00',
+                                   style: Theme.of(context)
+                                       .textTheme
+                                       .headlineMedium
+                                       ?.copyWith(
+                                         color: Theme.of(
+                                           context,
+                                         ).colorScheme.onSurface,
+                                       ),
+                                 ),
+                                 const Spacer(),
+                                 if (groupDetailProvider.expenseSummary != null)
+                                   Container(
+                                     padding: const EdgeInsets.all(8.0),
+                                     decoration: BoxDecoration(
+                                       color: groupDetailProvider.expenseSummary!.netAmount >= 0
+                                           ? Theme.of(context).colorScheme.secondary
+                                           : Theme.of(context).colorScheme.error,
+                                       shape: BoxShape.circle,
+                                     ),
+                                     child: Icon(
+                                       groupDetailProvider.expenseSummary!.netAmount >= 0
+                                           ? Icons.arrow_upward
+                                           : Icons.arrow_downward,
+                                       color: groupDetailProvider.expenseSummary!.netAmount >= 0
+                                           ? Theme.of(context).colorScheme.onSecondary
+                                           : Theme.of(context).colorScheme.onError,
+                                     ),
+                                   ),
+                               ],
+                             ),
+                             const SizedBox(height: 16),
+                             SizedBox(
+                               width: double.infinity,
+                               child: ElevatedButton(
+                                 onPressed: () {
+                                   // TODO: Settle Up
+                                 },
+                                 style: ElevatedButton.styleFrom(
+                                   backgroundColor: Theme.of(
+                                     context,
+                                   ).colorScheme.primary,
+                                   padding: const EdgeInsets.symmetric(
+                                     vertical: 12,
+                                   ),
+                                   shape: RoundedRectangleBorder(
+                                     borderRadius: BorderRadius.circular(8),
+                                   ),
+                                 ),
+                                 child: Text(
+                                   'Settle Up',
+                                   style: Theme.of(context).textTheme.labelLarge
+                                       ?.copyWith(
+                                         color: Theme.of(
+                                           context,
+                                         ).colorScheme.onPrimary,
+                                       ),
+                                 ),
+                               ),
+                             ),
+                           ],
+                         ),
+                       ),
+                     ),
                     const SizedBox(height: 24),
 
                     // Latest Messages Section
