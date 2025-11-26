@@ -4,15 +4,17 @@ This is the Flutter-based mobile application for the "Idiot Social Platform," a 
 
 ## Features
 
-*   **User Authentication:** Secure user login and registration.
+*   **User Authentication:** Secure user login and registration with Supabase Auth.
+*   **Profile Management:** View and edit user profiles with avatar upload.
 *   **Contact Management:** View, search, and invite friends.
-*   **Group Management:** Create and manage groups for games.
-*   **Event Organization:** Plan and track game events.
-*   **Expense Tracking:** Manage expenses related to games.
-*   **Idiot Game Tracking:** Log and track game sessions, stats, and achievements.
-*   **Real-time Chat:** (Planned/Future)
-*   **Profile Management:** View and edit user profiles.
-*   **Invite Friends:** Send invitations to new users via email.
+*   **Group Management:** Create and manage groups for games with group avatars and member management.
+*   **Event Organization:** Plan, create, edit, and track game events with invitations and attendance tracking.
+*   **Expense Tracking:** Manage and split expenses related to events and groups with payment tracking.
+*   **Payment Methods:** Manage preferred payment methods (Venmo, PayPal, CashApp, Zelle).
+*   **Idiot Game Tracking:** Log and track game sessions, stats, achievements, and game history.
+*   **Notifications:** Real-time notifications for invites, events, and game activities.
+*   **Real-time Chat:** Group chat functionality for events and groups.
+*   **Home Dashboard:** Unified view of upcoming events, groups, and recent games.
 
 ## Architecture
 
@@ -27,7 +29,7 @@ The application follows a feature-first, layered architecture (Clean Architectur
 
 Each major feature resides in its own top-level directory within `app/lib/features/`. For example, a "Notifications" feature would have the following structure:
 
-\`\`\`
+```
 app/lib/features/
 ├── notifications/
 │   ├── data/
@@ -47,20 +49,20 @@ app/lib/features/
 │   │       ├── get_notifications.dart
 │   │       └── mark_notification_as_read.dart
 │   └── presentation/
-│       ├── notifiers/
-│       │   └── notification_list_notifier.dart
+│       ├── providers/
+│       │   └── notification_provider.dart
 │       ├── screens/
 │       │   ├── notification_detail_screen.dart
 │       │   └── notification_list_screen.dart
 │       └── widgets/
 │           └── notification_card.dart
-\`\`\`
+```
 
 #### Layer Responsibilities
 
 *   **Presentation Layer (`app/lib/features/<feature_name>/presentation/`)**
     *   **Purpose:** Handles everything related to the User Interface (UI). It's responsible for displaying data to the user and reacting to user input.
-    *   **Contents:** `screens/`, `widgets/`, `notifiers/` (or `providers/`).
+    *   **Contents:** `screens/`, `widgets/`, `providers/`.
     *   **Dependencies:** Depends on the Domain layer. Should **never** directly depend on the Data layer.
 
 *   **Domain Layer (`app/lib/features/<feature_name>/domain/`)**
@@ -86,7 +88,7 @@ The `Repository` uses one or more `Data Sources` to fulfill the contracts define
 *   **Routing (`go_router`):** Routes are defined centrally, target screens from the Presentation layer, and handle deep linking/authentication redirects.
 *   **Dependency Injection (`get_it`):** Used to register and provide instances of repositories, use cases, and notifiers, decoupling components. Registrations are typically in `app/lib/core/di/service_locator.dart`.
 
-\`\`\`
+
 
 ## Backend
 
@@ -186,9 +188,3 @@ flutter run
 5.  Tap **"Send Invites"**.
 6.  Check your Supabase logs (or the console output of the `send-invite` Edge Function) for the generated invite link.
 7.  Open the invite link (e.g., `yourapp://invite?token=...`) on a device with the app installed. This should trigger the `InviteAcceptScreen` to process the invitation.
-
-## Further Development
-
-*   **Email Service Integration:** Integrate a transactional email service (e.g., SendGrid, Resend) into the `send-invite` Edge Function for actual email delivery.
-*   **Contact Relationship Logic:** Implement the logic in the `accept-invite` Edge Function to establish contact relationships (e.g., add to a `contacts` table) after an invitation is accepted.
-*   **UI/UX Enhancements:** Improve the user interface and experience for inviting and managing friends.
