@@ -1,6 +1,8 @@
 import 'package:app/features/home/domain/chat.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/widgets/user_avatar.dart';
+
 class RecentChatsList extends StatelessWidget {
   const RecentChatsList({super.key});
 
@@ -67,10 +69,10 @@ class RecentChatsList extends StatelessWidget {
             return ListTile(
               leading: Stack(
                 children: [
-                  CircleAvatar(
-                    radius: 25,
-                    backgroundImage: AssetImage(chat.avatarUrl),
-                  ),
+                   UserAvatar(
+                     avatarUrl: chat.avatarUrl,
+                     radius: 25,
+                   ),
                   if (chat.isOnline)
                     Positioned(
                       bottom: 0,

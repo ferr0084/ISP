@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../core/widgets/user_avatar.dart';
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -72,12 +74,11 @@ class _ProfilePageState extends State<ProfilePage> {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundImage: NetworkImage(
-                      user.userMetadata?['avatar_url'] ?? '',
-                    ),
-                  ),
+                   UserAvatar(
+                     avatarUrl: user.userMetadata?['avatar_url'],
+                     name: user.userMetadata?['full_name'],
+                     radius: 50,
+                   ),
                   const SizedBox(height: 16),
                   TextFormField(
                     controller: _nameController,

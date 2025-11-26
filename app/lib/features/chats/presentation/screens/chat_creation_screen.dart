@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../contacts/presentation/notifiers/contact_list_notifier.dart';
+import '../../../../core/widgets/user_avatar.dart';
 import '../providers/chat_provider.dart';
 
 class ChatCreationScreen extends StatefulWidget {
@@ -105,17 +106,10 @@ class _ChatCreationScreenState extends State<ChatCreationScreen> {
                         },
                         title: Text(contact.name),
                         subtitle: Text(contact.phoneNumber ?? ''),
-                        secondary: CircleAvatar(
-                          backgroundColor: Theme.of(
-                            context,
-                          ).colorScheme.primary,
-                          child: Text(
-                            contact.name[0].toUpperCase(),
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.onPrimary,
-                            ),
-                          ),
-                        ),
+                         secondary: UserAvatar(
+                           name: contact.name,
+                           backgroundColor: Theme.of(context).colorScheme.primary,
+                         ),
                       );
                     },
                   );

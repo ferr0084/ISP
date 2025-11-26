@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../core/widgets/user_avatar.dart';
+
 class NewGameScreen extends StatefulWidget {
   final String? groupId;
 
@@ -135,14 +137,10 @@ class _NewGameScreenState extends State<NewGameScreen> {
                             }
                           });
                         },
-                        secondary: CircleAvatar(
-                          backgroundImage: user.avatarUrl != null
-                              ? NetworkImage(user.avatarUrl!)
-                              : null,
-                          child: user.avatarUrl == null
-                              ? const Icon(Icons.person)
-                              : null,
-                        ),
+                         secondary: UserAvatar(
+                           avatarUrl: user.avatarUrl,
+                           name: user.fullName ?? user.email,
+                         ),
                         title: Text(user.fullName ?? user.email ?? 'Unknown'),
                       );
                     },

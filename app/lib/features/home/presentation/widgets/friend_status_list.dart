@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/widgets/user_avatar.dart';
 import '../providers/friend_status_provider.dart';
 
 class FriendStatusList extends StatelessWidget {
@@ -81,21 +82,11 @@ class FriendStatusList extends StatelessWidget {
                           },
                           child: Stack(
                             children: [
-                              CircleAvatar(
-                                radius: 30,
-                                foregroundImage:
-                                    friend.avatarUrl != null &&
-                                        friend.avatarUrl!.isNotEmpty
-                                    ? NetworkImage(friend.avatarUrl!)
-                                    : null,
-                                child: Text(
-                                  friend.name.isNotEmpty
-                                      ? friend.name
-                                            .substring(0, 1)
-                                            .toUpperCase()
-                                      : '?',
-                                ),
-                              ),
+                               UserAvatar(
+                                 avatarUrl: friend.avatarUrl,
+                                 name: friend.name,
+                                 radius: 30,
+                               ),
                               if (friend.isOnline)
                                 Positioned(
                                   bottom: 0,

@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../../core/widgets/user_avatar.dart';
 import '../../../auth/presentation/providers/user_provider.dart';
 
 class ProfileEditingScreen extends StatefulWidget {
@@ -91,15 +92,13 @@ class _ProfileEditingScreenState extends State<ProfileEditingScreen> {
             Center(
               child: Column(
                 children: [
-                  CircleAvatar(
-                    radius: 60,
-                    backgroundImage: _selectedImage != null
-                        ? FileImage(File(_selectedImage!.path))
-                        : profile?.avatarUrl != null
-                        ? NetworkImage(profile!.avatarUrl!)
-                        : const AssetImage('assets/images/avatar_s.png')
-                              as ImageProvider,
-                  ),
+                   UserAvatar(
+                     avatarUrl: profile?.avatarUrl,
+                     name: profile?.fullName,
+                     radius: 60,
+                     defaultAssetImage: 'assets/images/avatar_s.png',
+                     localImage: _selectedImage != null ? File(_selectedImage!.path) : null,
+                   ),
                   TextButton(
                     onPressed: _pickImage,
                     child: const Text('Set New Photo'),

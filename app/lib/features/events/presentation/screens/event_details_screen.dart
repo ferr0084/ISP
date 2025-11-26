@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/di/service_locator.dart';
+import '../../../../core/widgets/user_avatar.dart';
 import '../../domain/entities/event_invitation.dart';
 import '../providers/event_provider.dart';
 import 'edit_event_screen.dart';
@@ -306,15 +307,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                           // Creator Card
                           Card(
                             child: ListTile(
-                              leading: CircleAvatar(
-                                child: Text(
-                                  eventProvider
-                                          .getUserName(creatorId)
-                                          ?.substring(0, 1)
-                                          .toUpperCase() ??
-                                      '?',
-                                ),
-                              ),
+                               leading: UserAvatar(
+                                 name: eventProvider.getUserName(creatorId),
+                               ),
                               title: Text(
                                 '${eventProvider.getUserName(creatorId) ?? 'User $creatorId'} (Host)',
                                 style: const TextStyle(
@@ -326,15 +321,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                           ...accepted.map(
                             (invitation) => Card(
                               child: ListTile(
-                                leading: CircleAvatar(
-                                  child: Text(
-                                    eventProvider
-                                            .getUserName(invitation.inviteeId)
-                                            ?.substring(0, 1)
-                                            .toUpperCase() ??
-                                        '?',
-                                  ),
-                                ),
+                                 leading: UserAvatar(
+                                   name: eventProvider.getUserName(invitation.inviteeId),
+                                 ),
                                 title: Text(
                                   eventProvider.getUserName(
                                         invitation.inviteeId,
@@ -782,15 +771,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       ...attendees.map(
         (invitation) => Card(
           child: ListTile(
-            leading: CircleAvatar(
-              child: Text(
-                eventProvider
-                        .getUserName(invitation.inviteeId)
-                        ?.substring(0, 1)
-                        .toUpperCase() ??
-                    '?',
-              ),
-            ),
+             leading: UserAvatar(
+               name: eventProvider.getUserName(invitation.inviteeId),
+             ),
             title: Text(
               eventProvider.getUserName(invitation.inviteeId) ??
                   'User ${invitation.inviteeId}',

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../core/widgets/user_avatar.dart';
+
 class GroupMembersScreen extends StatelessWidget {
   final String groupId;
 
@@ -52,14 +54,10 @@ class GroupMembersScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               final member = members[index];
               return ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: member.avatarUrl != null
-                      ? NetworkImage(member.avatarUrl!)
-                      : null,
-                  child: member.avatarUrl == null
-                      ? Text(member.name[0].toUpperCase())
-                      : null,
-                ),
+                 leading: UserAvatar(
+                   avatarUrl: member.avatarUrl,
+                   name: member.name,
+                 ),
                 title: Text(member.name),
                 subtitle: Text(member.email),
                 trailing: Text(member.role),

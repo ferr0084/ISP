@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../core/widgets/user_avatar.dart';
+
 class GameDetailsScreen extends StatefulWidget {
   final String gameId;
 
@@ -118,16 +120,11 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
                         padding: const EdgeInsets.all(16.0),
                         child: Row(
                           children: [
-                            CircleAvatar(
-                              radius: 30,
-                              backgroundImage:
-                                  loser.userProfile.avatarUrl != null
-                                  ? NetworkImage(loser.userProfile.avatarUrl!)
-                                  : null,
-                              child: loser.userProfile.avatarUrl == null
-                                  ? const Icon(Icons.person, size: 30)
-                                  : null,
-                            ),
+                             UserAvatar(
+                               avatarUrl: loser.userProfile.avatarUrl,
+                               name: loser.userProfile.fullName,
+                               radius: 30,
+                             ),
                             const SizedBox(width: 16),
                             Expanded(
                               child: Column(
@@ -194,17 +191,10 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
                       return Card(
                         margin: const EdgeInsets.only(bottom: 8),
                         child: ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage:
-                                participant.userProfile.avatarUrl != null
-                                ? NetworkImage(
-                                    participant.userProfile.avatarUrl!,
-                                  )
-                                : null,
-                            child: participant.userProfile.avatarUrl == null
-                                ? const Icon(Icons.person)
-                                : null,
-                          ),
+                           leading: UserAvatar(
+                             avatarUrl: participant.userProfile.avatarUrl,
+                             name: participant.userProfile.fullName ?? participant.userProfile.email,
+                           ),
                           title: Text(
                             participant.userProfile.fullName ??
                                 participant.userProfile.email ??

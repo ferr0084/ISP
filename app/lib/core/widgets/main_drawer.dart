@@ -2,6 +2,7 @@ import 'package:app/features/auth/presentation/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'user_avatar.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({super.key});
@@ -38,13 +39,12 @@ class MainDrawer extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CircleAvatar(
-                        radius: 30,
-                        backgroundImage: profile?.avatarUrl != null
-                            ? NetworkImage(profile!.avatarUrl!)
-                            : const AssetImage('assets/images/avatar_james.png')
-                                  as ImageProvider, // Default avatar
-                      ),
+                       UserAvatar(
+                         avatarUrl: profile?.avatarUrl,
+                         name: userName,
+                         radius: 30,
+                         defaultAssetImage: 'assets/images/avatar_james.png',
+                       ),
                       const SizedBox(height: 8.0),
                       Text(
                         userName,

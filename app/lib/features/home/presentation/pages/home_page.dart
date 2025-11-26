@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../../core/widgets/user_avatar.dart';
 import '../../../groups/presentation/providers/group_provider.dart';
 import '../../../notifications/presentation/providers/notification_provider.dart';
 import '../widgets/my_groups_list.dart';
@@ -184,14 +185,10 @@ class _HomePageState extends State<HomePage> {
                     return ListTile(
                       leading: Stack(
                         children: [
-                          CircleAvatar(
-                            backgroundImage: _getImageProvider(
-                              chat.senderAvatarUrl,
-                            ),
-                            child: chat.senderAvatarUrl == null
-                                ? const Icon(Icons.person)
-                                : null,
-                          ),
+                           UserAvatar(
+                             avatarUrl: chat.senderAvatarUrl,
+                             name: chat.senderName,
+                           ),
                           if (chat.unreadCount > 0)
                             Positioned(
                               bottom: 0,
@@ -450,11 +447,4 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  ImageProvider? _getImageProvider(String? url) {
-    if (url == null || url.isEmpty) return null;
-    if (url.startsWith('http')) {
-      return NetworkImage(url);
-    }
-    return AssetImage(url);
-  }
 }

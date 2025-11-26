@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../core/widgets/user_avatar.dart';
 import '../providers/profile_provider.dart';
 
 class ProfileViewScreen extends StatelessWidget {
@@ -47,15 +48,12 @@ class ProfileViewScreen extends StatelessWidget {
                         builder: (context, provider, child) {
                           return Stack(
                             children: [
-                              CircleAvatar(
-                                radius: 60,
-                                backgroundImage: profile?.avatarUrl != null
-                                    ? NetworkImage(profile!.avatarUrl!)
-                                    : const AssetImage(
-                                            'assets/images/avatar_s.png',
-                                          )
-                                          as ImageProvider, // Placeholder image
-                              ),
+                               UserAvatar(
+                                 avatarUrl: profile?.avatarUrl,
+                                 name: profile?.fullName,
+                                 radius: 60,
+                                 defaultAssetImage: 'assets/images/avatar_s.png',
+                               ),
                               Positioned(
                                 bottom: 0,
                                 right: 0,

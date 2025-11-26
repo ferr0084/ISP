@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart'; // Added import
 import 'package:provider/provider.dart';
 
+import '../../../../core/widgets/user_avatar.dart';
 import '../../domain/entities/contact.dart';
 import '../notifiers/contact_list_notifier.dart';
 
@@ -148,17 +149,12 @@ class ContactListScreenState extends State<ContactListScreen> {
                             ),
                             ...contacts.map((contact) {
                               return ListTile(
-                                leading: CircleAvatar(
-                                  radius: 50,
-                                  backgroundImage:
-                                      (contact.avatarUrl != null &&
-                                          contact.avatarUrl!.isNotEmpty)
-                                      ? NetworkImage(contact.avatarUrl!)
-                                      : const AssetImage(
-                                              'assets/images/avatar_s.png',
-                                            )
-                                            as ImageProvider,
-                                ),
+                                 leading: UserAvatar(
+                                   avatarUrl: contact.avatarUrl,
+                                   name: contact.name,
+                                   radius: 50,
+                                   defaultAssetImage: 'assets/images/avatar_s.png',
+                                 ),
                                 title: Text(
                                   contact.name,
                                   style: Theme.of(context).textTheme.bodyLarge

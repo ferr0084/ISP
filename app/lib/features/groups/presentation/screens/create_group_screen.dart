@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../core/widgets/user_avatar.dart';
 import '../../domain/entities/group.dart';
 import '../providers/group_provider.dart';
 
@@ -64,10 +65,10 @@ class CreateGroupScreenState extends State<CreateGroupScreen> {
                     value: url,
                     child: Row(
                       children: [
-                        CircleAvatar(
-                          backgroundImage: AssetImage(url),
-                          radius: 20,
-                        ),
+                         UserAvatar(
+                           avatarUrl: url,
+                           radius: 20,
+                         ),
                         const SizedBox(width: 10),
                         Text(url.split('/').last), // Display file name
                       ],

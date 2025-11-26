@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/widgets/user_avatar.dart';
 import '../providers/user_profile_provider.dart';
 
 class UserProfileScreen extends StatefulWidget {
@@ -63,13 +64,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               width: double.infinity,
               child: Column(
                 children: [
-                  CircleAvatar(
-                    radius: 60,
-                    backgroundImage: profile.avatarUrl != null
-                        ? NetworkImage(profile.avatarUrl!)
-                        : const AssetImage('assets/images/avatar_s.png')
-                              as ImageProvider,
-                  ),
+                   UserAvatar(
+                     avatarUrl: profile.avatarUrl,
+                     name: profile.fullName,
+                     radius: 60,
+                     defaultAssetImage: 'assets/images/avatar_s.png',
+                   ),
                   const SizedBox(height: 16.0),
                   Text(
                     profile.fullName ?? 'No Name',

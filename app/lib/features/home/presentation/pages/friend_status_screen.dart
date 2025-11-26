@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/widgets/user_avatar.dart';
 import '../providers/friend_status_provider.dart';
 
 class FriendStatusScreen extends StatefulWidget {
@@ -62,13 +63,11 @@ class _FriendStatusScreenState extends State<FriendStatusScreen> {
               return ListTile(
                 leading: Stack(
                   children: [
-                    CircleAvatar(
-                      radius: 24,
-                      backgroundImage: status.avatarUrl != null
-                          ? NetworkImage(status.avatarUrl!)
-                          : const AssetImage('assets/images/avatar_s.png')
-                                as ImageProvider,
-                    ),
+                     UserAvatar(
+                       avatarUrl: status.avatarUrl,
+                       name: status.name,
+                       defaultAssetImage: 'assets/images/avatar_s.png',
+                     ),
                     if (status.isOnline)
                       Positioned(
                         bottom: 0,

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../core/widgets/user_avatar.dart';
 import '../notifiers/group_invite_notifier.dart'; // Changed to GroupInviteNotifier
 
 class GroupInviteScreen extends StatefulWidget {
@@ -156,17 +157,12 @@ class _GroupInviteScreenState extends State<GroupInviteScreen> {
                           Stack(
                             clipBehavior: Clip.none,
                             children: [
-                              CircleAvatar(
-                                radius: 30,
-                                backgroundImage:
-                                    (user.avatarUrl != null &&
-                                        user.avatarUrl!.isNotEmpty)
-                                    ? NetworkImage(user.avatarUrl!)
-                                    : const AssetImage(
-                                            'assets/images/avatar_s.png',
-                                          )
-                                          as ImageProvider,
-                              ),
+                               UserAvatar(
+                                 avatarUrl: user.avatarUrl,
+                                 name: user.fullName,
+                                 radius: 30,
+                                 defaultAssetImage: 'assets/images/avatar_s.png',
+                               ),
                               Positioned(
                                 top: -4,
                                 right: -4,
@@ -270,15 +266,12 @@ class _GroupInviteScreenState extends State<GroupInviteScreen> {
                       final user = notifier.searchResults[index];
                       final isSelected = _selectedUsers.contains(user);
                       return ListTile(
-                        leading: CircleAvatar(
-                          radius: 24,
-                          backgroundImage:
-                              (user.avatarUrl != null &&
-                                  user.avatarUrl!.isNotEmpty)
-                              ? NetworkImage(user.avatarUrl!)
-                              : const AssetImage('assets/images/avatar_s.png')
-                                    as ImageProvider,
-                        ),
+                         leading: UserAvatar(
+                           avatarUrl: user.avatarUrl,
+                           name: user.fullName,
+                           radius: 24,
+                           defaultAssetImage: 'assets/images/avatar_s.png',
+                         ),
                         title: Text(
                           user.fullName ?? 'Unknown User',
                           style: theme.textTheme.bodyLarge?.copyWith(

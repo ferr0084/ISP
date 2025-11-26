@@ -3,6 +3,8 @@ import 'package:app/features/contacts/presentation/notifiers/contact_detail_noti
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../core/widgets/user_avatar.dart';
+
 class ContactDetailScreen extends StatefulWidget {
   final String contactId;
 
@@ -126,15 +128,12 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                CircleAvatar(
-                  radius: 50,
-                  backgroundImage:
-                      (contact.avatarUrl != null &&
-                          contact.avatarUrl!.isNotEmpty)
-                      ? NetworkImage(contact.avatarUrl!)
-                      : const AssetImage('assets/images/avatar_s.png')
-                            as ImageProvider,
-                ),
+                 UserAvatar(
+                   avatarUrl: contact.avatarUrl,
+                   name: contact.name,
+                   radius: 50,
+                   defaultAssetImage: 'assets/images/avatar_s.png',
+                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _nameController,
