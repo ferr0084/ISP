@@ -38,6 +38,9 @@ import '../../features/profile/presentation/screens/profile_view_screen.dart';
 import '../../features/profile/presentation/screens/user_profile_screen.dart';
 import '../../features/profile/presentation/providers/user_profile_provider.dart';
 import '../../features/events/presentation/providers/expense_summary_provider.dart';
+import '../../features/payment_methods/presentation/screens/payment_methods_screen.dart';
+import '../../features/payment_methods/presentation/screens/add_card_screen.dart';
+import '../../features/payment_methods/presentation/screens/add_bank_account_screen.dart';
 
 class AppRouter {
   final UserProvider _userProvider;
@@ -150,21 +153,33 @@ class AppRouter {
           ),
         ],
       ),
-      GoRoute(
-        path: '/expenses',
-        builder: (context, state) => MultiProvider(
-          providers: [
-            ChangeNotifierProvider(
-              create: (_) => sl<ExpenseTransactionProvider>(),
-            ),
-            ChangeNotifierProvider(
-              create: (_) => sl<ExpenseSummaryProvider>(),
-            ),
-          ],
-          child: const ExpensesHomeScreen(),
+       GoRoute(
+         path: '/expenses',
+         builder: (context, state) => MultiProvider(
+           providers: [
+             ChangeNotifierProvider(
+               create: (_) => sl<ExpenseTransactionProvider>(),
+             ),
+             ChangeNotifierProvider(
+               create: (_) => sl<ExpenseSummaryProvider>(),
+             ),
+           ],
+           child: const ExpensesHomeScreen(),
+         ),
+       ),
+        GoRoute(
+          path: '/payment-methods',
+          builder: (context, state) => const PaymentMethodsScreen(),
         ),
-      ),
-      ShellRoute(
+        GoRoute(
+          path: '/add-card',
+          builder: (context, state) => const AddCardScreen(),
+        ),
+        GoRoute(
+          path: '/add-bank-account',
+          builder: (context, state) => const AddBankAccountScreen(),
+        ),
+       ShellRoute(
         builder: (context, state, child) {
           return ChangeNotifierProvider(
             create: (_) => sl<IdiotGameProvider>(),

@@ -105,6 +105,15 @@ import '../../features/profile/domain/usecases/update_profile.dart';
 import '../../features/profile/domain/usecases/upload_avatar.dart';
 import '../../features/profile/presentation/providers/profile_provider.dart';
 import '../../features/profile/presentation/providers/user_profile_provider.dart';
+import '../../features/payment_methods/data/datasources/payment_method_remote_data_source.dart';
+import '../../features/payment_methods/data/repositories/payment_method_repository_impl.dart';
+import '../../features/payment_methods/domain/repositories/payment_method_repository.dart';
+import '../../features/payment_methods/domain/usecases/add_payment_method.dart';
+import '../../features/payment_methods/domain/usecases/delete_payment_method.dart' as delete_usecase;
+import '../../features/payment_methods/domain/usecases/get_payment_methods.dart';
+import '../../features/payment_methods/domain/usecases/set_default_payment_method.dart' as set_default_usecase;
+import '../../features/payment_methods/domain/usecases/update_payment_method.dart' as update_usecase;
+import '../../features/payment_methods/presentation/providers/payment_method_provider.dart';
 
 final GetIt sl = GetIt.instance;
 
@@ -315,6 +324,29 @@ Future<void> setupServiceLocator() async {
   );
   sl.registerLazySingleton(() => GetFriendStatuses(sl()));
   sl.registerFactory<FriendStatusProvider>(() => FriendStatusProvider(sl()));
+
+  // Payment Methods
+  sl.registerLazySingleton<PaymentMethodRemoteDataSource>(
+    () => PaymentMethodRemoteDataSourceImpl(sl()),
+  );
+  sl.registerLazySingleton<PaymentMethodRepository>(
+    () => PaymentMethodRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton(() => GetPaymentMethods(sl()));
+  sl.registerLazySingleton(() => AddPaymentMethod(sl()));
+  sl.registerLazySingleton(() => update_usecase.UpdatePaymentMethod(sl()));
+  sl.registerLazySingleton(() => delete_usecase.DeletePaymentMethod(sl()));
+  sl.registerLazySingleton(() => set_default_usecase.SetDefaultPaymentMethod(sl()));
+
+  sl.registerFactory<PaymentMethodProvider>(
+    () => PaymentMethodProvider(
+      sl(), // GetPaymentMethods
+      sl(), // AddPaymentMethod
+      sl(), // UpdatePaymentMethod
+      sl(), // DeletePaymentMethod
+      sl(), // SetDefaultPaymentMethod
+    ),
+  );
 
   // External
   sl.registerLazySingleton<Uuid>(() => const Uuid());

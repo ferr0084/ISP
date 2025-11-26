@@ -18,6 +18,7 @@ import 'features/profile/presentation/providers/profile_provider.dart';
 import 'features/contacts/presentation/notifiers/contact_list_notifier.dart';
 import 'features/events/presentation/providers/event_provider.dart';
 import 'features/home/presentation/providers/friend_status_provider.dart';
+import 'features/payment_methods/presentation/providers/payment_method_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,9 +42,10 @@ Future<void> main() async {
           Provider<InvitationRepository>(
             create: (_) => sl<InvitationRepository>(),
           ),
-          ChangeNotifierProvider(create: (_) => sl<ContactListNotifier>()),
-          ChangeNotifierProvider(create: (_) => sl<EventProvider>()),
-          ChangeNotifierProvider(create: (_) => sl<FriendStatusProvider>()),
+           ChangeNotifierProvider(create: (_) => sl<ContactListNotifier>()),
+           ChangeNotifierProvider(create: (_) => sl<EventProvider>()),
+            ChangeNotifierProvider(create: (_) => sl<FriendStatusProvider>()),
+            ChangeNotifierProvider(create: (_) => sl<PaymentMethodProvider>()),
         ],
         child: const MyApp(),
       ),

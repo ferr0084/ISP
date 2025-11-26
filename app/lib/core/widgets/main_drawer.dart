@@ -91,20 +91,27 @@ class MainDrawer extends StatelessWidget {
             route: '/events',
             currentRoute: currentRoute,
           ),
-          _buildDrawerItem(
-            context,
-            icon: Icons.receipt_long,
-            title: 'Expenses',
-            route: '/expenses',
-            currentRoute: currentRoute,
-          ),
-          _buildDrawerItem(
-            context,
-            icon: Icons.casino, // Placeholder icon for Idiot Game
-            title: 'Idiot Game',
-            route: '/idiot-game',
-            currentRoute: currentRoute,
-          ),
+           _buildDrawerItem(
+             context,
+             icon: Icons.receipt_long,
+             title: 'Expenses',
+             route: '/expenses',
+             currentRoute: currentRoute,
+           ),
+           _buildDrawerItem(
+             context,
+             icon: Icons.payment,
+             title: 'Payment Methods',
+             route: '/payment-methods',
+             currentRoute: currentRoute,
+           ),
+           _buildDrawerItem(
+             context,
+             icon: Icons.casino, // Placeholder icon for Idiot Game
+             title: 'Idiot Game',
+             route: '/idiot-game',
+             currentRoute: currentRoute,
+           ),
 
           _buildDrawerItem(
             context,

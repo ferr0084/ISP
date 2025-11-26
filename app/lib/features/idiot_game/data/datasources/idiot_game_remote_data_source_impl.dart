@@ -128,10 +128,17 @@ class IdiotGameRemoteDataSourceImpl implements IdiotGameRemoteDataSource {
           .from('idiot_games')
           .select('*, idiot_game_participants(*, profiles(*))')
           .eq('id', gameId)
-          .single();
+          .maybeSingle();
+
+      if (response == null) {
+        throw GameNotFoundException();
+      }
 
       return GameWithDetailsModel.fromJson(response);
     } catch (e) {
+      if (e is GameNotFoundException) {
+        rethrow;
+      }
       throw ServerException();
     }
   }

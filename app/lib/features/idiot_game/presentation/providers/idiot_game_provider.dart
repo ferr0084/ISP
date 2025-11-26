@@ -1,3 +1,4 @@
+import 'package:app/core/error/failures.dart';
 import 'package:app/core/usecase/usecase.dart';
 import 'package:app/features/idiot_game/domain/entities/achievement.dart';
 import 'package:app/features/idiot_game/domain/entities/game.dart';
@@ -137,6 +138,9 @@ class IdiotGameProvider with ChangeNotifier {
   List<Game> _groupGames = [];
   List<Game> get groupGames => _groupGames;
 
+  GameWithDetails? _lastGroupGameDetails;
+  GameWithDetails? get lastGroupGameDetails => _lastGroupGameDetails;
+
   Future<void> fetchGroupGamesData(String groupId) async {
     _isLoading = true;
     _errorMessage = null;
@@ -151,11 +155,32 @@ class IdiotGameProvider with ChangeNotifier {
       },
       (games) {
         _groupGames = games;
+        // If there are games, fetch details of the last one (first in the list, assuming sorted by date desc)
+        if (games.isNotEmpty) {
+          fetchLastGroupGameDetails(games.first.id);
+        } else {
+          _lastGroupGameDetails = null;
+        }
       },
     );
 
     _isLoading = false;
     notifyListeners();
+  }
+
+  Future<void> fetchLastGroupGameDetails(String gameId) async {
+    final params = GetGameDetailsParams(gameId: gameId);
+    final failureOrGameDetails = await getGameDetails(params);
+
+    failureOrGameDetails.fold(
+      (failure) {
+        // Silently fail for now, or log
+      },
+      (gameDetails) {
+        _lastGroupGameDetails = gameDetails;
+        notifyListeners();
+      },
+    );
   }
 
   Future<void> fetchGameHistoryData() async {
@@ -188,7 +213,11 @@ class IdiotGameProvider with ChangeNotifier {
 
     failureOrGameDetails.fold(
       (failure) {
-        _errorMessage = 'Failed to fetch game details';
+        if (failure is GameNotFoundFailure) {
+          _errorMessage = 'Game not found';
+        } else {
+          _errorMessage = 'Failed to fetch game details';
+        }
       },
       (gameDetails) {
         _selectedGameDetails = gameDetails;

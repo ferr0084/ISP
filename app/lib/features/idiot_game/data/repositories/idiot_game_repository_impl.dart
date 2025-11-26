@@ -79,6 +79,8 @@ class IdiotGameRepositoryImpl implements IdiotGameRepository {
     try {
       final gameDetails = await remoteDataSource.getGameDetails(gameId);
       return Right(gameDetails);
+    } on GameNotFoundException {
+      return Left(GameNotFoundFailure());
     } on ServerException {
       return Left(ServerFailure('Server Error'));
     }

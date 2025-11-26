@@ -21,3 +21,12 @@ class GroupNotFoundFailure extends Failure {
   @override
   List<Object?> get props => [message];
 }
+
+class GameNotFoundFailure extends Failure {
+  final String message;
+
+  const GameNotFoundFailure([this.message = 'Game not found']);
+
+  @override
+  List<Object?> get props => [message];
+}

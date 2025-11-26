@@ -182,10 +182,11 @@ class GroupHomeScreenState extends State<GroupHomeScreen> {
                     // Idiot Game Section
                     Consumer<IdiotGameProvider>(
                       builder: (context, idiotGameProvider, child) {
-                        final games = idiotGameProvider.groupGames;
-                        final hasGames = games.isNotEmpty;
-                        final lastGame = hasGames ? games.first : null;
-                        // We need to find the loser of the last game.
+                         final games = idiotGameProvider.groupGames;
+                         final hasGames = games.isNotEmpty;
+                         final lastGame = hasGames ? games.first : null;
+                         final lastGameDetails = idiotGameProvider.lastGroupGameDetails;
+                         final loser = lastGameDetails?.loser;
                         // The Game entity might not have participant details directly accessible in a simple way
                         // if it's just a Game model. Let's check Game entity.
                         // It seems Game entity doesn't have participants list in the domain entity based on previous views?
@@ -256,39 +257,44 @@ class GroupHomeScreenState extends State<GroupHomeScreen> {
                                           ),
                                     ),
                                     const SizedBox(height: 8),
-                                    if (hasGames)
-                                      Row(
-                                        children: [
-                                          const CircleAvatar(
-                                            child: Icon(Icons.person),
-                                            radius: 20,
-                                          ),
-                                          const SizedBox(width: 12),
-                                          Text(
-                                            // TODO: Fetch and display actual loser name.
-                                            // For now, we just show the date or a placeholder.
-                                            'Game on ${lastGame!.gameDate.toString().split(' ')[0]}',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleMedium
-                                                ?.copyWith(
-                                                  color: Theme.of(
-                                                    context,
-                                                  ).colorScheme.onSurface,
-                                                ),
-                                          ),
-                                          const Spacer(),
-                                          Icon(
-                                            Icons.sentiment_dissatisfied,
-                                            color: Theme.of(
-                                              context,
-                                            ).colorScheme.error,
-                                            size: 30,
-                                          ),
-                                        ],
-                                      )
-                                    else
-                                      const Text('No games played yet.'),
+                                     if (loser != null)
+                                       Row(
+                                         children: [
+                                           CircleAvatar(
+                                             backgroundImage: loser.userProfile.avatarUrl != null
+                                                 ? NetworkImage(loser.userProfile.avatarUrl!)
+                                                 : null,
+                                             radius: 20,
+                                             child: loser.userProfile.avatarUrl == null
+                                                 ? Text((loser.userProfile.fullName ?? loser.userProfile.nickname ?? 'Unknown')[0])
+                                                 : null,
+                                           ),
+                                           const SizedBox(width: 12),
+                                           Text(
+                                             loser.userProfile.fullName ?? loser.userProfile.nickname ?? 'Unknown',
+                                             style: Theme.of(context)
+                                                 .textTheme
+                                                 .titleMedium
+                                                 ?.copyWith(
+                                                   color: Theme.of(
+                                                     context,
+                                                   ).colorScheme.onSurface,
+                                                 ),
+                                           ),
+                                           const Spacer(),
+                                           Icon(
+                                             Icons.sentiment_dissatisfied,
+                                             color: Theme.of(
+                                               context,
+                                             ).colorScheme.error,
+                                             size: 30,
+                                           ),
+                                         ],
+                                       )
+                                     else if (hasGames)
+                                       const Text('Loading loser details...')
+                                     else
+                                       const Text('No games played yet.'),
                                     const SizedBox(height: 16),
                                     SizedBox(
                                       width: double.infinity,
