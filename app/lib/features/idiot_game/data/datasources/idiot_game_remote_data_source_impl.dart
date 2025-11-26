@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:app/core/error/exceptions.dart';
 import 'package:app/features/idiot_game/data/datasources/idiot_game_remote_data_source.dart';
 import 'package:app/features/idiot_game/data/models/achievement_model.dart';
 import 'package:app/features/idiot_game/data/models/game_model.dart';
 import 'package:app/features/idiot_game/data/models/game_with_details_model.dart';
+import 'package:app/features/idiot_game/data/models/participant_details_model.dart';
 
 import 'package:app/features/idiot_game/data/models/user_stats_model.dart';
 import 'package:app/features/profile/domain/entities/user_profile.dart';
@@ -31,6 +34,7 @@ class IdiotGameRemoteDataSourceImpl implements IdiotGameRemoteDataSource {
     String description,
     String loserId,
     String? groupId,
+    String? imageUrl,
   ) async {
     try {
       // 1. Create the game
@@ -40,6 +44,7 @@ class IdiotGameRemoteDataSourceImpl implements IdiotGameRemoteDataSource {
             'description': description,
             'created_by': supabaseClient.auth.currentUser!.id,
             'group_id': groupId,
+            'image_url': imageUrl,
           })
           .select()
           .single();
@@ -62,6 +67,20 @@ class IdiotGameRemoteDataSourceImpl implements IdiotGameRemoteDataSource {
       // 3. Fetch full game details (simplified for now, just returning the game model)
       // In a real app, we might want to fetch the game with participants expanded
       return GameModel.fromJson(gameResponse);
+    } catch (e) {
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<String> uploadImage(String filePath) async {
+    try {
+      final fileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final response = await supabaseClient.storage
+          .from('idiot-pics')
+          .upload(fileName, File(filePath));
+      final publicUrl = supabaseClient.storage.from('idiot-pics').getPublicUrl(fileName);
+      return publicUrl;
     } catch (e) {
       throw ServerException();
     }
@@ -126,19 +145,22 @@ class IdiotGameRemoteDataSourceImpl implements IdiotGameRemoteDataSource {
     try {
       final response = await supabaseClient
           .from('idiot_games')
-          .select('*, idiot_game_participants(*, profiles(*))')
+          .select('*, idiot_game_participants(*, profiles!user_id(*))')
           .eq('id', gameId)
-          .maybeSingle();
+          .single();
 
-      if (response == null) {
-        throw GameNotFoundException();
-      }
+      // Parse the response
+      final gameData = response;
+      final participantsData = gameData['idiot_game_participants'] as List<dynamic>;
 
-      return GameWithDetailsModel.fromJson(response);
+      // Convert to models
+      final game = GameModel.fromJson(gameData);
+      final participants = participantsData
+          .map((p) => ParticipantDetailsModel.fromJson(p as Map<String, dynamic>))
+          .toList();
+
+      return GameWithDetailsModel(game: game, participants: participants);
     } catch (e) {
-      if (e is GameNotFoundException) {
-        rethrow;
-      }
       throw ServerException();
     }
   }

@@ -17,6 +17,7 @@ class CreateGame implements UseCase<Game, CreateGameParams> {
       params.description,
       params.loserId,
       params.groupId,
+      params.imageUrl,
     );
   }
 }
@@ -26,14 +27,16 @@ class CreateGameParams extends Equatable {
   final String loserId;
   final String description;
   final String? groupId;
+  final String? imageUrl;
 
   const CreateGameParams({
     required this.userIds,
     required this.loserId,
     required this.description,
     this.groupId,
+    this.imageUrl,
   });
 
   @override
-  List<Object?> get props => [userIds, loserId, description, groupId];
+  List<Object?> get props => [userIds, loserId, description, groupId, imageUrl];
 }

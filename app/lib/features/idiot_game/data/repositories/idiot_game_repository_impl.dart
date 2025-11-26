@@ -30,6 +30,7 @@ class IdiotGameRepositoryImpl implements IdiotGameRepository {
     String description,
     String loserId,
     String? groupId,
+    String? imageUrl,
   ) async {
     try {
       final game = await remoteDataSource.createGame(
@@ -37,10 +38,21 @@ class IdiotGameRepositoryImpl implements IdiotGameRepository {
         description,
         loserId,
         groupId,
+        imageUrl,
       );
       return Right(game);
     } on ServerException {
       return Left(ServerFailure('Server Error'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> uploadImage(String filePath) async {
+    try {
+      final imageUrl = await remoteDataSource.uploadImage(filePath);
+      return Right(imageUrl);
+    } on ServerException {
+      return Left(ServerFailure('Failed to upload image'));
     }
   }
 

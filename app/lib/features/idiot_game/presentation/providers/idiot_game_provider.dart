@@ -4,6 +4,7 @@ import 'package:app/features/idiot_game/domain/entities/achievement.dart';
 import 'package:app/features/idiot_game/domain/entities/game.dart';
 import 'package:app/features/idiot_game/domain/entities/game_with_details.dart';
 import 'package:app/features/idiot_game/domain/entities/user_stats.dart';
+import 'package:app/features/idiot_game/domain/repositories/idiot_game_repository.dart';
 import 'package:app/features/idiot_game/domain/usecases/create_game.dart';
 import 'package:app/features/idiot_game/domain/usecases/get_game_details.dart';
 import 'package:app/features/idiot_game/domain/usecases/get_game_history.dart';
@@ -14,6 +15,8 @@ import 'package:app/features/idiot_game/domain/usecases/get_user_achievements.da
 import 'package:app/features/idiot_game/domain/usecases/get_user_stats.dart';
 import 'package:app/features/profile/domain/entities/user_profile.dart';
 import 'package:flutter/foundation.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class IdiotGameProvider with ChangeNotifier {
   final GetPotentialPlayers getPotentialPlayers;
@@ -23,6 +26,7 @@ class IdiotGameProvider with ChangeNotifier {
   final GetGameDetails getGameDetails;
   final GetUserStats getUserStats;
   final GetUserAchievements getUserAchievements;
+  final IdiotGameRepository repository;
 
   final GetGroupGames getGroupGames;
 
@@ -35,6 +39,7 @@ class IdiotGameProvider with ChangeNotifier {
     required this.getUserStats,
     required this.getUserAchievements,
     required this.getGroupGames,
+    required this.repository,
   });
 
   List<UserProfile> _potentialPlayers = [];
@@ -80,6 +85,7 @@ class IdiotGameProvider with ChangeNotifier {
     String description,
     String loserId,
     String? groupId,
+    String? imageUrl,
   ) async {
     _isLoading = true;
     _errorMessage = null;
@@ -90,6 +96,7 @@ class IdiotGameProvider with ChangeNotifier {
       description: description,
       loserId: loserId,
       groupId: groupId,
+      imageUrl: imageUrl ?? _capturedImageUrl,
     );
     final failureOrGame = await createGame(params);
 
@@ -140,6 +147,12 @@ class IdiotGameProvider with ChangeNotifier {
 
   GameWithDetails? _lastGroupGameDetails;
   GameWithDetails? get lastGroupGameDetails => _lastGroupGameDetails;
+
+  String? _capturedImageUrl;
+  String? get capturedImageUrl => _capturedImageUrl;
+
+  bool _isUploadingImage = false;
+  bool get isUploadingImage => _isUploadingImage;
 
   Future<void> fetchGroupGamesData(String groupId) async {
     _isLoading = true;
@@ -270,5 +283,44 @@ class IdiotGameProvider with ChangeNotifier {
         notifyListeners();
       },
     );
+  }
+
+  Future<void> takePhoto() async {
+    final status = await Permission.camera.request();
+    if (!status.isGranted) {
+      _errorMessage = 'Camera permission denied';
+      notifyListeners();
+      return;
+    }
+
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      await uploadImage(pickedFile.path);
+    }
+  }
+
+  Future<void> uploadImage(String filePath) async {
+    _isUploadingImage = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    final failureOrUrl = await repository.uploadImage(filePath);
+    failureOrUrl.fold(
+      (failure) {
+        _errorMessage = 'Failed to upload image';
+      },
+      (url) {
+        _capturedImageUrl = url;
+      },
+    );
+
+    _isUploadingImage = false;
+    notifyListeners();
+  }
+
+  void clearCapturedImage() {
+    _capturedImageUrl = null;
+    notifyListeners();
   }
 }

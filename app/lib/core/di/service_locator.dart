@@ -274,6 +274,7 @@ Future<void> setupServiceLocator() async {
       getUserStats: sl(),
       getUserAchievements: sl(),
       getGroupGames: sl(),
+      repository: sl(),
     ),
   );
 

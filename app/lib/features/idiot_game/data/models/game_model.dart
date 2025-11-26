@@ -6,6 +6,8 @@ class GameModel extends Game {
     required super.gameDate,
     super.createdBy,
     super.description,
+    super.groupId,
+    super.imageUrl,
   });
 
   factory GameModel.fromJson(Map<String, dynamic> json) {
@@ -14,6 +16,8 @@ class GameModel extends Game {
       gameDate: DateTime.parse(json['game_date'] as String),
       createdBy: json['created_by'] as String?,
       description: json['description'] as String?,
+      groupId: json['group_id'] as String?,
+      imageUrl: json['image_url'] as String?,
     );
   }
 
@@ -23,6 +27,8 @@ class GameModel extends Game {
       'game_date': gameDate.toIso8601String(),
       'created_by': createdBy,
       'description': description,
+      'group_id': groupId,
+      'image_url': imageUrl,
     };
   }
 }

@@ -13,7 +13,9 @@ abstract class IdiotGameRepository {
     String description,
     String loserId,
     String? groupId,
+    String? imageUrl,
   );
+  Future<Either<Failure, String>> uploadImage(String filePath);
   Future<Either<Failure, List<Game>>> getRecentGames();
   Future<Either<Failure, List<Game>>> getGroupGames(String groupId);
   Future<Either<Failure, List<Game>>> getGameHistory();

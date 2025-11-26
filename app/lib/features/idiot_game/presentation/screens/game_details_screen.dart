@@ -87,17 +87,29 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
                               ),
                             ],
                           ),
-                          if (game.description != null &&
-                              game.description!.isNotEmpty) ...[
-                            const SizedBox(height: 12),
-                            Text(
-                              game.description!,
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontStyle: FontStyle.italic,
-                              ),
-                            ),
-                          ],
+                           if (game.description != null &&
+                               game.description!.isNotEmpty) ...[
+                             const SizedBox(height: 12),
+                             Text(
+                               game.description!,
+                               style: const TextStyle(
+                                 fontSize: 14,
+                                 fontStyle: FontStyle.italic,
+                               ),
+                             ),
+                           ],
+                           if (game.imageUrl != null) ...[
+                             const SizedBox(height: 12),
+                             ClipRRect(
+                               borderRadius: BorderRadius.circular(8),
+                               child: Image.network(
+                                 game.imageUrl!,
+                                 height: 200,
+                                 width: double.infinity,
+                                 fit: BoxFit.cover,
+                               ),
+                             ),
+                           ],
                         ],
                       ),
                     ),

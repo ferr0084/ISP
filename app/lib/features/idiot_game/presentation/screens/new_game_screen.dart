@@ -72,6 +72,7 @@ class _NewGameScreenState extends State<NewGameScreen> {
           : _descriptionController.text,
       _loserId!,
       widget.groupId, // Pass null if no group context
+      null, // imageUrl will be handled by provider
     );
 
     if (provider.errorMessage == null && mounted) {
@@ -172,9 +173,44 @@ class _NewGameScreenState extends State<NewGameScreen> {
                       _loserId = newValue;
                     });
                   },
-                ),
-                const SizedBox(height: 20),
-                TextField(
+                 ),
+                 const SizedBox(height: 20),
+                 const Text(
+                   'Capture Idiot Photo (optional)',
+                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                 ),
+                 const SizedBox(height: 10),
+                 if (provider.capturedImageUrl != null)
+                   Column(
+                     children: [
+                       Image.network(
+                         provider.capturedImageUrl!,
+                         height: 150,
+                         width: 150,
+                         fit: BoxFit.cover,
+                       ),
+                       TextButton(
+                         onPressed: () => provider.clearCapturedImage(),
+                         child: const Text('Remove Photo'),
+                       ),
+                     ],
+                   )
+                 else
+                   ElevatedButton.icon(
+                     onPressed: provider.isUploadingImage
+                         ? null
+                         : () => provider.takePhoto(),
+                     icon: const Icon(Icons.camera_alt),
+                     label: provider.isUploadingImage
+                         ? const SizedBox(
+                             height: 20,
+                             width: 20,
+                             child: CircularProgressIndicator(strokeWidth: 2),
+                           )
+                         : const Text('Take Photo'),
+                   ),
+                 const SizedBox(height: 20),
+                 TextField(
                   controller: _descriptionController,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
