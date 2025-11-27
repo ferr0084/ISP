@@ -1,5 +1,9 @@
+import 'package:app/core/di/service_locator.dart';
+import 'package:app/core/widgets/user_avatar.dart';
 import 'package:app/features/idiot_game/domain/entities/achievement.dart';
 import 'package:app/features/idiot_game/presentation/providers/idiot_game_provider.dart';
+import 'package:app/features/profile/domain/entities/profile.dart';
+import 'package:app/features/profile/presentation/providers/user_profile_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -17,192 +21,240 @@ class IdiotGameDashboardScreen extends StatefulWidget {
 
 class _IdiotGameDashboardScreenState extends State<IdiotGameDashboardScreen> {
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      final provider = Provider.of<IdiotGameProvider>(context, listen: false);
-      final userId =
-          widget.userId ?? Supabase.instance.client.auth.currentUser?.id;
-      if (userId != null) {
-        provider.fetchRecentGamesData(userId);
-        provider.fetchUserStatsData(userId);
-        provider.fetchUserAchievementsData(userId);
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.pop(),
-        ),
-        title: const Text('Idiot Tracker'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.history),
-            onPressed: () {
-              context.push('/idiot-game/history');
-            },
-          ),
-        ],
-      ),
-      body: Consumer<IdiotGameProvider>(
-        builder: (context, provider, child) {
-          if (provider.isLoading && provider.recentGames.isEmpty) {
-            return const Center(child: CircularProgressIndicator());
+    return ChangeNotifierProvider<UserProfileProvider>(
+      create: (_) {
+        final provider = sl<UserProfileProvider>();
+        final userId =
+            widget.userId ?? Supabase.instance.client.auth.currentUser?.id;
+        if (userId != null) {
+          provider.fetchProfile(userId);
+        }
+        return provider;
+      },
+      child: ChangeNotifierProvider<IdiotGameProvider>(
+        create: (_) {
+          final provider = sl<IdiotGameProvider>();
+          final userId =
+              widget.userId ?? Supabase.instance.client.auth.currentUser?.id;
+          if (userId != null) {
+            provider.fetchRecentGamesData(userId);
+            provider.fetchUserStatsData(userId);
+            provider.fetchUserAchievementsData(userId);
           }
+          return provider;
+        },
+        child: Consumer2<IdiotGameProvider, UserProfileProvider>(
+          builder: (context, idiotGameProvider, userProfileProvider, child) {
+            if (idiotGameProvider.isLoading &&
+                idiotGameProvider.recentGames.isEmpty) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-          if (provider.errorMessage != null && provider.recentGames.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(provider.errorMessage!),
-                  const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          final userId =
-                              widget.userId ??
-                              Supabase.instance.client.auth.currentUser?.id;
-                          if (userId != null) {
-                            provider.fetchRecentGamesData(userId);
-                            provider.fetchUserStatsData(userId);
-                            provider.fetchUserAchievementsData(userId);
-                          }
-                        },
-                        child: const Text('Retry'),
-                      ),
-                ],
-              ),
-            );
-          }
-
-          return RefreshIndicator(
-            onRefresh: () async {
-              final userId =
-                  widget.userId ??
-                  Supabase.instance.client.auth.currentUser?.id;
-              if (userId != null) {
-                provider.fetchRecentGamesData(userId);
-                provider.fetchUserStatsData(userId);
-                provider.fetchUserAchievementsData(userId);
-              }
-            },
-            child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
+            if (idiotGameProvider.errorMessage != null &&
+                idiotGameProvider.recentGames.isEmpty) {
+              return Center(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Stats Section
-                    if (provider.userStats != null) ...[
-                      _buildStatsSection(provider),
-                      const SizedBox(height: 24),
-                    ],
-
-                    // Achievements Section
-                    if (provider.achievements.isNotEmpty) ...[
-                      _buildAchievementsSection(provider.achievements),
-                      const SizedBox(height: 24),
-                    ],
-
-                    // Recent Games Section
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Recent Games',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            context.push('/idiot-game/history');
-                          },
-                          child: const Text('View All'),
-                        ),
-                      ],
+                    Text(idiotGameProvider.errorMessage!),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        final userId =
+                            widget.userId ??
+                            Supabase.instance.client.auth.currentUser?.id;
+                        if (userId != null) {
+                          idiotGameProvider.fetchRecentGamesData(userId);
+                          idiotGameProvider.fetchUserStatsData(userId);
+                          idiotGameProvider.fetchUserAchievementsData(userId);
+                        }
+                      },
+                      child: const Text('Retry'),
                     ),
-                    const SizedBox(height: 10),
-
-                    if (provider.recentGames.isEmpty)
-                      Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(32.0),
-                          child: Column(
-                            children: [
-                              Icon(
-                                Icons.games_outlined,
-                                size: 64,
-                                color: Colors.grey[400],
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                'No games yet',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.grey[600],
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                'Tap the + button to log your first game',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey[500],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      )
-                    else
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: provider.recentGames.length > 5
-                            ? 5
-                            : provider.recentGames.length,
-                        itemBuilder: (context, index) {
-                          final game = provider.recentGames[index];
-                          return Card(
-                            margin: const EdgeInsets.only(bottom: 8),
-                            child: ListTile(
-                              leading: CircleAvatar(
-                                child: Text('${index + 1}'),
-                              ),
-                              title: Text(game.description ?? 'Game'),
-                              subtitle: Text(
-                                game.gameDate.toString().split(' ')[0],
-                              ),
-                              trailing: const Icon(Icons.chevron_right),
-                              onTap: () {
-                                context.push('/idiot-game/details/${game.id}');
-                              },
-                            ),
-                          );
-                        },
-                      ),
                   ],
                 ),
+              );
+            }
+
+            return Scaffold(
+              appBar: AppBar(
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => context.pop(),
+                ),
+                title: const Text('Idiot Tracker'),
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.history),
+                    onPressed: () {
+                      context.push('/idiot-game/history');
+                    },
+                  ),
+                ],
               ),
+              body: RefreshIndicator(
+                onRefresh: () async {
+                  final userId =
+                      widget.userId ??
+                      Supabase.instance.client.auth.currentUser?.id;
+                  if (userId != null) {
+                    idiotGameProvider.fetchRecentGamesData(userId);
+                    idiotGameProvider.fetchUserStatsData(userId);
+                    idiotGameProvider.fetchUserAchievementsData(userId);
+                    userProfileProvider.fetchProfile(userId);
+                  }
+                },
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Profile Section
+                        if (userProfileProvider.profile != null) ...[
+                          Center(
+                            child: _buildProfileSection(
+                              userProfileProvider.profile!,
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                        ],
+                        // Stats Section
+                        if (idiotGameProvider.userStats != null) ...[
+                          _buildStatsSection(idiotGameProvider),
+                          const SizedBox(height: 24),
+                        ],
+                        // Achievements Section
+                        if (idiotGameProvider.achievements.isNotEmpty) ...[
+                          _buildAchievementsSection(
+                            idiotGameProvider.achievements,
+                          ),
+                          const SizedBox(height: 24),
+                        ],
+                        // Recent Games Section
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Recent Games',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                context.push('/idiot-game/history');
+                              },
+                              child: const Text('View All'),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        if (idiotGameProvider.recentGames.isEmpty)
+                          Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(32.0),
+                              child: Column(
+                                children: [
+                                  Icon(
+                                    Icons.games_outlined,
+                                    size: 64,
+                                    color: Colors.grey[400],
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    'No games yet',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    'Tap the + button to log your first game',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey[500],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        else
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: idiotGameProvider.recentGames.length > 5
+                                ? 5
+                                : idiotGameProvider.recentGames.length,
+                            itemBuilder: (context, index) {
+                              final game = idiotGameProvider.recentGames[index];
+                              return Card(
+                                margin: const EdgeInsets.only(bottom: 8),
+                                child: ListTile(
+                                  leading: CircleAvatar(
+                                    child: Text('${index + 1}'),
+                                  ),
+                                  title: Text(game.description ?? 'Game'),
+                                  subtitle: Text(
+                                    game.gameDate.toString().split(' ')[0],
+                                  ),
+                                  trailing: const Icon(Icons.chevron_right),
+                                  onTap: () {
+                                    context.push(
+                                      '/idiot-game/details/${game.id}',
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              floatingActionButton: FloatingActionButton(
+                onPressed: () {
+                  context.push('/idiot-game/new');
+                },
+                child: const Icon(Icons.add),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProfileSection(Profile profile) {
+    return Column(
+      children: [
+        UserAvatar(
+          avatarUrl: profile.avatarUrl,
+          name: profile.fullName,
+          radius: 60,
+          defaultAssetImage: 'assets/images/avatar_s.png',
+        ),
+        const SizedBox(height: 16.0),
+        Text(
+          profile.fullName,
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
+        if (profile.nickname != null) ...[
+          const SizedBox(height: 8.0),
+          Text(
+            profile.nickname!,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: Theme.of(context).colorScheme.primary,
             ),
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          context.push('/idiot-game/new');
-        },
-        child: const Icon(Icons.add),
-      ),
+          ),
+        ],
+      ],
     );
   }
 
@@ -211,11 +263,6 @@ class _IdiotGameDashboardScreenState extends State<IdiotGameDashboardScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'My Stats',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 12),
         Row(
           children: [
             Expanded(
