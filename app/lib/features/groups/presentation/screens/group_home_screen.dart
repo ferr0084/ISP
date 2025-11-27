@@ -319,40 +319,45 @@ class GroupHomeScreenState extends State<GroupHomeScreen> {
                                           ),
                                     ),
                                     const SizedBox(height: 8),
-                                     if (loser != null)
-                                       Row(
-                                         children: [
-                                           CircleAvatar(
-                                             backgroundImage: loser.userProfile.avatarUrl != null
-                                                 ? NetworkImage(loser.userProfile.avatarUrl!)
-                                                 : null,
-                                             radius: 20,
-                                             child: loser.userProfile.avatarUrl == null
-                                                 ? Text((loser.userProfile.fullName ?? loser.userProfile.nickname ?? 'Unknown')[0])
-                                                 : null,
-                                           ),
-                                           const SizedBox(width: 12),
-                                           Text(
-                                             loser.userProfile.fullName ?? loser.userProfile.nickname ?? 'Unknown',
-                                             style: Theme.of(context)
-                                                 .textTheme
-                                                 .titleMedium
-                                                 ?.copyWith(
-                                                   color: Theme.of(
-                                                     context,
-                                                   ).colorScheme.onSurface,
-                                                 ),
-                                           ),
-                                           const Spacer(),
-                                           Icon(
-                                             Icons.sentiment_dissatisfied,
-                                             color: Theme.of(
-                                               context,
-                                             ).colorScheme.error,
-                                             size: 30,
-                                           ),
-                                         ],
-                                       )
+                                      if (loser != null)
+                                        InkWell(
+                                          onTap: () {
+                                            context.push('/idiot-game/user/${loser.userProfile.id}');
+                                          },
+                                          child: Row(
+                                            children: [
+                                              CircleAvatar(
+                                                backgroundImage: loser.userProfile.avatarUrl != null
+                                                    ? NetworkImage(loser.userProfile.avatarUrl!)
+                                                    : null,
+                                                radius: 20,
+                                                child: loser.userProfile.avatarUrl == null
+                                                    ? Text((loser.userProfile.fullName ?? loser.userProfile.nickname ?? 'Unknown')[0])
+                                                    : null,
+                                              ),
+                                              const SizedBox(width: 12),
+                                              Text(
+                                                loser.userProfile.fullName ?? loser.userProfile.nickname ?? 'Unknown',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleMedium
+                                                    ?.copyWith(
+                                                      color: Theme.of(
+                                                        context,
+                                                      ).colorScheme.onSurface,
+                                                    ),
+                                              ),
+                                              const Spacer(),
+                                              Icon(
+                                                Icons.sentiment_dissatisfied,
+                                                color: Theme.of(
+                                                  context,
+                                                ).colorScheme.error,
+                                                size: 30,
+                                              ),
+                                            ],
+                                          ),
+                                        )
                                      else if (hasGames)
                                        const Text('Loading loser details...')
                                      else

@@ -1,5 +1,6 @@
 import 'package:app/features/idiot_game/presentation/providers/idiot_game_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -115,64 +116,69 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Current Idiot Section
-                  if (loser != null) ...[
-                    const Text(
-                      'The Idiot',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Card(
-                      color: Colors.red.shade50,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Row(
-                          children: [
-                            UserAvatar(
-                              avatarUrl: loser.userProfile.avatarUrl,
-                              name: loser.userProfile.fullName,
-                              radius: 30,
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    loser.userProfile.fullName ??
-                                        loser.userProfile.email ??
-                                        'Unknown',
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  if (loser.userProfile.email != null &&
-                                      loser.userProfile.fullName != null)
-                                    Text(
-                                      loser.userProfile.email!,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey[600],
-                                      ),
-                                    ),
-                                ],
-                              ),
-                            ),
-                            const Icon(
-                              Icons.emoji_events,
-                              color: Colors.red,
-                              size: 36,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                  ],
+                   // Current Idiot Section
+                   if (loser != null) ...[
+                     const Text(
+                       'The Idiot',
+                       style: TextStyle(
+                         fontSize: 20,
+                         fontWeight: FontWeight.bold,
+                       ),
+                     ),
+                     const SizedBox(height: 12),
+                     InkWell(
+                       onTap: () {
+                         context.push('/idiot-game/user/${loser.userId}');
+                       },
+                       child: Card(
+                         color: Colors.red.shade50,
+                         child: Padding(
+                           padding: const EdgeInsets.all(16.0),
+                           child: Row(
+                             children: [
+                               UserAvatar(
+                                 avatarUrl: loser.userProfile.avatarUrl,
+                                 name: loser.userProfile.fullName,
+                                 radius: 30,
+                               ),
+                               const SizedBox(width: 16),
+                               Expanded(
+                                 child: Column(
+                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                   children: [
+                                     Text(
+                                       loser.userProfile.fullName ??
+                                           loser.userProfile.email ??
+                                           'Unknown',
+                                       style: const TextStyle(
+                                         fontSize: 18,
+                                         fontWeight: FontWeight.bold,
+                                       ),
+                                     ),
+                                     if (loser.userProfile.email != null &&
+                                         loser.userProfile.fullName != null)
+                                       Text(
+                                         loser.userProfile.email!,
+                                         style: TextStyle(
+                                           fontSize: 14,
+                                           color: Colors.grey[600],
+                                         ),
+                                       ),
+                                   ],
+                                 ),
+                               ),
+                               const Icon(
+                                 Icons.emoji_events,
+                                 color: Colors.red,
+                                 size: 36,
+                               ),
+                             ],
+                           ),
+                         ),
+                       ),
+                     ),
+                     const SizedBox(height: 24),
+                   ],
 
                   // All Participants Section
                   Row(

@@ -191,6 +191,13 @@ class AppRouter {
             builder: (context, state) => const IdiotGameDashboardScreen(),
             routes: [
               GoRoute(
+                path: 'user/:userId',
+                builder: (context, state) {
+                  final userId = state.pathParameters['userId'];
+                  return IdiotGameDashboardScreen(userId: userId);
+                },
+              ),
+              GoRoute(
                 path: 'new',
                 builder: (context, state) {
                   final groupId = state.extra as String?;

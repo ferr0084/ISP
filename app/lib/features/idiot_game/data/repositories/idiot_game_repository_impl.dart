@@ -57,9 +57,9 @@ class IdiotGameRepositoryImpl implements IdiotGameRepository {
   }
 
   @override
-  Future<Either<Failure, List<Game>>> getRecentGames() async {
+  Future<Either<Failure, List<Game>>> getRecentGames([String? userId]) async {
     try {
-      final remoteGames = await remoteDataSource.getRecentGames();
+      final remoteGames = await remoteDataSource.getRecentGames(userId);
       return Right(remoteGames);
     } on ServerException {
       return const Left(ServerFailure('Server Error'));

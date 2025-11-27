@@ -89,11 +89,13 @@ class IdiotGameRemoteDataSourceImpl implements IdiotGameRemoteDataSource {
   }
 
   @override
-  Future<List<GameModel>> getRecentGames() async {
+  Future<List<GameModel>> getRecentGames([String? userId]) async {
     try {
+      final targetUserId = userId ?? supabaseClient.auth.currentUser!.id;
       final response = await supabaseClient
           .from('idiot_games')
           .select('*, idiot_game_participants(*)')
+          .eq('idiot_game_participants.user_id', targetUserId)
           .order('game_date', ascending: false)
           .limit(10);
 

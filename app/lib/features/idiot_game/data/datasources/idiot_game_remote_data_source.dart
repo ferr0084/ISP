@@ -14,7 +14,7 @@ abstract class IdiotGameRemoteDataSource {
     String? imageUrl,
   );
   Future<String> uploadImage(String filePath);
-  Future<List<GameModel>> getRecentGames();
+  Future<List<GameModel>> getRecentGames([String? userId]);
   Future<List<GameModel>> getGroupGames(String groupId);
   Future<List<GameModel>> getGameHistory();
   Future<GameWithDetailsModel> getGameDetails(String gameId);

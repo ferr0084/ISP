@@ -127,12 +127,13 @@ class IdiotGameProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchRecentGamesData() async {
+  Future<void> fetchRecentGamesData([String? userId]) async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
 
-    final failureOrGames = await getRecentGames(NoParams());
+    final params = GetRecentGamesParams(userId: userId);
+    final failureOrGames = await getRecentGames(params);
 
     failureOrGames.fold(
       (failure) {

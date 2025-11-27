@@ -6,7 +6,9 @@ import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class IdiotGameDashboardScreen extends StatefulWidget {
-  const IdiotGameDashboardScreen({super.key});
+  final String? userId;
+
+  const IdiotGameDashboardScreen({super.key, this.userId});
 
   @override
   State<IdiotGameDashboardScreen> createState() =>
@@ -20,9 +22,10 @@ class _IdiotGameDashboardScreenState extends State<IdiotGameDashboardScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       final provider = Provider.of<IdiotGameProvider>(context, listen: false);
-      final userId = Supabase.instance.client.auth.currentUser?.id;
+      final userId =
+          widget.userId ?? Supabase.instance.client.auth.currentUser?.id;
       if (userId != null) {
-        provider.fetchRecentGamesData();
+        provider.fetchRecentGamesData(userId);
         provider.fetchUserStatsData(userId);
         provider.fetchUserAchievementsData(userId);
       }
@@ -60,18 +63,19 @@ class _IdiotGameDashboardScreenState extends State<IdiotGameDashboardScreen> {
                 children: [
                   Text(provider.errorMessage!),
                   const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      final userId =
-                          Supabase.instance.client.auth.currentUser?.id;
-                      if (userId != null) {
-                        provider.fetchRecentGamesData();
-                        provider.fetchUserStatsData(userId);
-                        provider.fetchUserAchievementsData(userId);
-                      }
-                    },
-                    child: const Text('Retry'),
-                  ),
+                      ElevatedButton(
+                        onPressed: () {
+                          final userId =
+                              widget.userId ??
+                              Supabase.instance.client.auth.currentUser?.id;
+                          if (userId != null) {
+                            provider.fetchRecentGamesData(userId);
+                            provider.fetchUserStatsData(userId);
+                            provider.fetchUserAchievementsData(userId);
+                          }
+                        },
+                        child: const Text('Retry'),
+                      ),
                 ],
               ),
             );
@@ -79,9 +83,11 @@ class _IdiotGameDashboardScreenState extends State<IdiotGameDashboardScreen> {
 
           return RefreshIndicator(
             onRefresh: () async {
-              final userId = Supabase.instance.client.auth.currentUser?.id;
+              final userId =
+                  widget.userId ??
+                  Supabase.instance.client.auth.currentUser?.id;
               if (userId != null) {
-                provider.fetchRecentGamesData();
+                provider.fetchRecentGamesData(userId);
                 provider.fetchUserStatsData(userId);
                 provider.fetchUserAchievementsData(userId);
               }
