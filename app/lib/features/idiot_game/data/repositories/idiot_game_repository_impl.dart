@@ -20,7 +20,7 @@ class IdiotGameRepositoryImpl implements IdiotGameRepository {
       final players = await remoteDataSource.getPotentialPlayers();
       return Right(players);
     } on ServerException {
-      return Left(ServerFailure('Server Error'));
+      return const Left(ServerFailure('Server Error'));
     }
   }
 
@@ -42,7 +42,7 @@ class IdiotGameRepositoryImpl implements IdiotGameRepository {
       );
       return Right(game);
     } on ServerException {
-      return Left(ServerFailure('Server Error'));
+      return const Left(ServerFailure('Server Error'));
     }
   }
 
@@ -52,7 +52,7 @@ class IdiotGameRepositoryImpl implements IdiotGameRepository {
       final imageUrl = await remoteDataSource.uploadImage(filePath);
       return Right(imageUrl);
     } on ServerException {
-      return Left(ServerFailure('Failed to upload image'));
+      return const Left(ServerFailure('Failed to upload image'));
     }
   }
 
@@ -62,7 +62,7 @@ class IdiotGameRepositoryImpl implements IdiotGameRepository {
       final remoteGames = await remoteDataSource.getRecentGames();
       return Right(remoteGames);
     } on ServerException {
-      return Left(ServerFailure('Server Error'));
+      return const Left(ServerFailure('Server Error'));
     }
   }
 
@@ -72,7 +72,7 @@ class IdiotGameRepositoryImpl implements IdiotGameRepository {
       final remoteGames = await remoteDataSource.getGroupGames(groupId);
       return Right(remoteGames);
     } on ServerException {
-      return Left(ServerFailure('Server Error'));
+      return const Left(ServerFailure('Server Error'));
     }
   }
 
@@ -82,7 +82,7 @@ class IdiotGameRepositoryImpl implements IdiotGameRepository {
       final remoteGames = await remoteDataSource.getGameHistory();
       return Right(remoteGames);
     } on ServerException {
-      return Left(ServerFailure('Server Error'));
+      return const Left(ServerFailure('Server Error'));
     }
   }
 
@@ -92,9 +92,9 @@ class IdiotGameRepositoryImpl implements IdiotGameRepository {
       final gameDetails = await remoteDataSource.getGameDetails(gameId);
       return Right(gameDetails);
     } on GameNotFoundException {
-      return Left(GameNotFoundFailure());
+      return const Left(GameNotFoundFailure());
     } on ServerException {
-      return Left(ServerFailure('Server Error'));
+      return const Left(ServerFailure('Server Error'));
     }
   }
 
@@ -104,7 +104,7 @@ class IdiotGameRepositoryImpl implements IdiotGameRepository {
       final userStats = await remoteDataSource.getUserStats(userId);
       return Right(userStats);
     } on ServerException {
-      return Left(ServerFailure('Server Error'));
+      return const Left(ServerFailure('Server Error'));
     }
   }
 
@@ -114,7 +114,7 @@ class IdiotGameRepositoryImpl implements IdiotGameRepository {
       final achievements = await remoteDataSource.getUserAchievements(userId);
       return Right(achievements);
     } catch (e) {
-      return Left(ServerFailure('Failed to get user achievements'));
+      return const Left(ServerFailure('Failed to get user achievements'));
     }
   }
 
@@ -124,7 +124,7 @@ class IdiotGameRepositoryImpl implements IdiotGameRepository {
       await remoteDataSource.checkAndUnlockAchievements(userId);
       return const Right(null);
     } catch (e) {
-      return Left(ServerFailure('Failed to check achievements'));
+      return const Left(ServerFailure('Failed to check achievements'));
     }
   }
 }

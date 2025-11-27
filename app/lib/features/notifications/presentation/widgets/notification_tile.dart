@@ -91,9 +91,9 @@ class _NotificationTileState extends State<NotificationTile> {
       if (!mounted) return;
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.toString()}')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
     } finally {
       if (mounted) {
         setState(() {
@@ -111,19 +111,21 @@ class _NotificationTileState extends State<NotificationTile> {
     return ListTile(
       tileColor: n.read
           ? null
-          : Theme.of(context).colorScheme.primaryContainer.withOpacity(0.1),
+          : Theme.of(
+              context,
+            ).colorScheme.primaryContainer.withValues(alpha: 0.1),
       leading: CircleAvatar(
         backgroundColor: n.type == 'event_invite'
             ? Colors.green
             : n.type == 'group_invite'
-                ? Colors.blue
-                : Colors.grey,
+            ? Colors.blue
+            : Colors.grey,
         child: Icon(
           n.type == 'event_invite'
               ? Icons.event
               : n.type == 'group_invite'
-                  ? Icons.group_add
-                  : Icons.notifications,
+              ? Icons.group_add
+              : Icons.notifications,
           color: Colors.white,
         ),
       ),
@@ -153,31 +155,33 @@ class _NotificationTileState extends State<NotificationTile> {
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
                 else ...[
-                   ElevatedButton(
-                     onPressed: () => _handleInvite(true),
-                     style: ElevatedButton.styleFrom(
-                       backgroundColor: Colors.green,
-                       foregroundColor: Colors.white,
-                       padding: const EdgeInsets.symmetric(
-                         horizontal: 16,
-                         vertical: 0,
-                       ),
-                       visualDensity: VisualDensity.compact,
-                     ),
-                     child: Text(n.type == 'event_invite' ? 'View Event' : 'Accept'),
-                   ),
-                   const SizedBox(width: 8),
-                   OutlinedButton(
-                     onPressed: () => _handleInvite(false),
-                     style: OutlinedButton.styleFrom(
-                       padding: const EdgeInsets.symmetric(
-                         horizontal: 16,
-                         vertical: 0,
-                       ),
-                       visualDensity: VisualDensity.compact,
-                     ),
-                     child: const Text('Decline'),
-                   ),
+                  ElevatedButton(
+                    onPressed: () => _handleInvite(true),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 0,
+                      ),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                    child: Text(
+                      n.type == 'event_invite' ? 'View Event' : 'Accept',
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  OutlinedButton(
+                    onPressed: () => _handleInvite(false),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 0,
+                      ),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                    child: const Text('Decline'),
+                  ),
                 ],
               ],
             ),

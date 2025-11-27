@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/error/failures.dart';
-import '../../domain/usecases/get_user_pending_expenses.dart';
 import '../../domain/entities/user_expense_summary.dart';
+import '../../domain/usecases/get_user_pending_expenses.dart';
 
 class ExpenseSummaryProvider with ChangeNotifier {
   final GetUserPendingExpenses _getUserPendingExpenses;

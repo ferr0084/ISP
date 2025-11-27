@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/error/failures.dart';
-import '../../domain/usecases/get_user_expense_transactions.dart';
 import '../../domain/entities/expense_transaction.dart';
+import '../../domain/usecases/get_user_expense_transactions.dart';
 
 class ExpenseTransactionProvider with ChangeNotifier {
   final GetUserExpenseTransactions _getUserExpenseTransactions;

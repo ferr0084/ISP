@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
 
-import '../failures/event_failure.dart';
 import '../../domain/entities/event.dart';
 import '../../domain/repositories/event_repository.dart';
+import '../failures/event_failure.dart';
 
 class CreateEvent {
   final EventRepository repository;
@@ -18,7 +18,7 @@ class CreateEvent {
 
     // Validate invitee limit
     if (inviteeIds.length > maxInvitees) {
-      return Left(TooManyInviteesFailure(maxInvitees, 'Cannot invite more than $maxInvitees people to an event'));
+      return const Left(TooManyInviteesFailure(maxInvitees, 'Cannot invite more than $maxInvitees people to an event'));
     }
 
     // Validate event name is not empty

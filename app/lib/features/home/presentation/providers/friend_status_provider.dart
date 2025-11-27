@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+
+import '../../../../core/error/failures.dart';
 import '../../domain/entities/friend_status.dart';
 import '../../domain/usecases/get_friend_statuses.dart';
-import '../../../../core/error/failures.dart';
 
 class FriendStatusProvider extends ChangeNotifier {
   final GetFriendStatuses getFriendStatuses;

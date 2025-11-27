@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../../../core/di/service_locator.dart';
 import '../providers/event_expense_provider.dart';
 import 'add_expense_screen.dart';
-import 'settle_up_screen.dart';
 import 'expense_details_screen.dart';
+import 'settle_up_screen.dart';
 
 class EventExpensesScreen extends StatelessWidget {
   final String eventId;
@@ -36,9 +37,11 @@ class EventExpensesScreen extends StatelessWidget {
                           ),
                         )
                         .then((_) {
-                          context.read<EventExpenseProvider>().loadExpenses(
-                            eventId,
-                          );
+                          if (context.mounted) {
+                            context.read<EventExpenseProvider>().loadExpenses(
+                              eventId,
+                            );
+                          }
                         });
                   },
                 );
@@ -59,7 +62,11 @@ class EventExpensesScreen extends StatelessWidget {
                     ),
                   )
                   .then((_) {
-                    context.read<EventExpenseProvider>().loadExpenses(eventId);
+                    if (context.mounted) {
+                      context.read<EventExpenseProvider>().loadExpenses(
+                        eventId,
+                      );
+                    }
                   });
             },
             child: const Icon(Icons.add),

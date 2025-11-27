@@ -2,7 +2,6 @@ import 'package:app/core/widgets/main_drawer.dart';
 import 'package:app/features/events/presentation/providers/event_provider.dart';
 import 'package:app/features/events/presentation/providers/expense_summary_provider.dart';
 import 'package:app/features/home/domain/entities/expense.dart';
-
 import 'package:app/features/home/presentation/providers/recent_chats_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -13,9 +12,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/widgets/user_avatar.dart';
 import '../../../groups/presentation/providers/group_provider.dart';
 import '../../../notifications/presentation/providers/notification_provider.dart';
-import '../widgets/my_groups_list.dart';
-import '../widgets/friend_status_list.dart';
 import '../providers/friend_status_provider.dart';
+import '../widgets/friend_status_list.dart';
+import '../widgets/my_groups_list.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

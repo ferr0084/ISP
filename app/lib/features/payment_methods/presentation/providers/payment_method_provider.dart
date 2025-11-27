@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/error/failures.dart';
+import '../../domain/entities/payment_method.dart';
 import '../../domain/usecases/add_payment_method.dart';
 import '../../domain/usecases/delete_payment_method.dart' as delete_usecase;
 import '../../domain/usecases/get_payment_methods.dart';
 import '../../domain/usecases/set_default_payment_method.dart' as set_default_usecase;
 import '../../domain/usecases/update_payment_method.dart' as update_usecase;
-import '../../domain/entities/payment_method.dart';
 
 class PaymentMethodProvider with ChangeNotifier {
   final GetPaymentMethods _getPaymentMethods;

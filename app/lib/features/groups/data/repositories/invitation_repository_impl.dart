@@ -38,29 +38,17 @@ class InvitationRepositoryImpl implements InvitationRepository {
 
   @override
   Future<void> acceptInvite(String token, String userId) async {
-    print(
-      'InvitationRepositoryImpl: acceptInvite called with token: $token, userId: $userId',
-    );
     try {
-      print('InvitationRepositoryImpl: invoking accept-invite function');
       final response = await _supabaseClient.functions.invoke(
         'accept-invite',
         body: {'token': token, 'user_id': userId},
       );
-      print(
-        'InvitationRepositoryImpl: accept-invite response status: ${response.status}',
-      );
       if (response.status != 200) {
-        print(
-          'InvitationRepositoryImpl: accept-invite error data: ${response.data}',
-        );
         throw Exception(
           response.data['error'] ?? 'Failed to accept invitation',
         );
       }
-      print('InvitationRepositoryImpl: accept-invite success');
     } catch (e) {
-      print('InvitationRepositoryImpl: accept-invite exception: $e');
       throw Exception('Error accepting invitation: $e');
     }
   }

@@ -1,5 +1,5 @@
-import '../../domain/repositories/event_repository.dart';
 import '../../domain/entities/event.dart';
+import '../../domain/repositories/event_repository.dart';
 
 class GetEvent {
   final EventRepository repository;

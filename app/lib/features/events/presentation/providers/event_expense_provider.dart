@@ -1,11 +1,12 @@
 import 'package:flutter/foundation.dart';
+
+import '../../../contacts/domain/entities/contact.dart';
+import '../../../contacts/domain/repositories/contact_repository.dart';
 import '../../domain/entities/expense.dart';
 import '../../domain/entities/settlement.dart';
 import '../../domain/usecases/create_expense.dart';
 import '../../domain/usecases/create_settlement.dart';
 import '../../domain/usecases/get_event_expenses.dart';
-import '../../../contacts/domain/entities/contact.dart';
-import '../../../contacts/domain/repositories/contact_repository.dart';
 
 class EventExpenseProvider extends ChangeNotifier {
   final GetEventExpenses getEventExpenses;

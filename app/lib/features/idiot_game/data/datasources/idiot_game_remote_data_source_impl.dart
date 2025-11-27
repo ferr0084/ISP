@@ -76,10 +76,12 @@ class IdiotGameRemoteDataSourceImpl implements IdiotGameRemoteDataSource {
   Future<String> uploadImage(String filePath) async {
     try {
       final fileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
-      final response = await supabaseClient.storage
+      await supabaseClient.storage
           .from('idiot-pics')
           .upload(fileName, File(filePath));
-      final publicUrl = supabaseClient.storage.from('idiot-pics').getPublicUrl(fileName);
+      final publicUrl = supabaseClient.storage
+          .from('idiot-pics')
+          .getPublicUrl(fileName);
       return publicUrl;
     } catch (e) {
       throw ServerException();
@@ -151,12 +153,15 @@ class IdiotGameRemoteDataSourceImpl implements IdiotGameRemoteDataSource {
 
       // Parse the response
       final gameData = response;
-      final participantsData = gameData['idiot_game_participants'] as List<dynamic>;
+      final participantsData =
+          gameData['idiot_game_participants'] as List<dynamic>;
 
       // Convert to models
       final game = GameModel.fromJson(gameData);
       final participants = participantsData
-          .map((p) => ParticipantDetailsModel.fromJson(p as Map<String, dynamic>))
+          .map(
+            (p) => ParticipantDetailsModel.fromJson(p as Map<String, dynamic>),
+          )
           .toList();
 
       return GameWithDetailsModel(game: game, participants: participants);
@@ -254,7 +259,9 @@ class IdiotGameRemoteDataSourceImpl implements IdiotGameRemoteDataSource {
           .select('achievement_id')
           .eq('user_id', userId);
 
-      final unlockedIds = currentAchievements.map((a) => a['achievement_id'] as int).toSet();
+      final unlockedIds = currentAchievements
+          .map((a) => a['achievement_id'] as int)
+          .toSet();
 
       // Get all achievements
       final allAchievements = await supabaseClient
@@ -269,7 +276,6 @@ class IdiotGameRemoteDataSourceImpl implements IdiotGameRemoteDataSource {
           .order('idiot_games(game_date)', ascending: false);
 
       final totalGames = userGames.length;
-      final losses = userGames.where((g) => g['is_loser'] as bool).length;
 
       // Get recent games for streak
       final recentGames = userGames.take(10).toList();
@@ -300,25 +306,27 @@ class IdiotGameRemoteDataSourceImpl implements IdiotGameRemoteDataSource {
             if (recentGames.length >= 2) {
               final lastGame = recentGames[0];
               final secondLastGame = recentGames[1];
-              shouldUnlock = (secondLastGame['is_loser'] as bool) && !(lastGame['is_loser'] as bool);
+              shouldUnlock =
+                  (secondLastGame['is_loser'] as bool) &&
+                  !(lastGame['is_loser'] as bool);
             }
             break;
           case 'Pat Trick':
             // Check if last 5 games were all losses
             if (recentGames.length >= 5) {
-              shouldUnlock = recentGames.take(5).every((g) => g['is_loser'] as bool);
+              shouldUnlock = recentGames
+                  .take(5)
+                  .every((g) => g['is_loser'] as bool);
             }
             break;
           // Other achievements not implemented yet
         }
 
         if (shouldUnlock) {
-          await supabaseClient
-              .from('idiot_user_achievements')
-              .insert({
-                'user_id': userId,
-                'achievement_id': id,
-              });
+          await supabaseClient.from('idiot_user_achievements').insert({
+            'user_id': userId,
+            'achievement_id': id,
+          });
         }
       }
     } catch (e) {

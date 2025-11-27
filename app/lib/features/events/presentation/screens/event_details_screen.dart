@@ -6,11 +6,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/widgets/user_avatar.dart';
 import '../../domain/entities/event_invitation.dart';
+import '../providers/event_expense_provider.dart';
 import '../providers/event_provider.dart';
+import 'add_expense_screen.dart';
 import 'edit_event_screen.dart';
 import 'event_expenses_screen.dart';
-import '../providers/event_expense_provider.dart';
-import 'add_expense_screen.dart';
 
 class EventDetailsScreen extends StatefulWidget {
   final String eventId;
@@ -45,11 +45,11 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
           suggestedDate: suggestedDate,
         );
 
-    if (success && mounted) {
+    if (success && context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Response recorded successfully!')),
       );
-    } else {
+    } else if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -72,13 +72,13 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );
 
-    if (pickedDate != null && mounted) {
+    if (pickedDate != null && context.mounted) {
       final TimeOfDay? pickedTime = await showTimePicker(
         context: context,
         initialTime: TimeOfDay.now(),
       );
 
-      if (pickedTime != null && mounted) {
+      if (pickedTime != null && context.mounted) {
         final suggestedDateTime = DateTime(
           pickedDate.year,
           pickedDate.month,
@@ -119,17 +119,17 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       ),
     );
 
-    if (confirmed == true && mounted) {
+    if (confirmed == true && context.mounted) {
       final success = await context.read<EventProvider>().deleteExistingEvent(
         eventId,
       );
 
-      if (success && mounted) {
+      if (success && context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Event deleted successfully')),
         );
         context.pop(); // Go back to previous screen
-      } else if (mounted) {
+      } else if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -307,9 +307,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                           // Creator Card
                           Card(
                             child: ListTile(
-                               leading: UserAvatar(
-                                 name: eventProvider.getUserName(creatorId),
-                               ),
+                              leading: UserAvatar(
+                                name: eventProvider.getUserName(creatorId),
+                              ),
                               title: Text(
                                 '${eventProvider.getUserName(creatorId) ?? 'User $creatorId'} (Host)',
                                 style: const TextStyle(
@@ -321,9 +321,11 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                           ...accepted.map(
                             (invitation) => Card(
                               child: ListTile(
-                                 leading: UserAvatar(
-                                   name: eventProvider.getUserName(invitation.inviteeId),
-                                 ),
+                                leading: UserAvatar(
+                                  name: eventProvider.getUserName(
+                                    invitation.inviteeId,
+                                  ),
+                                ),
                                 title: Text(
                                   eventProvider.getUserName(
                                         invitation.inviteeId,
@@ -771,9 +773,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       ...attendees.map(
         (invitation) => Card(
           child: ListTile(
-             leading: UserAvatar(
-               name: eventProvider.getUserName(invitation.inviteeId),
-             ),
+            leading: UserAvatar(
+              name: eventProvider.getUserName(invitation.inviteeId),
+            ),
             title: Text(
               eventProvider.getUserName(invitation.inviteeId) ??
                   'User ${invitation.inviteeId}',

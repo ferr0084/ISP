@@ -1,19 +1,17 @@
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../di/service_locator.dart';
 import '../../features/auth/presentation/providers/user_provider.dart';
 import '../../features/auth/presentation/screens/login_callback_screen.dart';
 import '../../features/auth/presentation/screens/login_or_create_account_screen.dart';
 import '../../features/chats/presentation/screens/chat_detail_screen.dart';
 import '../../features/chats/presentation/screens/chat_list_screen.dart';
-import '../../features/common/presentation/pages/settings_page.dart';
+import '../../features/events/presentation/providers/expense_summary_provider.dart';
 import '../../features/events/presentation/screens/create_event_screen.dart';
 import '../../features/events/presentation/screens/event_details_screen.dart';
 import '../../features/events/presentation/screens/events_dashboard_screen.dart';
-import '../../features/expenses/presentation/screens/expenses_home_screen.dart';
 import '../../features/expenses/presentation/providers/expense_transaction_provider.dart';
-import '../../features/events/presentation/providers/expense_summary_provider.dart';
+import '../../features/expenses/presentation/screens/expenses_home_screen.dart';
 import '../../features/groups/presentation/providers/group_detail_provider.dart';
 import '../../features/groups/presentation/screens/create_group_screen.dart';
 import '../../features/groups/presentation/screens/edit_group_screen.dart';
@@ -22,25 +20,25 @@ import '../../features/groups/presentation/screens/group_invite_screen.dart';
 import '../../features/groups/presentation/screens/group_members_screen.dart';
 import '../../features/groups/presentation/screens/invite_accept_screen.dart';
 import '../../features/groups/presentation/screens/my_groups_overview_screen.dart';
-import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/home/presentation/pages/friend_status_screen.dart';
+import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/idiot_game/presentation/providers/idiot_game_provider.dart';
-import '../../features/idiot_game/presentation/screens/idiot_game_dashboard_screen.dart';
 import '../../features/idiot_game/presentation/screens/achievements_stats_screen.dart';
 import '../../features/idiot_game/presentation/screens/game_details_screen.dart';
 import '../../features/idiot_game/presentation/screens/game_history_screen.dart';
+import '../../features/idiot_game/presentation/screens/idiot_game_dashboard_screen.dart';
 import '../../features/idiot_game/presentation/screens/new_game_screen.dart';
 import '../../features/notifications/presentation/providers/notification_provider.dart';
 import '../../features/notifications/presentation/screens/notifications_screen.dart';
+import '../../features/payment_methods/presentation/screens/add_bank_account_screen.dart';
+import '../../features/payment_methods/presentation/screens/add_card_screen.dart';
+import '../../features/payment_methods/presentation/screens/payment_methods_screen.dart';
+import '../../features/profile/presentation/providers/user_profile_provider.dart';
 import '../../features/profile/presentation/screens/profile_editing_screen.dart';
 import '../../features/profile/presentation/screens/profile_stats_screen.dart';
 import '../../features/profile/presentation/screens/profile_view_screen.dart';
 import '../../features/profile/presentation/screens/user_profile_screen.dart';
-import '../../features/profile/presentation/providers/user_profile_provider.dart';
-import '../../features/events/presentation/providers/expense_summary_provider.dart';
-import '../../features/payment_methods/presentation/screens/payment_methods_screen.dart';
-import '../../features/payment_methods/presentation/screens/add_card_screen.dart';
-import '../../features/payment_methods/presentation/screens/add_bank_account_screen.dart';
+import '../di/service_locator.dart';
 
 class AppRouter {
   final UserProvider _userProvider;
@@ -59,10 +57,13 @@ class AppRouter {
         path: '/login-callback',
         builder: (context, state) => const LoginCallbackScreen(),
       ),
-      GoRoute(path: '/home', builder: (context, state) => ChangeNotifierProvider(
-        create: (_) => sl<ExpenseSummaryProvider>(),
-        child: const HomePage(),
-      )),
+      GoRoute(
+        path: '/home',
+        builder: (context, state) => ChangeNotifierProvider(
+          create: (_) => sl<ExpenseSummaryProvider>(),
+          child: const HomePage(),
+        ),
+      ),
       GoRoute(
         path: '/friend-statuses',
         builder: (context, state) => const FriendStatusScreen(),
@@ -153,33 +154,31 @@ class AppRouter {
           ),
         ],
       ),
-       GoRoute(
-         path: '/expenses',
-         builder: (context, state) => MultiProvider(
-           providers: [
-             ChangeNotifierProvider(
-               create: (_) => sl<ExpenseTransactionProvider>(),
-             ),
-             ChangeNotifierProvider(
-               create: (_) => sl<ExpenseSummaryProvider>(),
-             ),
-           ],
-           child: const ExpensesHomeScreen(),
-         ),
-       ),
-        GoRoute(
-          path: '/payment-methods',
-          builder: (context, state) => const PaymentMethodsScreen(),
+      GoRoute(
+        path: '/expenses',
+        builder: (context, state) => MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+              create: (_) => sl<ExpenseTransactionProvider>(),
+            ),
+            ChangeNotifierProvider(create: (_) => sl<ExpenseSummaryProvider>()),
+          ],
+          child: const ExpensesHomeScreen(),
         ),
-        GoRoute(
-          path: '/add-card',
-          builder: (context, state) => const AddCardScreen(),
-        ),
-        GoRoute(
-          path: '/add-bank-account',
-          builder: (context, state) => const AddBankAccountScreen(),
-        ),
-       ShellRoute(
+      ),
+      GoRoute(
+        path: '/payment-methods',
+        builder: (context, state) => const PaymentMethodsScreen(),
+      ),
+      GoRoute(
+        path: '/add-card',
+        builder: (context, state) => const AddCardScreen(),
+      ),
+      GoRoute(
+        path: '/add-bank-account',
+        builder: (context, state) => const AddBankAccountScreen(),
+      ),
+      ShellRoute(
         builder: (context, state, child) {
           return ChangeNotifierProvider(
             create: (_) => sl<IdiotGameProvider>(),
@@ -216,21 +215,6 @@ class AppRouter {
             ],
           ),
         ],
-      ),
-
-      GoRoute(
-        path: '/expenses',
-        builder: (context, state) => MultiProvider(
-          providers: [
-            ChangeNotifierProvider(
-              create: (_) => sl<ExpenseTransactionProvider>(),
-            ),
-            ChangeNotifierProvider(
-              create: (_) => sl<ExpenseSummaryProvider>(),
-            ),
-          ],
-          child: const ExpensesHomeScreen(),
-        ),
       ),
       GoRoute(
         path: '/invite-accept',

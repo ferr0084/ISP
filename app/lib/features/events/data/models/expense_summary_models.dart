@@ -1,5 +1,5 @@
-import '../../domain/entities/user_expense_summary.dart';
 import '../../domain/entities/group_expense_summary.dart';
+import '../../domain/entities/user_expense_summary.dart';
 
 class UserExpenseSummaryModel {
   final String otherUserId;

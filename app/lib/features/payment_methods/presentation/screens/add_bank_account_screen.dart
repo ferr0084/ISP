@@ -182,10 +182,10 @@ class _AddBankAccountScreenState extends State<AddBankAccountScreen> {
             // Account Number
             TextFormField(
               controller: _accountNumberController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Account Number',
                 hintText: 'Enter your account number',
-                border: const OutlineInputBorder(),
+                border: OutlineInputBorder(),
                 helperText: 'Your account number will be securely stored',
               ),
               keyboardType: TextInputType.number,

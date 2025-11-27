@@ -1,5 +1,6 @@
 import 'package:app/features/profile/domain/entities/profile.dart';
 import 'package:app/features/profile/domain/usecases/get_profile.dart';
+import 'package:app/features/profile/domain/usecases/update_last_seen.dart';
 import 'package:app/features/profile/domain/usecases/update_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -8,8 +9,6 @@ import '../../../../core/usecase/usecase.dart';
 import '../../domain/usecases/login_with_email_and_password.dart';
 import '../../domain/usecases/logout.dart';
 import '../../domain/usecases/sign_up.dart';
-
-import 'package:app/features/profile/domain/usecases/update_last_seen.dart';
 
 class UserProvider extends ChangeNotifier with WidgetsBindingObserver {
   final SignUp _signUp;

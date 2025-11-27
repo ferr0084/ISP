@@ -1,8 +1,9 @@
 import 'package:app/core/error/failures.dart';
 import 'package:dartz/dartz.dart';
-import '../../domain/repositories/event_repository.dart';
+
 import '../../domain/entities/event.dart';
 import '../../domain/entities/event_invitation.dart';
+import '../../domain/repositories/event_repository.dart';
 import '../datasources/events_remote_data_source.dart';
 
 class EventRepositoryImpl implements EventRepository {

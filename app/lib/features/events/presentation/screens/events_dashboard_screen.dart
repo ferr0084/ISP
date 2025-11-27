@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../providers/event_provider.dart';
-import '../../domain/entities/event_invitation.dart';
+
 import '../../../../core/di/service_locator.dart';
+import '../../domain/entities/event_invitation.dart';
+import '../providers/event_provider.dart';
 
 class EventsDashboardScreen extends StatefulWidget {
   const EventsDashboardScreen({super.key});
@@ -95,7 +96,7 @@ class EventsDashboardScreenState extends State<EventsDashboardScreen> {
                                       color: Theme.of(context)
                                           .colorScheme
                                           .onSurface
-                                          .withAlpha(178), // 0.7 * 255 = 178.5
+                                          .withValues(alpha: 0.7),
                                     ),
                             ),
                           ),
@@ -134,7 +135,7 @@ class EventsDashboardScreenState extends State<EventsDashboardScreen> {
                                       color: Theme.of(context)
                                           .colorScheme
                                           .onSurface
-                                          .withAlpha(178), // 0.7 * 255 = 178.5
+                                          .withValues(alpha: 0.7),
                                     ),
                             ),
                           ),
@@ -310,7 +311,7 @@ class _EventCardState extends State<_EventCard> {
                           fontStyle: FontStyle.italic,
                           color: Theme.of(
                             context,
-                          ).colorScheme.onSurface.withOpacity(0.8),
+                          ).colorScheme.onSurface.withValues(alpha: 0.8),
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -320,7 +321,7 @@ class _EventCardState extends State<_EventCard> {
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Theme.of(
                           context,
-                        ).colorScheme.onSurface.withAlpha(178),
+                        ).colorScheme.onSurface.withValues(alpha: 0.7),
                       ),
                     ),
                   ],
@@ -332,7 +333,9 @@ class _EventCardState extends State<_EventCard> {
                 height: 80,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
-                  color: Theme.of(context).colorScheme.primary.withAlpha(50),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.primary.withValues(alpha: 0.2),
                 ),
                 child: const Icon(Icons.event, size: 40),
               ),

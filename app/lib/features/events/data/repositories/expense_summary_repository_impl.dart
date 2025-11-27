@@ -1,8 +1,7 @@
-import '../../domain/entities/user_expense_summary.dart';
 import '../../domain/entities/group_expense_summary.dart';
+import '../../domain/entities/user_expense_summary.dart';
 import '../../domain/repositories/expense_summary_repository.dart';
 import '../datasources/expense_summary_remote_data_source.dart';
-import '../models/expense_summary_models.dart';
 
 class ExpenseSummaryRepositoryImpl implements ExpenseSummaryRepository {
   final ExpenseSummaryRemoteDataSource remoteDataSource;
@@ -16,8 +15,14 @@ class ExpenseSummaryRepositoryImpl implements ExpenseSummaryRepository {
   }
 
   @override
-  Future<GroupExpenseSummary> getGroupExpenseSummary(String userId, String groupId) async {
-    final model = await remoteDataSource.getGroupExpenseSummary(userId, groupId);
+  Future<GroupExpenseSummary> getGroupExpenseSummary(
+    String userId,
+    String groupId,
+  ) async {
+    final model = await remoteDataSource.getGroupExpenseSummary(
+      userId,
+      groupId,
+    );
     return model.toEntity();
   }
 }

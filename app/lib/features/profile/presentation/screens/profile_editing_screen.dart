@@ -92,13 +92,15 @@ class _ProfileEditingScreenState extends State<ProfileEditingScreen> {
             Center(
               child: Column(
                 children: [
-                   UserAvatar(
-                     avatarUrl: profile?.avatarUrl,
-                     name: profile?.fullName,
-                     radius: 60,
-                     defaultAssetImage: 'assets/images/avatar_s.png',
-                     localImage: _selectedImage != null ? File(_selectedImage!.path) : null,
-                   ),
+                  UserAvatar(
+                    avatarUrl: profile?.avatarUrl,
+                    name: profile?.fullName,
+                    radius: 60,
+                    defaultAssetImage: 'assets/images/avatar_s.png',
+                    localImage: _selectedImage != null
+                        ? File(_selectedImage!.path)
+                        : null,
+                  ),
                   TextButton(
                     onPressed: _pickImage,
                     child: const Text('Set New Photo'),
@@ -166,10 +168,11 @@ class _ProfileEditingScreenState extends State<ProfileEditingScreen> {
 
                 String? avatarUrl = profile.avatarUrl;
                 if (_selectedImage != null) {
+                  final scaffoldMessenger = ScaffoldMessenger.of(context);
                   avatarUrl = await _uploadImage(_selectedImage!);
                   if (avatarUrl == null) {
                     if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
+                      scaffoldMessenger.showSnackBar(
                         const SnackBar(content: Text('Failed to upload image')),
                       );
                     }
@@ -192,7 +195,7 @@ class _ProfileEditingScreenState extends State<ProfileEditingScreen> {
 
                 try {
                   await userProvider.updateUserProfile(updatedProfile);
-                  if (!mounted) return;
+                  if (!context.mounted) return;
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('Profile updated successfully!'),
@@ -200,7 +203,7 @@ class _ProfileEditingScreenState extends State<ProfileEditingScreen> {
                   );
                   Navigator.of(context).pop();
                 } catch (e) {
-                  if (!mounted) return;
+                  if (!context.mounted) return;
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Failed to update profile: $e')),
                   );

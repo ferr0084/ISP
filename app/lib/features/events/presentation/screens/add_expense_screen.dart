@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../../../core/di/service_locator.dart';
+import '../../../auth/presentation/providers/user_provider.dart';
 import '../../domain/entities/event.dart';
+import '../../domain/entities/event_invitation.dart';
 import '../../domain/usecases/get_event.dart';
 import '../providers/event_expense_provider.dart';
-import '../../../auth/presentation/providers/user_provider.dart';
 
 class AddExpenseScreen extends StatefulWidget {
   final String eventId;
@@ -41,7 +43,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
         if (event.invitations != null) {
           for (final invite in event.invitations!) {
             // Only include accepted or pending? Probably accepted.
-            if (invite.status == 'accepted') {
+            if (invite.status == InvitationStatus.accepted) {
               _selectedParticipants[invite.inviteeId] = true;
             }
           }
@@ -96,7 +98,9 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
             TextFormField(
               controller: _amountController,
               decoration: const InputDecoration(labelText: 'Amount'),
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               validator: (value) {
                 if (value == null || value.isEmpty) return 'Required';
                 if (double.tryParse(value) == null) return 'Invalid amount';

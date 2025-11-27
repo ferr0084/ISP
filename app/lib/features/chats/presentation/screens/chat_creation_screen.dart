@@ -2,8 +2,8 @@ import 'package:app/core/di/service_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../contacts/presentation/notifiers/contact_list_notifier.dart';
 import '../../../../core/widgets/user_avatar.dart';
+import '../../../contacts/presentation/notifiers/contact_list_notifier.dart';
 import '../providers/chat_provider.dart';
 
 class ChatCreationScreen extends StatefulWidget {

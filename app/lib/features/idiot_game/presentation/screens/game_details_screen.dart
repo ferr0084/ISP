@@ -18,9 +18,8 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      final provider = Provider.of<IdiotGameProvider>(context, listen: false);
-      provider.fetchGameDetailsData(widget.gameId);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<IdiotGameProvider>().fetchGameDetailsData(widget.gameId);
     });
   }
 
@@ -87,29 +86,29 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
                               ),
                             ],
                           ),
-                           if (game.description != null &&
-                               game.description!.isNotEmpty) ...[
-                             const SizedBox(height: 12),
-                             Text(
-                               game.description!,
-                               style: const TextStyle(
-                                 fontSize: 14,
-                                 fontStyle: FontStyle.italic,
-                               ),
-                             ),
-                           ],
-                           if (game.imageUrl != null) ...[
-                             const SizedBox(height: 12),
-                             ClipRRect(
-                               borderRadius: BorderRadius.circular(8),
-                               child: Image.network(
-                                 game.imageUrl!,
-                                 height: 200,
-                                 width: double.infinity,
-                                 fit: BoxFit.cover,
-                               ),
-                             ),
-                           ],
+                          if (game.description != null &&
+                              game.description!.isNotEmpty) ...[
+                            const SizedBox(height: 12),
+                            Text(
+                              game.description!,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                          ],
+                          if (game.imageUrl != null) ...[
+                            const SizedBox(height: 12),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.network(
+                                game.imageUrl!,
+                                height: 200,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ],
                         ],
                       ),
                     ),
@@ -132,11 +131,11 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
                         padding: const EdgeInsets.all(16.0),
                         child: Row(
                           children: [
-                             UserAvatar(
-                               avatarUrl: loser.userProfile.avatarUrl,
-                               name: loser.userProfile.fullName,
-                               radius: 30,
-                             ),
+                            UserAvatar(
+                              avatarUrl: loser.userProfile.avatarUrl,
+                              name: loser.userProfile.fullName,
+                              radius: 30,
+                            ),
                             const SizedBox(width: 16),
                             Expanded(
                               child: Column(
@@ -203,10 +202,12 @@ class _GameDetailsScreenState extends State<GameDetailsScreen> {
                       return Card(
                         margin: const EdgeInsets.only(bottom: 8),
                         child: ListTile(
-                           leading: UserAvatar(
-                             avatarUrl: participant.userProfile.avatarUrl,
-                             name: participant.userProfile.fullName ?? participant.userProfile.email,
-                           ),
+                          leading: UserAvatar(
+                            avatarUrl: participant.userProfile.avatarUrl,
+                            name:
+                                participant.userProfile.fullName ??
+                                participant.userProfile.email,
+                          ),
                           title: Text(
                             participant.userProfile.fullName ??
                                 participant.userProfile.email ??

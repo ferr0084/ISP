@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+
 import '../../../../core/widgets/user_avatar.dart';
 import '../providers/user_profile_provider.dart';
 
@@ -64,15 +65,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               width: double.infinity,
               child: Column(
                 children: [
-                   UserAvatar(
-                     avatarUrl: profile.avatarUrl,
-                     name: profile.fullName,
-                     radius: 60,
-                     defaultAssetImage: 'assets/images/avatar_s.png',
-                   ),
+                  UserAvatar(
+                    avatarUrl: profile.avatarUrl,
+                    name: profile.fullName,
+                    radius: 60,
+                    defaultAssetImage: 'assets/images/avatar_s.png',
+                  ),
                   const SizedBox(height: 16.0),
                   Text(
-                    profile.fullName ?? 'No Name',
+                    profile.fullName,
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   if (profile.nickname != null) ...[

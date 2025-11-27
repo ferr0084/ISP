@@ -8,17 +8,17 @@ import 'core/supabase/supabase_initializer.dart';
 import 'core/theme/theme_data.dart';
 import 'core/theme/theme_provider.dart';
 import 'features/auth/presentation/providers/user_provider.dart';
+import 'features/contacts/presentation/notifiers/contact_list_notifier.dart';
+import 'features/events/presentation/providers/event_provider.dart';
 import 'features/groups/domain/repositories/invitation_repository.dart';
 import 'features/groups/presentation/notifiers/group_invite_notifier.dart';
 import 'features/groups/presentation/providers/group_provider.dart';
+import 'features/home/presentation/providers/friend_status_provider.dart';
 import 'features/home/presentation/providers/recent_chats_provider.dart';
 import 'features/idiot_game/presentation/providers/idiot_game_provider.dart';
 import 'features/notifications/presentation/providers/notification_provider.dart';
-import 'features/profile/presentation/providers/profile_provider.dart';
-import 'features/contacts/presentation/notifiers/contact_list_notifier.dart';
-import 'features/events/presentation/providers/event_provider.dart';
-import 'features/home/presentation/providers/friend_status_provider.dart';
 import 'features/payment_methods/presentation/providers/payment_method_provider.dart';
+import 'features/profile/presentation/providers/profile_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../providers/event_provider.dart';
-import '../../../groups/presentation/providers/group_provider.dart';
-import '../../../groups/domain/entities/group.dart';
-import '../../../contacts/presentation/notifiers/contact_list_notifier.dart';
+
 import '../../../../core/di/service_locator.dart';
+import '../../../contacts/presentation/notifiers/contact_list_notifier.dart';
+import '../../../groups/domain/entities/group.dart';
+import '../../../groups/presentation/providers/group_provider.dart';
+import '../providers/event_provider.dart';
 
 class CreateEventScreen extends StatefulWidget {
   const CreateEventScreen({super.key});
@@ -22,7 +23,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   final _locationController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
   TimeOfDay _selectedTime = TimeOfDay.now();
-  List<String> _selectedInvitees = [];
+  final List<String> _selectedInvitees = [];
   Group? _selectedGroup;
 
   @override
@@ -104,7 +105,9 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       inviteeIds: _selectedInvitees,
     );
 
-    if (success && mounted) {
+    if (!mounted) return;
+
+    if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Event created successfully!')),
       );
@@ -218,7 +221,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                 labelText: 'Select Group (Optional)',
                 border: OutlineInputBorder(),
               ),
-              value: _selectedGroup,
+              initialValue: _selectedGroup,
               items: groupProvider.groups.map((group) {
                 return DropdownMenuItem<Group>(
                   value: group,

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../../../core/di/service_locator.dart';
+import '../../../auth/presentation/providers/user_provider.dart';
 import '../../domain/entities/event.dart';
+import '../../domain/entities/event_invitation.dart';
 import '../../domain/usecases/get_event.dart';
 import '../providers/event_expense_provider.dart';
-import '../../../auth/presentation/providers/user_provider.dart';
 
 class SettleUpScreen extends StatefulWidget {
   final String eventId;
@@ -69,7 +71,8 @@ class _SettleUpScreenState extends State<SettleUpScreen> {
     final potentialPayees = <String>{};
     if (_event!.invitations != null) {
       for (final invite in _event!.invitations!) {
-        if (invite.status == 'accepted' && invite.inviteeId != currentUserId) {
+        if (invite.status == InvitationStatus.accepted &&
+            invite.inviteeId != currentUserId) {
           potentialPayees.add(invite.inviteeId);
         }
       }
@@ -86,7 +89,7 @@ class _SettleUpScreenState extends State<SettleUpScreen> {
           padding: const EdgeInsets.all(16.0),
           children: [
             DropdownButtonFormField<String>(
-              value: _selectedPayeeId,
+              initialValue: _selectedPayeeId,
               decoration: const InputDecoration(labelText: 'Pay to'),
               items: potentialPayees.map((userId) {
                 final userName = context
@@ -107,7 +110,9 @@ class _SettleUpScreenState extends State<SettleUpScreen> {
             TextFormField(
               controller: _amountController,
               decoration: const InputDecoration(labelText: 'Amount'),
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               validator: (value) {
                 if (value == null || value.isEmpty) return 'Required';
                 if (double.tryParse(value) == null) return 'Invalid amount';

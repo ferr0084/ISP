@@ -14,11 +14,8 @@ class _GameHistoryScreenState extends State<GameHistoryScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      Provider.of<IdiotGameProvider>(
-        context,
-        listen: false,
-      ).fetchGameHistoryData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<IdiotGameProvider>().fetchGameHistoryData();
     });
   }
 

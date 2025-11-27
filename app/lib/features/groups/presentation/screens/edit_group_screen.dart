@@ -127,20 +127,23 @@ class EditGroupScreenState extends State<EditGroupScreen> {
                     onPressed: groupProvider.isLoading
                         ? null
                         : () async {
+                            final provider = context.read<GroupProvider>();
                             if (_formKey.currentState!.validate()) {
                               _formKey.currentState!.save();
 
                               String? avatarUrl = group.avatarUrl;
                               if (_selectedImage != null) {
+                                final scaffoldMessenger = ScaffoldMessenger.of(
+                                  context,
+                                );
                                 avatarUrl = await _uploadImage(_selectedImage!);
+                                if (!mounted) return;
                                 if (avatarUrl == null) {
-                                  if (mounted) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text('Failed to upload image'),
-                                      ),
-                                    );
-                                  }
+                                  scaffoldMessenger.showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Failed to upload image'),
+                                    ),
+                                  );
                                   return;
                                 }
                               }
@@ -149,16 +152,10 @@ class EditGroupScreenState extends State<EditGroupScreen> {
                                 name: _groupName,
                                 avatarUrl: avatarUrl,
                               );
-                              final navigator = Navigator.of(context);
-                              final scaffoldMessenger = ScaffoldMessenger.of(
-                                context,
-                              );
-                              await context.read<GroupProvider>().updateGroup(
-                                updatedGroup,
-                              );
-                              if (!mounted) return;
+                              await provider.updateGroup(updatedGroup);
+                              if (!context.mounted) return;
                               if (groupProvider.hasError) {
-                                scaffoldMessenger.showSnackBar(
+                                ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
                                       'Error updating group: ${groupProvider.errorMessage}',
@@ -166,7 +163,7 @@ class EditGroupScreenState extends State<EditGroupScreen> {
                                   ),
                                 );
                               } else {
-                                navigator.pop();
+                                Navigator.of(context).pop();
                               }
                             }
                           },
