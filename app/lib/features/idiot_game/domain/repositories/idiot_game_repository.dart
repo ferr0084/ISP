@@ -22,4 +22,5 @@ abstract class IdiotGameRepository {
   Future<Either<Failure, GameWithDetails>> getGameDetails(String gameId);
   Future<Either<Failure, UserStats>> getUserStats(String userId);
   Future<Either<Failure, List<Achievement>>> getUserAchievements(String userId);
+  Future<Either<Failure, void>> checkAndUnlockAchievements(String userId);
 }

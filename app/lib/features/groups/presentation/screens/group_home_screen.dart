@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 
 import '../../../events/presentation/providers/event_provider.dart';
 import '../../../idiot_game/presentation/providers/idiot_game_provider.dart';
-import '../../domain/entities/announcement.dart';
 import '../providers/group_detail_provider.dart';
 import '../providers/group_provider.dart';
 import '../widgets/group_avatar.dart';
@@ -21,21 +20,12 @@ class GroupHomeScreen extends StatefulWidget {
 }
 
 class GroupHomeScreenState extends State<GroupHomeScreen> {
-  // Dummy Data
-  static final Announcement _announcement = Announcement(
-    title: 'Pinned Announcement',
-    content: 'Project Deadline moved to Friday.',
-    imageUrl: 'assets/images/group_design_team.png', // Placeholder image
-  );
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<GroupDetailProvider>(
       create: (_) {
         final provider = sl<GroupDetailProvider>(param1: widget.groupId);
         provider.fetchGroupDetails();
-        // Also fetch games for this group
-        sl<IdiotGameProvider>().fetchGroupGamesData(widget.groupId);
         return provider;
       },
       child: Consumer<GroupDetailProvider>(
@@ -92,29 +82,29 @@ class GroupHomeScreenState extends State<GroupHomeScreen> {
                 ],
               ),
               actions: [
-                PopupMenuButton<String>(
-                  onSelected: (value) async {
-                    final navigator = GoRouter.of(context);
-                    final scaffoldMessenger = ScaffoldMessenger.of(context);
-                    if (value == 'Edit') {
-                      navigator.push('/groups/edit', extra: group.id);
-                    } else if (value == 'Delete') {
-                      await context.read<GroupProvider>().deleteGroup(group.id);
-                      if (!mounted) return;
-                      if (!mounted) return;
-                      if (context.read<GroupProvider>().hasError) {
-                        scaffoldMessenger.showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'Error deleting group: ${context.read<GroupProvider>().errorMessage}',
-                            ),
-                          ),
-                        );
-                      } else {
-                        navigator.pop();
-                      }
-                    }
-                  },
+                    PopupMenuButton<String>(
+                      onSelected: (value) async {
+                        final navigator = GoRouter.of(context);
+                        final scaffoldMessenger = ScaffoldMessenger.of(context);
+                        if (value == 'Edit') {
+                          navigator.push('/groups/edit', extra: group.id);
+                        } else if (value == 'Delete') {
+                          final groupProvider = context.read<GroupProvider>();
+                          await groupProvider.deleteGroup(group.id);
+                          if (!mounted) return;
+                          if (groupProvider.hasError) {
+                            scaffoldMessenger.showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'Error deleting group: ${groupProvider.errorMessage}',
+                                ),
+                              ),
+                            );
+                          } else {
+                            navigator.pop();
+                          }
+                        }
+                      },
                   itemBuilder: (BuildContext context) {
                     return {'Edit', 'Delete'}.map((String choice) {
                       return PopupMenuItem<String>(
@@ -132,61 +122,133 @@ class GroupHomeScreenState extends State<GroupHomeScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Pinned Announcement
-                    Container(
-                      height: 150,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        image: DecorationImage(
-                          image: AssetImage(_announcement.imageUrl),
-                          fit: BoxFit.cover,
-                          colorFilter: ColorFilter.mode(
-                            Colors.black.withAlpha(102), // 0.4 * 255 = 102
-                            BlendMode.darken,
+                    // Latest Messages Section
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Latest Messages',
+                          style: Theme.of(context).textTheme.headlineSmall
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            if (group.chatId != null) {
+                              context.push(
+                                '/chats/${group.chatId}',
+                                extra: group.name,
+                              );
+                            } else {
+                              // Handle case where chatId is null (shouldn't happen with triggers)
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Chat not available for this group.',
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                          child: Text(
+                            'Open Chat',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontSize: 16,
+                            ),
                           ),
                         ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Card(
+                      color: Theme.of(context).colorScheme.surface,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              _announcement.title,
-                              style: Theme.of(context).textTheme.titleMedium
-                                  ?.copyWith(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.onPrimary,
+                      child: Column(
+                        children: latestMessages.map((messageWithSender) {
+                          return Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CircleAvatar(
+                                  backgroundImage:
+                                      messageWithSender.senderAvatar != null
+                                      ? NetworkImage(
+                                          messageWithSender.senderAvatar!,
+                                        )
+                                      : null,
+                                  radius: 20,
+                                  child: messageWithSender.senderAvatar == null
+                                      ? const Icon(Icons.person)
+                                      : null,
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        messageWithSender.senderName,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium
+                                            ?.copyWith(
+                                              color: Theme.of(
+                                                context,
+                                              ).colorScheme.onSurface,
+                                            ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        messageWithSender.message.content,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium
+                                            ?.copyWith(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onSurface
+                                                  .withAlpha(
+                                                    178,
+                                                  ), // 0.7 * 255 = 178.5
+                                            ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
                                   ),
+                                ),
+                              ],
                             ),
-                            const SizedBox(height: 4),
-                            Text(
-                              _announcement.content,
-                              style: Theme.of(context).textTheme.bodyMedium
-                                  ?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onPrimary
-                                        .withAlpha(204), // 0.8 * 255 = 204
-                                  ),
-                            ),
-                          ],
-                        ),
+                          );
+                        }).toList(),
                       ),
                     ),
                     const SizedBox(height: 24),
 
-                    // Idiot Game Section
-                    Consumer<IdiotGameProvider>(
-                      builder: (context, idiotGameProvider, child) {
+                     // Idiot Game Section
+                     Consumer<IdiotGameProvider>(
+                       builder: (context, idiotGameProvider, child) {
                          final games = idiotGameProvider.groupGames;
                          final hasGames = games.isNotEmpty;
-                         final lastGame = hasGames ? games.first : null;
                          final lastGameDetails = idiotGameProvider.lastGroupGameDetails;
                          final loser = lastGameDetails?.loser;
+
+                         // Fetch data if not loaded
+                         if (games.isEmpty && lastGameDetails == null) {
+                           WidgetsBinding.instance.addPostFrameCallback((_) {
+                             idiotGameProvider.fetchGroupGamesData(widget.groupId);
+                           });
+                           return const Padding(
+                             padding: EdgeInsets.all(16.0),
+                             child: Center(child: CircularProgressIndicator()),
+                           );
+                         }
                         // The Game entity might not have participant details directly accessible in a simple way
                         // if it's just a Game model. Let's check Game entity.
                         // It seems Game entity doesn't have participants list in the domain entity based on previous views?
@@ -628,116 +690,7 @@ class GroupHomeScreenState extends State<GroupHomeScreen> {
                          ),
                        ),
                      ),
-                    const SizedBox(height: 24),
-
-                    // Latest Messages Section
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Latest Messages',
-                          style: Theme.of(context).textTheme.headlineSmall
-                              ?.copyWith(
-                                color: Theme.of(context).colorScheme.onSurface,
-                              ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            if (group.chatId != null) {
-                              context.push(
-                                '/chats/${group.chatId}',
-                                extra: group.name,
-                              );
-                            } else {
-                              // Handle case where chatId is null (shouldn't happen with triggers)
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'Chat not available for this group.',
-                                  ),
-                                ),
-                              );
-                            }
-                          },
-                          child: Text(
-                            'Open Chat',
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.primary,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    Card(
-                      color: Theme.of(context).colorScheme.surface,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        children: latestMessages.map((messageWithSender) {
-                          return Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                CircleAvatar(
-                                  backgroundImage:
-                                      messageWithSender.senderAvatar != null
-                                      ? NetworkImage(
-                                          messageWithSender.senderAvatar!,
-                                        )
-                                      : null,
-                                  radius: 20,
-                                  child: messageWithSender.senderAvatar == null
-                                      ? const Icon(Icons.person)
-                                      : null,
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        messageWithSender.senderName,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium
-                                            ?.copyWith(
-                                              color: Theme.of(
-                                                context,
-                                              ).colorScheme.onSurface,
-                                            ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        messageWithSender.message.content,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium
-                                            ?.copyWith(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .onSurface
-                                                  .withAlpha(
-                                                    178,
-                                                  ), // 0.7 * 255 = 178.5
-                                            ),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
+                     const SizedBox(height: 24),
 
                     // Members Section
                     Row(

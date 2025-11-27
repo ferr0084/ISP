@@ -8,6 +8,7 @@ import 'package:app/features/idiot_game/domain/repositories/idiot_game_repositor
 import 'package:app/features/idiot_game/domain/usecases/create_game.dart';
 import 'package:app/features/idiot_game/domain/usecases/get_game_details.dart';
 import 'package:app/features/idiot_game/domain/usecases/get_game_history.dart';
+import 'package:app/features/idiot_game/domain/usecases/check_achievements.dart';
 import 'package:app/features/idiot_game/domain/usecases/get_group_games.dart';
 import 'package:app/features/idiot_game/domain/usecases/get_potential_players.dart';
 import 'package:app/features/idiot_game/domain/usecases/get_recent_games.dart';
@@ -26,6 +27,7 @@ class IdiotGameProvider with ChangeNotifier {
   final GetGameDetails getGameDetails;
   final GetUserStats getUserStats;
   final GetUserAchievements getUserAchievements;
+  final CheckAchievements checkAchievements;
   final IdiotGameRepository repository;
 
   final GetGroupGames getGroupGames;
@@ -38,6 +40,7 @@ class IdiotGameProvider with ChangeNotifier {
     required this.getGameDetails,
     required this.getUserStats,
     required this.getUserAchievements,
+    required this.checkAchievements,
     required this.getGroupGames,
     required this.repository,
   });
@@ -115,6 +118,8 @@ class IdiotGameProvider with ChangeNotifier {
         // Assuming `loserId` is the current user's ID for simplicity here,
         // or this should be passed from a user session.
         fetchUserStatsData(loserId); // Refresh stats too
+        // Check for new achievements
+        checkAchievements.call(loserId);
       },
     );
 

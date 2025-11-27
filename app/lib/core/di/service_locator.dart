@@ -1,3 +1,4 @@
+import 'package:app/features/idiot_game/domain/usecases/check_achievements.dart';
 import 'package:app/features/idiot_game/domain/usecases/get_group_games.dart';
 import 'package:app/features/idiot_game/domain/usecases/get_user_achievements.dart';
 import 'package:app/features/idiot_game/domain/usecases/get_user_stats.dart';
@@ -194,6 +195,7 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton(() => GetGameDetails(sl()));
   sl.registerLazySingleton(() => GetUserStats(sl()));
   sl.registerLazySingleton(() => GetUserAchievements(sl()));
+  sl.registerLazySingleton(() => CheckAchievements(sl()));
   sl.registerLazySingleton(() => GetGroupGames(sl()));
   // Events
   sl.registerLazySingleton<EventsRemoteDataSource>(
@@ -273,6 +275,7 @@ Future<void> setupServiceLocator() async {
       getGameDetails: sl(),
       getUserStats: sl(),
       getUserAchievements: sl(),
+      checkAchievements: sl(),
       getGroupGames: sl(),
       repository: sl(),
     ),

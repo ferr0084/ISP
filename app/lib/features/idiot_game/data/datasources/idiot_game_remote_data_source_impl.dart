@@ -244,4 +244,97 @@ class IdiotGameRemoteDataSourceImpl implements IdiotGameRemoteDataSource {
       throw ServerException();
     }
   }
+
+  @override
+  Future<void> checkAndUnlockAchievements(String userId) async {
+    try {
+      // Get user's current achievements
+      final currentAchievements = await supabaseClient
+          .from('idiot_user_achievements')
+          .select('achievement_id')
+          .eq('user_id', userId);
+
+      final unlockedIds = currentAchievements.map((a) => a['achievement_id'] as int).toSet();
+
+      // Get all achievements
+      final allAchievements = await supabaseClient
+          .from('idiot_achievements')
+          .select('*');
+
+      // Get user's game stats
+      final userGames = await supabaseClient
+          .from('idiot_game_participants')
+          .select('is_loser, idiot_games!inner(game_date)')
+          .eq('user_id', userId)
+          .order('idiot_games(game_date)', ascending: false);
+
+      final totalGames = userGames.length;
+      final losses = userGames.where((g) => g['is_loser'] as bool).length;
+
+      // Get recent games for streak
+      final recentGames = userGames.take(10).toList();
+      final currentStreak = _calculateCurrentStreak(recentGames);
+
+      // Check each achievement
+      for (final achievement in allAchievements) {
+        final id = achievement['id'] as int;
+        final name = achievement['name'] as String;
+
+        if (unlockedIds.contains(id)) continue;
+
+        bool shouldUnlock = false;
+
+        switch (name) {
+          case 'Century Club':
+            shouldUnlock = totalGames >= 100;
+            break;
+          case 'Idiot King':
+            // TODO: Implement check for highest losses
+            shouldUnlock = false; // Placeholder
+            break;
+          case 'Survivor':
+            shouldUnlock = currentStreak >= 10;
+            break;
+          case 'Comeback Kid':
+            // Check if last game was loser and this game is not
+            if (recentGames.length >= 2) {
+              final lastGame = recentGames[0];
+              final secondLastGame = recentGames[1];
+              shouldUnlock = (secondLastGame['is_loser'] as bool) && !(lastGame['is_loser'] as bool);
+            }
+            break;
+          case 'Pat Trick':
+            // Check if last 5 games were all losses
+            if (recentGames.length >= 5) {
+              shouldUnlock = recentGames.take(5).every((g) => g['is_loser'] as bool);
+            }
+            break;
+          // Other achievements not implemented yet
+        }
+
+        if (shouldUnlock) {
+          await supabaseClient
+              .from('idiot_user_achievements')
+              .insert({
+                'user_id': userId,
+                'achievement_id': id,
+              });
+        }
+      }
+    } catch (e) {
+      throw ServerException();
+    }
+  }
+
+  int _calculateCurrentStreak(List<dynamic> games) {
+    int streak = 0;
+    for (final game in games) {
+      if (!(game['is_loser'] as bool)) {
+        streak++;
+      } else {
+        break;
+      }
+    }
+    return streak;
+  }
 }

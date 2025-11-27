@@ -101,22 +101,30 @@ class IdiotGameRepositoryImpl implements IdiotGameRepository {
   @override
   Future<Either<Failure, UserStats>> getUserStats(String userId) async {
     try {
-      final stats = await remoteDataSource.getUserStats(userId);
-      return Right(stats);
+      final userStats = await remoteDataSource.getUserStats(userId);
+      return Right(userStats);
     } on ServerException {
       return Left(ServerFailure('Server Error'));
     }
   }
 
   @override
-  Future<Either<Failure, List<Achievement>>> getUserAchievements(
-    String userId,
-  ) async {
+  Future<Either<Failure, List<Achievement>>> getUserAchievements(String userId) async {
     try {
       final achievements = await remoteDataSource.getUserAchievements(userId);
       return Right(achievements);
-    } on ServerException {
-      return Left(ServerFailure('Server Error'));
+    } catch (e) {
+      return Left(ServerFailure('Failed to get user achievements'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> checkAndUnlockAchievements(String userId) async {
+    try {
+      await remoteDataSource.checkAndUnlockAchievements(userId);
+      return const Right(null);
+    } catch (e) {
+      return Left(ServerFailure('Failed to check achievements'));
     }
   }
 }

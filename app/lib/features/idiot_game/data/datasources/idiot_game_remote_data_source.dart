@@ -20,4 +20,5 @@ abstract class IdiotGameRemoteDataSource {
   Future<GameWithDetailsModel> getGameDetails(String gameId);
   Future<UserStatsModel> getUserStats(String userId);
   Future<List<AchievementModel>> getUserAchievements(String userId);
+  Future<void> checkAndUnlockAchievements(String userId);
 }
